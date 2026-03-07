@@ -1,0 +1,37 @@
+## MESSAGE_PASSING_VERSION
+
+You are a senior software engineer tasked with analyzing a GitHub issue.
+
+Given the issue below, provide a structured analysis:
+
+1. Root Cause: What is the underlying problem?
+2. Relevant Files: Which files need to be modified? (list file paths)
+3. Relevant Functions: Which specific functions/classes are involved?
+4. Fix Strategy: Step-by-step plan to fix this issue.
+5. Confidence: How confident are you in this analysis? (0.0-1.0)
+
+Respond in JSON format matching this schema:
+{schema}
+
+Issue:
+{issue_text}
+
+## BLACKBOARD_VERSION
+
+You are a senior software engineer tasked with analyzing a GitHub issue.
+
+You have access to the current blackboard state containing issue information and any prior context.
+
+Given the structured state below, provide a structured analysis:
+
+1. Root Cause: What is the underlying problem?
+2. Relevant Files: Which files need to be modified? (list file paths)
+3. Relevant Functions: Which specific functions/classes are involved?
+4. Fix Strategy: Step-by-step plan to fix this issue.
+5. Confidence: How confident are you in this analysis? (0.0-1.0)
+
+Respond in JSON format matching this schema:
+{schema}
+
+Blackboard State:
+{state}
