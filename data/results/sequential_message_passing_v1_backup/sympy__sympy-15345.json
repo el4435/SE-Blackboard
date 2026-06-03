@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-15345_41ecc95e",
+  "issue_id": "sympy__sympy-15345",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 20513,
+  "total_output_tokens": 13798,
+  "total_latency_ms": 170279,
+  "final_patch": "--- a/sympy/printing/mathematica.py\n+++ b/sympy/printing/mathematica.py\n@@ -1,6 +1,6 @@\n \"\"\"\n Mathematica code printer\n \"\"\"\n from sympy.printing.codeprinter import CodePrinter\n-from sympy.core import S\n+from sympy.core import S, I\n \n class MathematicaCodePrinter(CodePrinter):\n     \"\"\"\n@@ -15,7 +15,8 @@\n         'Ge': '>=',\n         'Lt': '<',\n         'Le': '<=',\n-        'Ne': '!='\n+        'Ne': '!=',\n+        'Eq': '=='\n     }\n \n     def _print_Pow(self, expr):\n@@ -32,20 +33,28 @@\n         return '%s[%s]' % (self._print(expr.func), ', '.join(map(self._print, expr.args)))\n \n     def _print_Mul(self, expr):\n-        # Separate commutative and non-commutative parts\n-        c, nc = expr.args_cnc()\n-        \n-        # Print commutative part using standard multiplication\n-        result = super()._print_Mul(expr.func(*c))\n-        \n-        # Print non-commutative part using Dot\n+        from sympy import Mul\n+        c, nc = expr.args_cnc(cset=True)\n+        c = list(c)\n+        \n+        # Handle commutative part\n+        if c:\n+            c_part = super()._print_Mul(Mul(*c))\n+        else:\n+            c_part = None\n+        \n+        # Handle non-commutative part using Dot\n         if nc:\n-            nc_str = '.'.join(map(self._print, nc))\n-            if c:\n-                result = '(%s)*(%s)' % (result, nc_str)\n+            nc_str = 'Dot[%s]' % ', '.join(map(self._print, nc))\n+            if c_part:\n+                return '(%s)*(%s)' % (c_part, nc_str)\n             else:\n-                result = nc_str\n-        \n-        return result\n+                return nc_str\n+        else:\n+            return c_part if c_part else '1'\n+\n+    def _print_ImaginaryUnit(self, expr):\n+        return 'I'\n \n     def _print_Integral(self, expr):\n         if len(expr.limits) == 1:\n@@ -53,7 +62,7 @@\n             if len(limit) == 3:\n                 var, lower, upper = limit\n                 # Check for infinite integral\n-                if limit[1:] == (S.NegativeInfinity, S.Infinity):\n+                if lower == S.NegativeInfinity and upper == S.Infinity:\n                     return 'Integrate[%s, {%s, -Infinity, Infinity}]' % (\n                         self._print(expr.function),\n                         self._print(var)\n@@ -67,6 +76,19 @@\n         # Fallback for multiple limits or other cases\n         return 'Integrate[%s, %s]' % (self._print(expr.function), ', '.join(self._print(l) for l in expr.limits))\n \n+    def _print_Sum(self, expr):\n+        if len(expr.limits) == 1:\n+            limit = expr.limits[0]\n+            if len(limit) == 3:\n+                var, lower, upper = limit\n+                return 'Sum[%s, {%s, %s, %s}]' % (\n+                    self._print(expr.function),\n+                    self._print(var),\n+                    self._print(lower),\n+                    self._print(upper)\n+                )\n+        return 'Sum[%s]' % self._print(expr.function)\n+\n def mathematica_code(expr, **settings):\n     \"\"\"\n     Converts an expr to a string of Mathematica code\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T03:55:59.894219+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 481,
+      "output_tokens": 463,
+      "latency_ms": 9500
+    },
+    {
+      "timestamp": "2026-02-14T03:57:05.508758+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 6036,
+      "output_tokens": 6494,
+      "latency_ms": 65613
+    },
+    {
+      "timestamp": "2026-02-14T03:57:15.271641+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3651,
+      "output_tokens": 451,
+      "latency_ms": 9761
+    },
+    {
+      "timestamp": "2026-02-14T03:57:45.579874+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1245,
+      "output_tokens": 2551,
+      "latency_ms": 30307
+    },
+    {
+      "timestamp": "2026-02-14T03:57:57.174502+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2979,
+      "output_tokens": 544,
+      "latency_ms": 11593
+    },
+    {
+      "timestamp": "2026-02-14T03:58:27.898747+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 4330,
+      "output_tokens": 2768,
+      "latency_ms": 30723
+    },
+    {
+      "timestamp": "2026-02-14T03:58:40.671947+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1791,
+      "output_tokens": 527,
+      "latency_ms": 12772
+    }
+  ],
+  "blackboard_final_state": null
+}

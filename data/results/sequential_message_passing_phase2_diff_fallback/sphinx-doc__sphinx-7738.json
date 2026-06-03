@@ -1,0 +1,100 @@
+{
+  "experiment_id": "seq_message_passing_sphinx-doc__sphinx-7738_d5aecffd",
+  "issue_id": "sphinx-doc__sphinx-7738",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 7388,
+  "total_output_tokens": 3443,
+  "total_latency_ms": 90877,
+  "final_patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -24,6 +24,7 @@\n     RawSQL,\n     Ref,\n     StartsWithCols,\n+    Subquery,\n     Value,\n )\n from django.db.models.sql.constants import INNER, LOUTER, SINGLE\n@@ -149,7 +150,12 @@\n                 if expr in ref_sources:\n                     continue\n                 expressions.append(expr)\n+                # Subquery expressions should not be added to SELECT when used in GROUP BY\n+                # as they are self-contained and don't need to be in the result set.\n+                # See issue #XXXXX for details.\n+                if isinstance(expr, (Subquery,)):\n+                    continue\n                 cols = expr.get_group_by_cols()\n                 for col in cols:\n                     if col not in ref_sources:\n",
+  "apply_method": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T23:09:41.421031+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 754,
+      "output_tokens": 661,
+      "latency_ms": 12971
+    },
+    {
+      "timestamp": "2026-02-22T23:09:56.626180+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 446,
+      "output_tokens": 195,
+      "latency_ms": 5269
+    },
+    {
+      "timestamp": "2026-02-22T23:10:17.278952+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3167,
+      "output_tokens": 1371,
+      "latency_ms": 20651
+    },
+    {
+      "timestamp": "2026-02-22T23:10:27.076499+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 691,
+      "output_tokens": 393,
+      "latency_ms": 9796
+    },
+    {
+      "timestamp": "2026-02-22T23:10:34.013092+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1103,
+      "output_tokens": 391,
+      "latency_ms": 6935
+    },
+    {
+      "timestamp": "2026-02-22T23:10:40.725868+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 819,
+      "output_tokens": 316,
+      "latency_ms": 6711
+    },
+    {
+      "timestamp": "2026-02-22T23:10:59.324336+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 116,
+      "latency_ms": 2502
+    }
+  ],
+  "blackboard_final_state": null
+}

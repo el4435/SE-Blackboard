@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-12481_13b7d768",
+  "issue_id": "sympy__sympy-12481",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 10303,
+  "total_output_tokens": 4945,
+  "total_latency_ms": 109771,
+  "final_patch": "--- a/sympy/combinatorics/permutations.py\n+++ b/sympy/combinatorics/permutations.py\n@@ -903,7 +903,7 @@\n \n         Examples\n         ========\n-        #a)\n+        # a)\n         >>> from sympy.combinatorics.permutations import Permutation\n         >>> Permutation.print_cyclic = False\n         >>> p = Permutation([2,3,1,0])\n@@ -914,7 +914,7 @@\n         >>> p.list()\n         [2, 3, 1, 0]\n \n-        #b)\n+        # b)\n         >>> Permutation.print_cyclic = True\n         >>> p = Permutation([2,3,1,0])\n         >>> p\n@@ -980,6 +980,18 @@\n                 raise ValueError('Permutation argument must be a list of ints, '\n                                  'a list of lists, Permutation or Cycle.')\n \n+        # Validate that all elements are non-negative integers\n+        if is_cycle:\n+            for cycle in args:\n+                for element in cycle:\n+                    if not isinstance(element, int) or element < 0:\n+                        raise ValueError('Cycle elements must be non-negative integers.')\n+        else:\n+            for a in args:\n+                for element in a:\n+                    if not isinstance(element, int) or element < 0:\n+                        raise ValueError('Permutation elements must be non-negative integers.')\n+\n         # if there are n elements present, 0, 1, ..., n-1 should be present\n         # unless a cycle notation has been provided. A 0 will be added\n         # for convenience in case one wants to enter permutations where\n@@ -987,9 +999,15 @@\n \n         if is_cycle:\n             # it's not necessarily canonical so we won't store\n-            # it -- use the array form instead\n+            # it -- use the array form instead.\n+            # Filter out empty cycles\n+            args = [c for c in args if c]\n+            if args:\n+                size = max(size, max(max(c) for c in args) + 1)\n+            else:\n+                size = size or 0\n             temp = list(range(size))\n             for c in args:\n-                c = list(c)\n+                c = list(c)  # ensure c is a list\n                 if len(c) > 1:\n                     first = c[0]\n@@ -997,7 +1015,7 @@\n                         # Apply cycle: i -> c[j+1], last -> first\n                         if j == len(c) - 1:\n                             i_new = first\n                         else:\n                             i_new = c[j + 1]\n-                        temp[result[i]] = result[i_new]\n+                        result[temp[i]] = temp[i_new]\n             aform = temp\n         else:\n             aform = list(args[0])\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:11:34.393835+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 536,
+      "output_tokens": 613,
+      "latency_ms": 11366
+    },
+    {
+      "timestamp": "2026-02-16T18:11:47.748729+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3406,
+      "output_tokens": 966,
+      "latency_ms": 13339
+    },
+    {
+      "timestamp": "2026-02-16T18:11:59.637939+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 885,
+      "output_tokens": 486,
+      "latency_ms": 11888
+    },
+    {
+      "timestamp": "2026-02-16T18:12:13.492953+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1196,
+      "output_tokens": 849,
+      "latency_ms": 13854
+    },
+    {
+      "timestamp": "2026-02-16T18:12:25.913642+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1277,
+      "output_tokens": 503,
+      "latency_ms": 12419
+    },
+    {
+      "timestamp": "2026-02-16T18:12:42.594092+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1213,
+      "output_tokens": 954,
+      "latency_ms": 16679
+    },
+    {
+      "timestamp": "2026-02-16T18:12:53.658658+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1382,
+      "output_tokens": 453,
+      "latency_ms": 11063
+    },
+    {
+      "timestamp": "2026-02-16T18:13:12.797903+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3243
+    }
+  ],
+  "blackboard_final_state": null
+}

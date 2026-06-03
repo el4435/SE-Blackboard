@@ -38,7 +38,10 @@ class LLMClient:
         self._client = anthropic.AsyncAnthropic()  # reads ANTHROPIC_API_KEY from env
         self.cumulative_input_tokens: int = 0
         self.cumulative_output_tokens: int = 0
+
+    # ------------------------------------------------------------------
     # Core call
+    # ------------------------------------------------------------------
 
     async def call(
         self,
@@ -82,7 +85,10 @@ class LLMClient:
                 await asyncio.sleep(wait)
 
         raise RuntimeError(f"LLM call failed after {max_retries} attempts: {last_error}")
+
+    # ------------------------------------------------------------------
     # Structured output
+    # ------------------------------------------------------------------
 
     async def call_structured(
         self,
@@ -119,7 +125,10 @@ class LLMClient:
             return parsed, in_tok, out_tok
 
         raise ValueError(f"Failed to parse LLM output into {response_model.__name__} after correction retry.")
+
+    # ------------------------------------------------------------------
     # Helpers
+    # ------------------------------------------------------------------
 
     @staticmethod
     def _try_parse(text: str, model: type[T]) -> T | None:
@@ -134,7 +143,10 @@ class LLMClient:
             return model.model_validate_json(cleaned)
         except Exception:
             return None
+
+    # ------------------------------------------------------------------
     # Tool-use call
+    # ------------------------------------------------------------------
 
     async def call_with_tools(
         self,

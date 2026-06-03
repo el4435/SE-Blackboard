@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-16229_bbb062e1",
+  "issue_id": "django__django-16229",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 46902,
+  "total_output_tokens": 4842,
+  "total_latency_ms": 110901,
+  "final_patch": "--- a/django/contrib/postgres/forms/array.py\n+++ b/django/contrib/postgres/forms/array.py\n@@ -1,6 +1,7 @@\n import copy\n from itertools import chain\n \n+from django.db.models.fields import NOT_PROVIDED\n from django import forms\n from django.contrib.postgres.validators import (\n     ArrayMaxLengthValidator,\n@@ -145,10 +146,19 @@\n     def formfield(self, **kwargs):\n-        from django.db.models.fields import NOT_PROVIDED\n-\n-        if hasattr(self, \"default\") and callable(self.default):\n-            if \"initial\" not in kwargs:\n-                kwargs[\"initial\"] = self.default()\n+        # Handle callable defaults for show_hidden_initial to work correctly.\n+        # Callable defaults need to be evaluated at form instantiation time,\n+        # not at field definition time.\n+        if \"initial\" not in kwargs:\n+            if self.default is not NOT_PROVIDED:\n+                if callable(self.default):\n+                    try:\n+                        kwargs[\"initial\"] = self.default()\n+                    except Exception:\n+                        # If the callable raises an exception, let the field\n+                        # use its normal default behavior\n+                        pass\n+                else:\n+                    kwargs[\"initial\"] = self.default\n         return super().formfield(\n             **{\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:53:45.990696+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 801,
+      "output_tokens": 868,
+      "latency_ms": 18924
+    },
+    {
+      "timestamp": "2026-02-16T17:53:58.931157+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 14437,
+      "output_tokens": 798,
+      "latency_ms": 12204
+    },
+    {
+      "timestamp": "2026-02-16T17:54:09.502326+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 752,
+      "output_tokens": 404,
+      "latency_ms": 10570
+    },
+    {
+      "timestamp": "2026-02-16T17:54:24.562804+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 14363,
+      "output_tokens": 865,
+      "latency_ms": 15059
+    },
+    {
+      "timestamp": "2026-02-16T17:54:33.737142+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 761,
+      "output_tokens": 384,
+      "latency_ms": 9173
+    },
+    {
+      "timestamp": "2026-02-16T17:54:48.721160+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 14501,
+      "output_tokens": 1017,
+      "latency_ms": 14983
+    },
+    {
+      "timestamp": "2026-02-16T17:54:58.682554+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 879,
+      "output_tokens": 385,
+      "latency_ms": 9960
+    },
+    {
+      "timestamp": "2026-02-16T17:55:17.966356+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3255
+    }
+  ],
+  "blackboard_final_state": null
+}

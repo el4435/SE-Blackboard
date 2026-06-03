@@ -1,0 +1,51 @@
+{
+  "experiment_id": "seq_message_passing_pytest-dev__pytest-11143_4e060e89",
+  "issue_id": "pytest-dev__pytest-11143",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 4609,
+  "total_output_tokens": 1227,
+  "total_latency_ms": 44717,
+  "final_patch": "--- a/src/_pytest/assertion/rewrite.py\n+++ b/src/_pytest/assertion/rewrite.py\n@@ -757,7 +757,7 @@\n \n     def is_rewrite_disabled(self, docstring):\n-        return \"PYTEST_DONT_REWRITE\" in docstring\n+        return isinstance(docstring, str) and \"PYTEST_DONT_REWRITE\" in docstring\n \n     def variable(self):\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:43:36.385561+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 2611,
+      "output_tokens": 628,
+      "latency_ms": 11392
+    },
+    {
+      "timestamp": "2026-02-16T17:43:40.453056+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1339,
+      "output_tokens": 231,
+      "latency_ms": 4051
+    },
+    {
+      "timestamp": "2026-02-16T17:43:48.172840+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 659,
+      "output_tokens": 368,
+      "latency_ms": 7718
+    }
+  ],
+  "blackboard_final_state": null
+}

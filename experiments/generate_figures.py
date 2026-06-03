@@ -1,4 +1,4 @@
-"""Generate paper figures for SE-Blackboard.
+"""Day 6 — Generate paper figures for SE-Blackboard.
 
 Generates Figures 1-7 as PDF and PNG.
 """
@@ -23,7 +23,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 FIGURES_DIR = PROJECT_ROOT / "figures"
 FIGURES_DIR.mkdir(exist_ok=True)
 
-# Style
+# ── Style ────────────────────────────────────────────────────────────
 matplotlib.rcParams["font.family"] = "serif"
 matplotlib.rcParams["font.size"] = 11
 matplotlib.rcParams["axes.labelsize"] = 12
@@ -48,7 +48,7 @@ LEGEND_LABELS = {
 }
 
 
-# Data Loading
+# ── Data Loading ─────────────────────────────────────────────────────
 
 def load_results(config_dir: str) -> list[dict]:
     results = []
@@ -85,7 +85,7 @@ n_bb = sum(1 for i in all_issues if bb_by_id[i].get("resolved", False))
 n_hy = sum(1 for i in all_issues if hy_by_id[i].get("resolved", False))
 
 
-# Figure 1: Resolve Rate Bar Chart
+# ── Figure 1: Resolve Rate Bar Chart ────────────────────────────────
 
 def fig1_resolve_rate():
     fig, ax = plt.subplots(figsize=(6, 4))
@@ -120,7 +120,7 @@ def fig1_resolve_rate():
     print("  Fig 1: Resolve Rate - DONE")
 
 
-# Figure 2: Difficulty Breakdown
+# ── Figure 2: Difficulty Breakdown ───────────────────────────────────
 
 def fig2_difficulty_breakdown():
     """Group issues by repository as proxy for difficulty."""
@@ -177,7 +177,7 @@ def fig2_difficulty_breakdown():
     print("  Fig 2: Difficulty Breakdown - DONE")
 
 
-# Figure 3: IFS Analysis (dual subplot)
+# ── Figure 3: IFS Analysis (dual subplot) ───────────────────────────
 
 def fig3_ifs_analysis():
     ifs_summary = json.loads((data_root / "ifs" / "ifs_summary_real.json").read_text(encoding="utf-8"))
@@ -237,7 +237,7 @@ def fig3_ifs_analysis():
     print("  Fig 3: IFS Analysis - DONE")
 
 
-# Figure 4: Failure Mode Distribution
+# ── Figure 4: Failure Mode Distribution ──────────────────────────────
 
 def fig4_failure_analysis():
     failure_data = json.loads(
@@ -289,7 +289,7 @@ def fig4_failure_analysis():
     print("  Fig 4: Failure Analysis - DONE")
 
 
-# Figure 5: Cost-Efficiency
+# ── Figure 5: Cost-Efficiency ────────────────────────────────────────
 
 def fig5_cost_efficiency():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
@@ -336,7 +336,7 @@ def fig5_cost_efficiency():
     print("  Fig 5: Cost Efficiency - DONE")
 
 
-# Figure 6: Overlap Diagram
+# ── Figure 6: Overlap Diagram ────────────────────────────────────────
 
 def fig6_overlap():
     mp_set = {i for i in all_issues if mp_by_id[i].get("resolved", False)}
@@ -390,7 +390,7 @@ def fig6_overlap():
     print("  Fig 6: Overlap - DONE")
 
 
-# Figure 7: Case Study (django-13028)
+# ── Figure 7: Case Study (django-13028) ─────────────────────────────
 
 def fig7_case_study():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
@@ -464,7 +464,7 @@ def fig7_case_study():
     print("  Fig 7: Case Study - DONE")
 
 
-# Fig 8: Information Flow Bottleneck Model
+# ── Fig 8: Information Flow Bottleneck Model ────────────────────────
 
 def fig8_bottleneck_model():
     """Horizontal flow diagram showing BB vs MP performance at each pipeline stage."""
@@ -555,7 +555,7 @@ def fig8_bottleneck_model():
     print("  Fig 8: Bottleneck Model - DONE")
 
 
-# Fig 9: File Targeting Rate
+# ── Fig 9: File Targeting Rate ──────────────────────────────────────
 
 def fig9_file_targeting():
     """Bar chart comparing correct file targeting rates across modes."""
@@ -595,7 +595,7 @@ def fig9_file_targeting():
     print("  Fig 9: File Targeting - DONE")
 
 
-# Main
+# ── Main ─────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     print("Generating figures...")

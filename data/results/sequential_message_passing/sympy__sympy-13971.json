@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-13971_f074c869",
+  "issue_id": "sympy__sympy-13971",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 7249,
+  "total_output_tokens": 2545,
+  "total_latency_ms": 86024,
+  "final_patch": "--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -197,7 +197,10 @@\n     def _getobj(self):\n         \"\"\"Gets the underlying Python object. May be overwritten by subclasses.\"\"\"\n         # TODO: Improve the type of `parent.obj` so that assert/ignore aren't needed.\n-        return getattr(self.parent.obj, self.originalname)  # type: ignore[attr-defined]\n+        # Use originalname if set, otherwise fall back to name.\n+        # originalname may be None when using parametrize decorator.\n+        name = self.originalname if self.originalname is not None else self.name\n+        return getattr(self.parent.obj, name)  # type: ignore[attr-defined]\n \n     @property\n     def obj(self):\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:39:08.754530+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13971",
+      "issue_id": "sympy__sympy-13971",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 610,
+      "output_tokens": 591,
+      "latency_ms": 11424
+    },
+    {
+      "timestamp": "2026-02-16T17:39:26.934538+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13971",
+      "issue_id": "sympy__sympy-13971",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 446,
+      "output_tokens": 206,
+      "latency_ms": 5952
+    },
+    {
+      "timestamp": "2026-02-16T17:39:34.987470+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13971",
+      "issue_id": "sympy__sympy-13971",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2278,
+      "output_tokens": 348,
+      "latency_ms": 8052
+    },
+    {
+      "timestamp": "2026-02-16T17:39:40.043906+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13971",
+      "issue_id": "sympy__sympy-13971",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 970,
+      "output_tokens": 247,
+      "latency_ms": 5056
+    },
+    {
+      "timestamp": "2026-02-16T17:39:48.561473+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13971",
+      "issue_id": "sympy__sympy-13971",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 675,
+      "output_tokens": 353,
+      "latency_ms": 8516
+    },
+    {
+      "timestamp": "2026-02-16T17:39:55.963625+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13971",
+      "issue_id": "sympy__sympy-13971",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1063,
+      "output_tokens": 371,
+      "latency_ms": 7401
+    },
+    {
+      "timestamp": "2026-02-16T17:40:04.061011+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13971",
+      "issue_id": "sympy__sympy-13971",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 799,
+      "output_tokens": 308,
+      "latency_ms": 8096
+    },
+    {
+      "timestamp": "2026-02-16T17:40:23.353142+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13971",
+      "issue_id": "sympy__sympy-13971",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3360
+    }
+  ],
+  "blackboard_final_state": null
+}

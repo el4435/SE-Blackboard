@@ -1,0 +1,135 @@
+{
+  "experiment_id": "deb_blackboard_django__django-12908_d2f3201e",
+  "issue_id": "django__django-12908",
+  "topology": "debate",
+  "communication": "blackboard",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 9048,
+  "total_output_tokens": 2190,
+  "total_latency_ms": 38457,
+  "final_patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1090,6 +1090,7 @@\n     def distinct(self, *field_names):\n         \"\"\"\n         Return a new QuerySet instance that will select only distinct results.\n         \"\"\"\n+        self._not_support_combined_queries('distinct')\n         assert not self.query.is_sliced, \\\n             \"Cannot create distinct fields once a slice has been taken.\"\n         clone = self._chain()",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T00:55:48.110958+00:00",
+      "experiment_id": "debate_blackboard_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Deb-B",
+      "agent_role": "Planner",
+      "communication_mode": "blackboard",
+      "iteration": 0,
+      "input_tokens": 3389,
+      "output_tokens": 1580,
+      "latency_ms": 25357
+    },
+    {
+      "timestamp": "2026-02-15T00:55:52.870819+00:00",
+      "experiment_id": "debate_blackboard_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 1788,
+      "output_tokens": 241,
+      "latency_ms": 4758
+    },
+    {
+      "timestamp": "2026-02-15T00:55:57.733135+00:00",
+      "experiment_id": "debate_blackboard_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 1788,
+      "output_tokens": 241,
+      "latency_ms": 4861
+    },
+    {
+      "timestamp": "2026-02-15T00:56:01.209349+00:00",
+      "experiment_id": "debate_blackboard_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 2083,
+      "output_tokens": 128,
+      "latency_ms": 3474
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-12908",
+      "problem_statement": "Union queryset should raise on distinct().\nDescription\n\t \n\t\t(last modified by Sielc Technologies)\n\t \nAfter using\n.annotate() on 2 different querysets\nand then .union()\n.distinct() will not affect the queryset\n\tdef setUp(self) -> None:\n\t\tuser = self.get_or_create_admin_user()\n\t\tSample.h.create(user, name=\"Sam1\")\n\t\tSample.h.create(user, name=\"Sam2 acid\")\n\t\tSample.h.create(user, name=\"Sam3\")\n\t\tSample.h.create(user, name=\"Sam4 acid\")\n\t\tSample.h.create(user, name=\"Dub\")\n\t\tSample.h.create(user, name=\"Dub\")\n\t\tSample.h.create(user, name=\"Dub\")\n\t\tself.user = user\n\tdef test_union_annotated_diff_distinct(self):\n\t\tqs = Sample.objects.filter(user=self.user)\n\t\tqs1 = qs.filter(name='Dub').annotate(rank=Value(0, IntegerField()))\n\t\tqs2 = qs.filter(name='Sam1').annotate(rank=Value(1, IntegerField()))\n\t\tqs = qs1.union(qs2)\n\t\tqs = qs.order_by('name').distinct('name') # THIS DISTINCT DOESN'T WORK\n\t\tself.assertEqual(qs.count(), 2)\nexpected to get wrapped union\n\tSELECT DISTINCT ON (siebox_sample.name) * FROM (SELECT ... UNION SELECT ...) AS siebox_sample\n",
+      "repo": "django/django",
+      "base_commit": "49ae7ce50a874f8a04cd910882fb9571ff3a0d7a",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "Django's ORM allows calling distinct() on union querysets but it doesn't work correctly because DISTINCT cannot be directly applied to UNION queries without wrapping them in a subquery. Instead of silently failing or producing incorrect results, Django should raise a NotSupportedError to inform users that distinct() is not supported on combined querysets (union/intersection/difference).",
+      "relevant_files": [
+        "django/db/models/query.py",
+        "django/db/models/sql/query.py"
+      ],
+      "relevant_functions": [
+        "QuerySet.distinct",
+        "QuerySet.union",
+        "QuerySet._not_support_combined_queries",
+        "Query.distinct"
+      ],
+      "fix_strategy": "1. Locate the QuerySet.distinct() method in django/db/models/query.py\n2. Add a check at the beginning of the distinct() method to determine if the queryset is a combined query (has union/intersection/difference applied)\n3. If it is a combined query, raise NotSupportedError with a message like 'Calling distinct() after union(), intersection(), or difference() is not supported.'\n4. This should use the existing _not_support_combined_queries() helper method or similar pattern that Django uses for other unsupported operations on combined queries\n5. Add test cases in the appropriate test file (likely tests/queries/tests.py or tests/queries/test_union.py) to verify that:\n   - distinct() raises NotSupportedError on union querysets\n   - distinct() raises NotSupportedError on intersection querysets\n   - distinct() raises NotSupportedError on difference querysets\n   - distinct() with field parameters also raises the error\n6. Ensure the error message is clear and helpful to developers",
+      "confidence": 0.9,
+      "relevant_code": "## Source Code Context\n\n## File: django/db/models/query.py\n```python\n# Mock content for django/db/models/query.py\n# This is a placeholder.\n\n```\n\n## File: django/db/models/sql/query.py\n```python\n# Mock content for django/db/models/sql/query.py\n# This is a placeholder.\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder_A",
+        "diff": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1090,6 +1090,7 @@\n     def distinct(self, *field_names):\n         \"\"\"\n         Return a new QuerySet instance that will select only distinct results.\n         \"\"\"\n+        self._not_support_combined_queries('distinct')\n         assert not self.query.is_sliced, \\\n             \"Cannot create distinct fields once a slice has been taken.\"\n         clone = self._chain()",
+        "description": "Add check to raise NotSupportedError when distinct() is called on combined querysets (union/intersection/difference). This prevents silent failures where distinct() has no effect on union queries.",
+        "timestamp": "2026-02-15T00:55:52.871263Z"
+      },
+      {
+        "version": 1,
+        "author": "Coder_B",
+        "diff": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1090,6 +1090,7 @@\n     def distinct(self, *field_names):\n         \"\"\"\n         Return a new QuerySet instance that will select only distinct results.\n         \"\"\"\n+        self._not_support_combined_queries('distinct')\n         assert not self.query.is_sliced, \\\n             \"Cannot create distinct fields once a slice has been taken.\"\n         clone = self._chain()",
+        "description": "Add check to raise NotSupportedError when distinct() is called on combined querysets (union/intersection/difference). This prevents silent failures where distinct() has no effect on union queries.",
+        "timestamp": "2026-02-15T00:55:57.733762Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider adding comprehensive test cases to verify the fix works for union(), intersection(), and difference() querysets",
+          "Verify that the error message from _not_support_combined_queries('distinct') is clear and helpful to developers",
+          "Consider adding documentation or release notes mentioning this breaking change, as code that previously silently failed will now raise an exception"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 1,
+        "passed": true,
+        "pass_count": 42,
+        "fail_count": 0,
+        "failing_tests": [],
+        "error_traces": []
+      }
+    ],
+    "metadata": {
+      "status": "resolved",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-15T00:55:22.752949Z",
+      "end_time": null
+    }
+  }
+}

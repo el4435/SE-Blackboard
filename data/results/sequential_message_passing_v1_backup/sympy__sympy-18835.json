@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-18835_da772fa1",
+  "issue_id": "sympy__sympy-18835",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 6733,
+  "total_output_tokens": 2989,
+  "total_latency_ms": 64977,
+  "final_patch": "--- a/sympy/utilities/iterables.py\n+++ b/sympy/utilities/iterables.py\n@@ -1,6 +1,7 @@\n from __future__ import print_function, division\n \n from collections import defaultdict, deque\n+from collections.abc import MutableSequence\n from itertools import (\n     combinations, combinations_with_replacement, permutations,\n     product, islice, chain\n@@ -1750,6 +1751,11 @@ def multiset_partitions(multiset, m=None):\n     [[[0, 0], [1]], [[0], [0], [1]], [[0], [0, 1]], [[0, 1], [0]]]\n \n     \"\"\"\n+    # Create a snapshot of the input sequence to prevent issues when the\n+    # original sequence is modified during iteration (GitHub issue #18393)\n+    if isinstance(multiset, (list, MutableSequence)):\n+        multiset = list(multiset)\n+\n     # This function is called repeatedly for a given multiset, so we\n     # do some pre-processing which will be cached.\n     if type(multiset) is not dict:\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T04:46:51.542108+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-18835",
+      "issue_id": "sympy__sympy-18835",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 648,
+      "output_tokens": 366,
+      "latency_ms": 7874
+    },
+    {
+      "timestamp": "2026-02-14T04:46:59.727620+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-18835",
+      "issue_id": "sympy__sympy-18835",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1114,
+      "output_tokens": 410,
+      "latency_ms": 8184
+    },
+    {
+      "timestamp": "2026-02-14T04:47:08.073066+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-18835",
+      "issue_id": "sympy__sympy-18835",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 838,
+      "output_tokens": 354,
+      "latency_ms": 8344
+    },
+    {
+      "timestamp": "2026-02-14T04:47:20.135897+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-18835",
+      "issue_id": "sympy__sympy-18835",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1101,
+      "output_tokens": 613,
+      "latency_ms": 12061
+    },
+    {
+      "timestamp": "2026-02-14T04:47:29.825713+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-18835",
+      "issue_id": "sympy__sympy-18835",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1041,
+      "output_tokens": 382,
+      "latency_ms": 9688
+    },
+    {
+      "timestamp": "2026-02-14T04:47:38.830687+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-18835",
+      "issue_id": "sympy__sympy-18835",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1129,
+      "output_tokens": 434,
+      "latency_ms": 9004
+    },
+    {
+      "timestamp": "2026-02-14T04:47:48.643607+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-18835",
+      "issue_id": "sympy__sympy-18835",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 862,
+      "output_tokens": 430,
+      "latency_ms": 9812
+    }
+  ],
+  "blackboard_final_state": null
+}

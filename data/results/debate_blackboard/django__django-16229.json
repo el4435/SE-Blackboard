@@ -1,0 +1,138 @@
+{
+  "experiment_id": "deb_blackboard_django__django-16229_f7b3ec18",
+  "issue_id": "django__django-16229",
+  "topology": "debate",
+  "communication": "blackboard",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 13096,
+  "total_output_tokens": 3421,
+  "total_latency_ms": 59910,
+  "final_patch": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -290,6 +290,16 @@\n             if formfield:\n                 if set_initial:\n                     formfield.initial = initial_value\n+                # Disable show_hidden_initial for fields with callable defaults\n+                # to prevent incorrect change detection on form resubmission\n+                if (\n+                    hasattr(formfield, 'show_hidden_initial') and\n+                    formfield.show_hidden_initial and\n+                    hasattr(field, 'default') and\n+                    field.default is not NOT_PROVIDED and\n+                    callable(field.default)\n+                ):\n+                    formfield.show_hidden_initial = False\n                 form_fields[name] = formfield\n         return form_fields\n \n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T01:38:32.235087+00:00",
+      "experiment_id": "debate_blackboard_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Deb-B",
+      "agent_role": "Planner",
+      "communication_mode": "blackboard",
+      "iteration": 0,
+      "input_tokens": 3550,
+      "output_tokens": 1846,
+      "latency_ms": 30191
+    },
+    {
+      "timestamp": "2026-02-15T01:38:37.877493+00:00",
+      "experiment_id": "debate_blackboard_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 1888,
+      "output_tokens": 350,
+      "latency_ms": 5641
+    },
+    {
+      "timestamp": "2026-02-15T01:38:45.853874+00:00",
+      "experiment_id": "debate_blackboard_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 1888,
+      "output_tokens": 407,
+      "latency_ms": 7975
+    },
+    {
+      "timestamp": "2026-02-15T01:39:01.952348+00:00",
+      "experiment_id": "debate_blackboard_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 5770,
+      "output_tokens": 818,
+      "latency_ms": 16097
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-16229",
+      "problem_statement": "ModelForm fields with callable defaults don't correctly propagate default values\nDescription\n\t\nWhen creating an object via the admin, if an inline contains an ArrayField in error, the validation will be bypassed (and the inline dismissed) if we submit the form a second time (without modification).\ngo to /admin/my_app/thing/add/\ntype anything in plop\nsubmit -> it shows an error on the inline\nsubmit again -> no errors, plop become unfilled\n# models.py\nclass Thing(models.Model):\n\tpass\nclass RelatedModel(models.Model):\n\tthing = models.ForeignKey(Thing, on_delete=models.CASCADE)\n\tplop = ArrayField(\n\t\tmodels.CharField(max_length=42),\n\t\tdefault=list,\n\t)\n# admin.py\nclass RelatedModelForm(forms.ModelForm):\n\tdef clean(self):\n\t\traise ValidationError(\"whatever\")\nclass RelatedModelInline(admin.TabularInline):\n\tform = RelatedModelForm\n\tmodel = RelatedModel\n\textra = 1\n@admin.register(Thing)\nclass ThingAdmin(admin.ModelAdmin):\n\tinlines = [\n\t\tRelatedModelInline\n\t]\nIt seems related to the hidden input containing the initial value:\n<input type=\"hidden\" name=\"initial-relatedmodel_set-0-plop\" value=\"test\" id=\"initial-relatedmodel_set-0-id_relatedmodel_set-0-plop\">\nI can fix the issue locally by forcing show_hidden_initial=False on the field (in the form init)\n",
+      "repo": "django/django",
+      "base_commit": "04b15022e8d1f49af69d8a1e6cd678f31f1280ff",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "When a ModelForm field has a callable default (like default=list for ArrayField), Django creates a hidden input to track initial values. On resubmission after validation errors, the hidden initial value comparison incorrectly treats the field as unchanged because callable defaults create new instances each time. This causes the field to be reset to its initial state, bypassing validation and clearing user input.",
+      "relevant_files": [
+        "django/forms/models.py",
+        "django/forms/fields.py",
+        "django/forms/boundfield.py",
+        "django/contrib/postgres/forms/array.py"
+      ],
+      "relevant_functions": [
+        "django.forms.models.model_to_dict",
+        "django.forms.models.BaseModelForm.__init__",
+        "django.forms.fields.Field.has_changed",
+        "django.forms.boundfield.BoundField.as_hidden",
+        "django.contrib.postgres.forms.array.SimpleArrayField"
+      ],
+      "fix_strategy": "1. Modify BaseModelForm.__init__() in django/forms/models.py to detect when a model field has a callable default.\n2. For fields with callable defaults, automatically set show_hidden_initial=False on the corresponding form field to prevent creation of hidden initial value inputs.\n3. Add a check in the form field initialization that inspects the model field's default attribute using callable() to determine if it's a callable.\n4. Ensure this logic works correctly with ArrayField and other fields that commonly use callable defaults like list, dict, set.\n5. Add regression tests that verify fields with callable defaults don't create hidden initial inputs and properly handle validation errors on resubmission.\n6. Test specifically with admin inlines to ensure the fix resolves the reported issue.",
+      "confidence": 0.85,
+      "relevant_code": "## Source Code Context\n\n## File: django/forms/models.py\n```python\n# Mock content for django/forms/models.py\n# This is a placeholder.\n\n```\n\n## File: django/forms/fields.py\n```python\n# Mock content for django/forms/fields.py\n# This is a placeholder.\n\n```\n\n## File: django/forms/boundfield.py\n```python\n# Mock content for django/forms/boundfield.py\n# This is a placeholder.\n\n```\n\n## File: django/contrib/postgres/forms/array.py\n```python\n# Mock content for django/contrib/postgres/forms/array.py\n# This is a placeholder.\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder_A",
+        "diff": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -290,6 +290,16 @@\n             if formfield:\n                 if set_initial:\n                     formfield.initial = initial_value\n+                # Disable show_hidden_initial for fields with callable defaults\n+                # to prevent incorrect change detection on form resubmission\n+                if (\n+                    hasattr(formfield, 'show_hidden_initial') and\n+                    formfield.show_hidden_initial and\n+                    hasattr(field, 'default') and\n+                    field.default is not NOT_PROVIDED and\n+                    callable(field.default)\n+                ):\n+                    formfield.show_hidden_initial = False\n                 form_fields[name] = formfield\n         return form_fields\n \n",
+        "description": "Fix ModelForm fields with callable defaults to not use hidden initial inputs. This prevents incorrect change detection when forms are resubmitted after validation errors. The fix detects when a model field has a callable default (like default=list for ArrayField) and automatically sets show_hidden_initial=False on the corresponding form field.",
+        "timestamp": "2026-02-15T01:38:37.877797Z"
+      },
+      {
+        "version": 1,
+        "author": "Coder_B",
+        "diff": "--- a/django/forms/models.py\n+++ b/django/forms/models.py\n@@ -290,6 +290,16 @@\n             if formfield:\n                 if fields is not None and f.name not in fields:\n                     continue\n+                # Check if the model field has a callable default\n+                # If so, disable show_hidden_initial to prevent issues with\n+                # hidden initial value tracking on form resubmission\n+                if hasattr(f, 'default') and f.default is not NOT_PROVIDED:\n+                    if callable(f.default):\n+                        # Only set if not already explicitly set\n+                        if 'show_hidden_initial' not in formfield.widget.attrs:\n+                            formfield.show_hidden_initial = False\n+                    elif hasattr(f.default, '__call__'):\n+                        formfield.show_hidden_initial = False\n                 form_field_names.append(f.name)\n                 if apply_limit_choices_to:\n                     apply_limit_choices_to_to_formfield(formfield)\n",
+        "description": "Fix ModelForm fields with callable defaults to not create hidden initial inputs. This prevents validation bypass issues when forms with callable defaults (like ArrayField with default=list) are resubmitted after validation errors. The fix detects callable defaults on model fields and automatically sets show_hidden_initial=False on the corresponding form fields.",
+        "timestamp": "2026-02-15T01:38:45.854320Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider adding a comment explaining why callable defaults need show_hidden_initial=False to help future maintainers understand the fix",
+          "Add test cases to verify the fix works with various callable defaults (list, dict, set, custom callables)",
+          "Verify the fix works specifically with admin inlines as described in the issue"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 1,
+        "passed": true,
+        "pass_count": 42,
+        "fail_count": 0,
+        "failing_tests": [],
+        "error_traces": []
+      }
+    ],
+    "metadata": {
+      "status": "resolved",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-15T01:38:02.043026Z",
+      "end_time": null
+    }
+  }
+}

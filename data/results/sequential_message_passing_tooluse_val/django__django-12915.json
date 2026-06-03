@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_django__django-12915_c1a0f830",
+  "issue_id": "django__django-12915",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 3,
+  "total_input_tokens": 200050,
+  "total_output_tokens": 8180,
+  "total_latency_ms": 182119,
+  "final_patch": "--- a/django/contrib/staticfiles/handlers.py\n+++ b/django/contrib/staticfiles/handlers.py\n@@ -1,6 +1,8 @@\n from urllib.parse import urlparse\n from urllib.request import url2pathname\n \n+from asgiref.sync import sync_to_async\n+\n from django.conf import settings\n from django.contrib.staticfiles import utils\n from django.contrib.staticfiles.views import serve\n@@ -52,7 +54,14 @@\n             return self.serve(request)\n         except Http404 as e:\n             return response_for_exception(request, e)\n+\n+    async def get_response_async(self, request):\n+        \"\"\"Asynchronous version of get_response.\"\"\"\n+        try:\n+            return await sync_to_async(self.serve, thread_sensitive=False)(request)\n+        except Http404 as e:\n+            return await sync_to_async(response_for_exception, thread_sensitive=False)(request, e)\n \n \n class StaticFilesHandler(StaticFilesHandlerMixin, WSGIHandler):\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-20T22:46:21.186406+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12915",
+      "issue_id": "django__django-12915",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 706,
+      "output_tokens": 616,
+      "latency_ms": 10981
+    },
+    {
+      "timestamp": "2026-02-20T22:46:55.970108+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12915",
+      "issue_id": "django__django-12915",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 78700,
+      "output_tokens": 1936,
+      "latency_ms": 34683
+    },
+    {
+      "timestamp": "2026-02-20T22:47:04.501434+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12915",
+      "issue_id": "django__django-12915",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 809,
+      "output_tokens": 359,
+      "latency_ms": 8530
+    },
+    {
+      "timestamp": "2026-02-20T22:47:51.787404+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12915",
+      "issue_id": "django__django-12915",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 55967,
+      "output_tokens": 2400,
+      "latency_ms": 47285
+    },
+    {
+      "timestamp": "2026-02-20T22:48:00.519975+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12915",
+      "issue_id": "django__django-12915",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 874,
+      "output_tokens": 369,
+      "latency_ms": 8731
+    },
+    {
+      "timestamp": "2026-02-20T22:48:42.212994+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12915",
+      "issue_id": "django__django-12915",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 62161,
+      "output_tokens": 2355,
+      "latency_ms": 41692
+    },
+    {
+      "timestamp": "2026-02-20T22:48:46.534807+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12915",
+      "issue_id": "django__django-12915",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 833,
+      "output_tokens": 145,
+      "latency_ms": 4320
+    }
+  ],
+  "blackboard_final_state": null
+}

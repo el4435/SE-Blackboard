@@ -1,0 +1,99 @@
+{
+  "experiment_id": "deb_message_passing_django__django-17051_faf81d28",
+  "issue_id": "django__django-17051",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 2,
+  "total_input_tokens": 17730,
+  "total_output_tokens": 7701,
+  "total_latency_ms": 110162,
+  "final_patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -1,3 +1,3 @@\n-# Mock content for django/db/models/sql/compiler.py\n-# This is a placeholder.\n+class SQLInsertCompiler(SQLCompiler):\n+    def as_sql(self):\n+        # Existing implementation here\n@@ -100,7 +100,7 @@\n         # Determine if we can use RETURNING clause\n-        if self.returning_fields and self.connection.features.can_return_rows_from_bulk_insert:\n+        if self.returning_fields and self.connection.features.can_return_rows_from_bulk_insert and not self.query.ignore_conflicts:\n             # Use RETURNING clause\n             pass\n \n@@ -200,7 +200,7 @@\n     def execute_sql(self, returning_fields=None):\n         # Existing implementation here\n-        if returning_fields and self.connection.features.can_return_rows_from_bulk_insert:\n+        if returning_fields and self.connection.features.can_return_rows_from_bulk_insert and not self.query.ignore_conflicts:\n             # Execute with RETURNING\n             pass\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1,3 +1,3 @@\n-# Mock content for django/db/models/query.py\n-# This is a placeholder.\n+class QuerySet:\n+    def bulk_create(self, objs, batch_size=None, ignore_conflicts=False, update_conflicts=False, update_fields=None, unique_fields=None):\n+        # Existing implementation here\n@@ -500,7 +500,7 @@\n         # Set query flags\n         query.ignore_conflicts = ignore_conflicts\n         query.update_conflicts = update_conflicts\n-        query.can_return_ids = self.connection.features.can_return_rows_from_bulk_insert\n+        query.can_return_ids = self.connection.features.can_return_rows_from_bulk_insert and not ignore_conflicts\n         # Continue with bulk insert\n         pass",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T23:27:56.809068+00:00",
+      "experiment_id": "debate_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 722,
+      "output_tokens": 760,
+      "latency_ms": 14659
+    },
+    {
+      "timestamp": "2026-02-14T23:28:37.161910+00:00",
+      "experiment_id": "debate_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 5420,
+      "output_tokens": 3644,
+      "latency_ms": 40350
+    },
+    {
+      "timestamp": "2026-02-14T23:28:53.076270+00:00",
+      "experiment_id": "debate_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 4393,
+      "output_tokens": 1102,
+      "latency_ms": 15912
+    },
+    {
+      "timestamp": "2026-02-14T23:29:06.840207+00:00",
+      "experiment_id": "debate_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 2427,
+      "output_tokens": 538,
+      "latency_ms": 13762
+    },
+    {
+      "timestamp": "2026-02-14T23:29:17.631031+00:00",
+      "experiment_id": "debate_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1414,
+      "output_tokens": 746,
+      "latency_ms": 10789
+    },
+    {
+      "timestamp": "2026-02-14T23:29:28.463893+00:00",
+      "experiment_id": "debate_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1414,
+      "output_tokens": 746,
+      "latency_ms": 10831
+    },
+    {
+      "timestamp": "2026-02-14T23:29:32.309193+00:00",
+      "experiment_id": "debate_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1940,
+      "output_tokens": 165,
+      "latency_ms": 3844
+    }
+  ],
+  "blackboard_final_state": null
+}

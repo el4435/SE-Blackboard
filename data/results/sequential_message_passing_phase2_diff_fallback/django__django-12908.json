@@ -1,0 +1,112 @@
+{
+  "experiment_id": "seq_message_passing_django__django-12908_3499ef32",
+  "issue_id": "django__django-12908",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 51050,
+  "total_output_tokens": 6965,
+  "total_latency_ms": 133535,
+  "final_patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1041,11 +1041,12 @@\n \n     def annotate(self, *args, **kwargs):\n         \"\"\"Return a query set with added annotations.\"\"\"\n+        self._not_support_combined_queries('annotate')\n         self._validate_values_are_expressions((*args, *kwargs.values()), method_name='annotate')\n         annotations = {}\n         for arg in args:\n             # The default_alias property may raise a TypeError.\n             try:\n                 if arg.default_alias in kwargs:\n                     raise ValueError(\"The named annotation '%s' conflicts with the default name for another annotation.\" % arg.default_alias)\n                 annotations[arg.default_alias] = arg\n@@ -1054,7 +1054,6 @@\n                 raise TypeError(\"Complex annotations require an alias\")\n             annotations[arg.default_alias] = arg\n         annotations.update(kwargs)\n-        self._not_support_combined_queries('annotate')\n \n         clone = self._chain()\n         names = self._fields\n@@ -1127,6 +1126,7 @@\n \n     def distinct(self, *field_names):\n         \"\"\"Return a new QuerySet instance that will select only distinct results.\"\"\"\n+        self._not_support_combined_queries('distinct')\n         assert not self.query.is_sliced, \\\n             \"Cannot create distinct fields once a slice has been taken.\"\n         obj = self._chain()\n@@ -1232,6 +1232,7 @@\n         Essentially, this means that it is going to select related objects\n         from the database.\n         \"\"\"\n+        self._not_support_combined_queries('select_related')\n         if self._fields is not None:\n             raise TypeError(\"Cannot call select_related() after .values() or .values_list()\")\n \n@@ -1251,6 +1252,7 @@\n         Return a new QuerySet instance that will prefetch the specified\n         Many-To-One and Many-To-Many related objects when the QuerySet is\n         evaluated.\n+        self._not_support_combined_queries('prefetch_related')\n \n         When prefetch_related() is called more than once, append to the list of\n         prefetch lookups. If prefetch_related(None) is called, clear the list.\n@@ -1293,6 +1295,7 @@\n         Essentially, this means that it is going to get extra data from other\n         tables and add them to select_related().\n         \"\"\"\n+        self._not_support_combined_queries('extra')\n         assert not self.query.is_sliced, \\\n             \"Cannot change a query once a slice has been taken.\"\n         clone = self._chain()\n@@ -1302,6 +1305,7 @@\n         Return a new QuerySet instance that will handle deferring the loading\n         of data for certain fields until they're accessed.\n         \"\"\"\n+        self._not_support_combined_queries('defer')\n         if self._fields is not None:\n             raise TypeError(\"Cannot call defer() after .values() or .values_list()\")\n         clone = self._chain()\n@@ -1314,7 +1318,8 @@\n         Return a new QuerySet instance that will select only the specified\n         fields when the QuerySet is evaluated.\n         \"\"\"\n+        self._not_support_combined_queries('only')\n         if self._fields is not None:\n             raise TypeError(\"Cannot call only() after .values() or .values_list()\")\n         if fields == (None,):\n",
+  "apply_method": "failed",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T22:44:55.681254+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 822,
+      "output_tokens": 740,
+      "latency_ms": 14798
+    },
+    {
+      "timestamp": "2026-02-22T22:45:08.730778+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 14953,
+      "output_tokens": 662,
+      "latency_ms": 12214
+    },
+    {
+      "timestamp": "2026-02-22T22:45:19.012192+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 704,
+      "output_tokens": 417,
+      "latency_ms": 10280
+    },
+    {
+      "timestamp": "2026-02-22T22:45:42.154294+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 15541,
+      "output_tokens": 1747,
+      "latency_ms": 23141
+    },
+    {
+      "timestamp": "2026-02-22T22:45:53.060476+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1241,
+      "output_tokens": 494,
+      "latency_ms": 10905
+    },
+    {
+      "timestamp": "2026-02-22T22:46:26.137327+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 15864,
+      "output_tokens": 2372,
+      "latency_ms": 33076
+    },
+    {
+      "timestamp": "2026-02-22T22:46:36.004744+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1517,
+      "output_tokens": 417,
+      "latency_ms": 9866
+    },
+    {
+      "timestamp": "2026-02-22T22:46:54.208459+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 116,
+      "latency_ms": 2165
+    }
+  ],
+  "blackboard_final_state": null
+}

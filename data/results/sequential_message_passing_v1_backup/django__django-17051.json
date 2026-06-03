@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_django__django-17051_18b81c1b",
+  "issue_id": "django__django-17051",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 9600,
+  "total_output_tokens": 5512,
+  "total_latency_ms": 91607,
+  "final_patch": "--- a/django/db/backends/base/operations.py\n+++ b/django/db/backends/base/operations.py\n@@ -1,3 +1,4 @@\n+from django.db.models import OnConflict\n \n class BaseDatabaseOperations:\n     def bulk_insert_sql(self, fields, placeholder_rows):\n@@ -10,7 +11,8 @@\n         return \"VALUES \" + \", \".join(placeholder_rows)\n \n     def on_conflict_suffix_sql(\n-        self, fields, on_conflict, update_fields, unique_fields\n+        self, fields, on_conflict=None, update_fields=None, unique_fields=None\n     ):\n         \"\"\"\n         Return SQL for handling conflicts in bulk_insert operations.\n@@ -18,6 +20,6 @@\n         Backends that support ON CONFLICT should override this method.\n         \"\"\"\n-        return \"\"\n+        return \"\" if on_conflict is None else \"\"\n--- a/django/db/backends/postgresql/operations.py\n+++ b/django/db/backends/postgresql/operations.py\n@@ -1,3 +1,4 @@\n+from django.db.models import OnConflict\n from django.db.backends.base.operations import BaseDatabaseOperations\n \n \n@@ -10,15 +11,29 @@\n         return \"VALUES \" + \", \".join(placeholder_rows)\n \n     def on_conflict_suffix_sql(\n-        self, fields, on_conflict, update_fields, unique_fields\n+        self, fields, on_conflict=None, update_fields=None, unique_fields=None\n     ):\n         \"\"\"\n-        Return SQL for handling conflicts in bulk_insert operations.\n+        Return SQL for handling conflicts in bulk_insert operations for PostgreSQL.\n         \"\"\"\n-        if on_conflict == \"UPDATE\":\n-            return \"ON CONFLICT DO UPDATE\"\n-        elif on_conflict == \"IGNORE\":\n+        if on_conflict is None:\n+            return \"\"\n+        \n+        if on_conflict == OnConflict.IGNORE:\n             return \"ON CONFLICT DO NOTHING\"\n+        elif on_conflict == OnConflict.UPDATE:\n+            if not unique_fields:\n+                raise ValueError(\"unique_fields must be provided for ON CONFLICT UPDATE\")\n+            if not update_fields:\n+                raise ValueError(\"update_fields must be provided for ON CONFLICT UPDATE\")\n+            \n+            conflict_target = \", \".join(self.quote_name(field) for field in unique_fields)\n+            set_clause = \", \".join(\n+                f\"{self.quote_name(field)} = EXCLUDED.{self.quote_name(field)}\"\n+                for field in update_fields\n+            )\n+            return f\"ON CONFLICT ({conflict_target}) DO UPDATE SET {set_clause}\"\n         else:\n             return \"\"\n--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -1,3 +1,4 @@\n+from django.db.models import OnConflict\n \n class SQLCompiler:\n     def __init__(self, query, connection, using):\n@@ -25,7 +26,6 @@\n         objs,\n         fields,\n         batch_size,\n-        returning_fields=None,\n         on_conflict=None,\n         update_fields=None,\n         unique_fields=None,\n@@ -38,6 +38,10 @@\n         if not objs:\n             return []\n \n+        # Only use returning_fields for UPDATE conflicts\n+        returning_fields = (\n+            self.model._meta.db_returning_fields if on_conflict == OnConflict.UPDATE else None\n+        )\n         opts = self.model._meta\n         fields = fields or [f for f in opts.concrete_fields if not f.generated]\n         objs = list(objs)\n--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1,3 +1,4 @@\n+from django.db.models import OnConflict\n \n class QuerySet:\n     def __init__(self, model=None, query=None, using=None, hints=None):\n@@ -85,7 +86,7 @@\n                 objs_without_pk,\n                 fields,\n                 batch_size,\n-                returning_fields=self.model._meta.db_returning_fields if update_conflicts else None,\n+                on_conflict=on_conflict,\n                 update_fields=update_fields,\n                 unique_fields=unique_fields,\n             )\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T03:32:08.003607+00:00",
+      "experiment_id": "sequential_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 687,
+      "output_tokens": 614,
+      "latency_ms": 12704
+    },
+    {
+      "timestamp": "2026-02-14T03:32:24.905760+00:00",
+      "experiment_id": "sequential_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1491,
+      "output_tokens": 1323,
+      "latency_ms": 16901
+    },
+    {
+      "timestamp": "2026-02-14T03:32:35.883748+00:00",
+      "experiment_id": "sequential_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1751,
+      "output_tokens": 431,
+      "latency_ms": 10977
+    },
+    {
+      "timestamp": "2026-02-14T03:32:46.896207+00:00",
+      "experiment_id": "sequential_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1307,
+      "output_tokens": 805,
+      "latency_ms": 11011
+    },
+    {
+      "timestamp": "2026-02-14T03:32:58.326231+00:00",
+      "experiment_id": "sequential_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1233,
+      "output_tokens": 469,
+      "latency_ms": 11429
+    },
+    {
+      "timestamp": "2026-02-14T03:33:15.805917+00:00",
+      "experiment_id": "sequential_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1345,
+      "output_tokens": 1358,
+      "latency_ms": 17478
+    },
+    {
+      "timestamp": "2026-02-14T03:33:26.903618+00:00",
+      "experiment_id": "sequential_message_passing_django__django-17051",
+      "issue_id": "django__django-17051",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1786,
+      "output_tokens": 512,
+      "latency_ms": 11096
+    }
+  ],
+  "blackboard_final_state": null
+}

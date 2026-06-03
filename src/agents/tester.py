@@ -55,7 +55,10 @@ class TesterAgent(BaseAgent):
             result = await self._analyse_failures(result, context)
 
         return result.model_dump()
+
+    # ------------------------------------------------------------------
     # Runner-based execution
+    # ------------------------------------------------------------------
 
     async def _run_with_runner(self, context: str) -> TestResult:
         """Use the injected SWEBenchRunner to execute tests."""
@@ -142,7 +145,10 @@ class TesterAgent(BaseAgent):
 
         # Strategy 3: return raw context (works with mock runner)
         return context.strip()
+
+    # ------------------------------------------------------------------
     # Fallback: parse test output from context string
+    # ------------------------------------------------------------------
 
     @staticmethod
     def _parse_test_context(context: str) -> TestResult:
@@ -168,7 +174,10 @@ class TesterAgent(BaseAgent):
             passed=passed,
             error_traces=[] if passed else ["Could not parse test output."],
         )
+
+    # ------------------------------------------------------------------
     # Optional LLM failure analysis
+    # ------------------------------------------------------------------
 
     async def _analyse_failures(self, result: TestResult, context: str) -> TestResult:
         """Call the LLM to produce a structured analysis of test failures."""

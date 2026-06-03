@@ -31,7 +31,10 @@ from rich.console import Console
 from rich.table import Table
 
 console = Console()
+
+# ---------------------------------------------------------------------------
 # Exclusion lists
+# ---------------------------------------------------------------------------
 
 # Repos known to need complex env setup
 EXCLUDED_REPOS = {
@@ -57,7 +60,11 @@ EXCLUDED_INSTANCES = {
 #   Hard:   > 18 changed lines or 3+ files (~40 instances available)
 EASY_MAX_LINES = 6
 MEDIUM_MAX_LINES = 18
+
+
+# ---------------------------------------------------------------------------
 # Patch parsing
+# ---------------------------------------------------------------------------
 
 def parse_patch_stats(patch: str) -> tuple[int, int]:
     """Parse a unified diff to count files touched and lines changed.
@@ -87,7 +94,11 @@ def classify_difficulty(num_files: int, num_lines: int) -> str:
     if num_files >= 2 or num_lines > EASY_MAX_LINES:
         return "medium"
     return "easy"
+
+
+# ---------------------------------------------------------------------------
 # Selection
+# ---------------------------------------------------------------------------
 
 def select_issues(
     dataset: list[dict[str, Any]],
@@ -174,7 +185,11 @@ def _repo_stratified_sample(
         selected.extend(remaining[: target - len(selected)])
 
     return selected[:target]
+
+
+# ---------------------------------------------------------------------------
 # Serialization
+# ---------------------------------------------------------------------------
 
 def _convert_to_serializable(item: dict[str, Any]) -> dict[str, Any]:
     """Extract the fields we need for experiment input."""
@@ -189,7 +204,11 @@ def _convert_to_serializable(item: dict[str, Any]) -> dict[str, Any]:
         "gold_patch_files": item.get("_gold_patch_files", 0),
         "gold_patch_lines": item.get("_gold_patch_lines", 0),
     }
+
+
+# ---------------------------------------------------------------------------
 # Statistics
+# ---------------------------------------------------------------------------
 
 def print_statistics(items: list[dict[str, Any]]) -> None:
     """Print a rich summary of the selected issues."""
@@ -236,7 +255,11 @@ def print_statistics(items: list[dict[str, Any]]) -> None:
         )
 
     console.print(repo_table)
+
+
+# ---------------------------------------------------------------------------
 # Main
+# ---------------------------------------------------------------------------
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Select issues from SWE-bench Lite")

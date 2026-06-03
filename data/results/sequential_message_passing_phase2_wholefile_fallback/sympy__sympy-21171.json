@@ -1,0 +1,112 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-21171_9a6b018e",
+  "issue_id": "sympy__sympy-21171",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 6448,
+  "total_output_tokens": 18055,
+  "total_latency_ms": 270121,
+  "final_patch": "",
+  "apply_method": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-23T00:26:02.740649+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 3002,
+      "output_tokens": 581,
+      "latency_ms": 10152
+    },
+    {
+      "timestamp": "2026-02-23T00:29:41.795716+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 761,
+      "output_tokens": 16384,
+      "latency_ms": 219040
+    },
+    {
+      "timestamp": "2026-02-23T00:29:46.308969+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 498,
+      "output_tokens": 197,
+      "latency_ms": 4510
+    },
+    {
+      "timestamp": "2026-02-23T00:29:49.638029+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 376,
+      "output_tokens": 122,
+      "latency_ms": 3328
+    },
+    {
+      "timestamp": "2026-02-23T00:29:55.006004+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 498,
+      "output_tokens": 228,
+      "latency_ms": 5366
+    },
+    {
+      "timestamp": "2026-02-23T00:29:58.810527+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 407,
+      "output_tokens": 183,
+      "latency_ms": 3804
+    },
+    {
+      "timestamp": "2026-02-23T00:30:04.478111+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 498,
+      "output_tokens": 239,
+      "latency_ms": 5666
+    },
+    {
+      "timestamp": "2026-02-23T00:30:22.708078+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 2327
+    }
+  ],
+  "blackboard_final_state": null
+}

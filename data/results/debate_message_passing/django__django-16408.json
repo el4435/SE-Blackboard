@@ -1,0 +1,99 @@
+{
+  "experiment_id": "deb_message_passing_django__django-16408_3e00c789",
+  "issue_id": "django__django-16408",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 12554,
+  "total_output_tokens": 6471,
+  "total_latency_ms": 206899,
+  "final_patch": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T23:36:17.040251+00:00",
+      "experiment_id": "debate_message_passing_django__django-16408",
+      "issue_id": "django__django-16408",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 716,
+      "output_tokens": 704,
+      "latency_ms": 14662
+    },
+    {
+      "timestamp": "2026-02-14T23:36:24.050215+00:00",
+      "experiment_id": "debate_message_passing_django__django-16408",
+      "issue_id": "django__django-16408",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1538,
+      "output_tokens": 300,
+      "latency_ms": 7008
+    },
+    {
+      "timestamp": "2026-02-14T23:36:31.362936+00:00",
+      "experiment_id": "debate_message_passing_django__django-16408",
+      "issue_id": "django__django-16408",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1538,
+      "output_tokens": 300,
+      "latency_ms": 7311
+    },
+    {
+      "timestamp": "2026-02-14T23:36:38.853058+00:00",
+      "experiment_id": "debate_message_passing_django__django-16408",
+      "issue_id": "django__django-16408",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1048,
+      "output_tokens": 355,
+      "latency_ms": 7489
+    },
+    {
+      "timestamp": "2026-02-14T23:38:13.466782+00:00",
+      "experiment_id": "debate_message_passing_django__django-16408",
+      "issue_id": "django__django-16408",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 5819,
+      "output_tokens": 4145,
+      "latency_ms": 59140
+    },
+    {
+      "timestamp": "2026-02-14T23:38:24.858874+00:00",
+      "experiment_id": "debate_message_passing_django__django-16408",
+      "issue_id": "django__django-16408",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1415,
+      "output_tokens": 453,
+      "latency_ms": 11391
+    },
+    {
+      "timestamp": "2026-02-14T23:39:29.276352+00:00",
+      "experiment_id": "debate_message_passing_django__django-16408",
+      "issue_id": "django__django-16408",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 480,
+      "output_tokens": 214,
+      "latency_ms": 5935
+    }
+  ],
+  "blackboard_final_state": null
+}

@@ -1,0 +1,134 @@
+{
+  "experiment_id": "deb_hybrid_django__django-13321_8560b2aa",
+  "issue_id": "django__django-13321",
+  "topology": "debate",
+  "communication": "hybrid",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 33950,
+  "total_output_tokens": 4362,
+  "total_latency_ms": 64150,
+  "final_patch": "--- a/django/contrib/sessions/backends/base.py\n+++ b/django/contrib/sessions/backends/base.py\n@@ -1,4 +1,5 @@\n import base64\n+import binascii\n import logging\n import string\n import warnings\n@@ -115,10 +116,13 @@\n \n     def decode(self, session_data):\n         try:\n             return signing.loads(session_data, salt=self.key_salt, serializer=self.serializer)\n         except signing.BadSignature:\n-            return self._legacy_decode(session_data)\n+            try:\n+                return self._legacy_decode(session_data)\n+            except Exception:\n+                logger.warning('Session data corrupted')\n+                return {}\n \n     def _legacy_decode(self, session_data):\n         # RemovedInDjango40Warning: pre-Django 3.1 format will be invalid.\n         encoded_data = base64.b64decode(session_data.encode('ascii'))",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T03:55:44.596739+00:00",
+      "experiment_id": "debate_hybrid_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Deb-H",
+      "agent_role": "Planner",
+      "communication_mode": "hybrid",
+      "iteration": 0,
+      "input_tokens": 8129,
+      "output_tokens": 1487,
+      "latency_ms": 21254
+    },
+    {
+      "timestamp": "2026-02-15T03:55:57.930070+00:00",
+      "experiment_id": "debate_hybrid_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Deb-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 8074,
+      "output_tokens": 1006,
+      "latency_ms": 13332
+    },
+    {
+      "timestamp": "2026-02-15T03:56:11.365959+00:00",
+      "experiment_id": "debate_hybrid_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Deb-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 8071,
+      "output_tokens": 984,
+      "latency_ms": 13434
+    },
+    {
+      "timestamp": "2026-02-15T03:56:27.490950+00:00",
+      "experiment_id": "debate_hybrid_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Deb-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 9676,
+      "output_tokens": 885,
+      "latency_ms": 16123
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-13321",
+      "problem_statement": "Decoding an invalid session data crashes.\nDescription\n\t \n\t\t(last modified by Matt Hegarty)\n\t \nHi\nI recently upgraded my staging server to 3.1. I think that there was an old session which was still active.\nOn browsing to any URL, I get the crash below. It looks similar to ​this issue.\nI cannot login at all with Chrome - each attempt to access the site results in a crash. Login with Firefox works fine.\nThis is only happening on my Staging site, which is running Gunicorn behind nginx proxy.\nInternal Server Error: /overview/\nTraceback (most recent call last):\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/sessions/backends/base.py\", line 215, in _get_session\nreturn self._session_cache\nAttributeError: 'SessionStore' object has no attribute '_session_cache'\nDuring handling of the above exception, another exception occurred:\nTraceback (most recent call last):\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/sessions/backends/base.py\", line 118, in decode\nreturn signing.loads(session_data, salt=self.key_salt, serializer=self.serializer)\nFile \"/usr/local/lib/python3.8/site-packages/django/core/signing.py\", line 135, in loads\nbase64d = TimestampSigner(key, salt=salt).unsign(s, max_age=max_age).encode()\nFile \"/usr/local/lib/python3.8/site-packages/django/core/signing.py\", line 201, in unsign\nresult = super().unsign(value)\nFile \"/usr/local/lib/python3.8/site-packages/django/core/signing.py\", line 184, in unsign\nraise BadSignature('Signature \"%s\" does not match' % sig)\ndjango.core.signing.BadSignature: Signature \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\" does not match\nDuring handling of the above exception, another exception occurred:\nTraceback (most recent call last):\nFile \"/usr/local/lib/python3.8/site-packages/django/core/handlers/exception.py\", line 47, in inner\nresponse = get_response(request)\nFile \"/usr/local/lib/python3.8/site-packages/django/core/handlers/base.py\", line 179, in _get_response\nresponse = wrapped_callback(request, *callback_args, **callback_kwargs)\nFile \"/usr/local/lib/python3.8/site-packages/django/views/generic/base.py\", line 73, in view\nreturn self.dispatch(request, *args, **kwargs)\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/auth/mixins.py\", line 50, in dispatch\nif not request.user.is_authenticated:\nFile \"/usr/local/lib/python3.8/site-packages/django/utils/functional.py\", line 240, in inner\nself._setup()\nFile \"/usr/local/lib/python3.8/site-packages/django/utils/functional.py\", line 376, in _setup\nself._wrapped = self._setupfunc()\nFile \"/usr/local/lib/python3.8/site-packages/django_otp/middleware.py\", line 38, in _verify_user\nuser.otp_device = None\nFile \"/usr/local/lib/python3.8/site-packages/django/utils/functional.py\", line 270, in __setattr__\nself._setup()\nFile \"/usr/local/lib/python3.8/site-packages/django/utils/functional.py\", line 376, in _setup\nself._wrapped = self._setupfunc()\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/auth/middleware.py\", line 23, in <lambda>\nrequest.user = SimpleLazyObject(lambda: get_user(request))\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/auth/middleware.py\", line 11, in get_user\nrequest._cached_user = auth.get_user(request)\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/auth/__init__.py\", line 174, in get_user\nuser_id = _get_user_session_key(request)\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/auth/__init__.py\", line 58, in _get_user_session_key\nreturn get_user_model()._meta.pk.to_python(request.session[SESSION_KEY])\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/sessions/backends/base.py\", line 65, in __getitem__\nreturn self._session[key]\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/sessions/backends/base.py\", line 220, in _get_session\nself._session_cache = self.load()\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/sessions/backends/db.py\", line 44, in load\nreturn self.decode(s.session_data) if s else {}\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/sessions/backends/base.py\", line 122, in decode\nreturn self._legacy_decode(session_data)\nFile \"/usr/local/lib/python3.8/site-packages/django/contrib/sessions/backends/base.py\", line 126, in _legacy_decode\nencoded_data = base64.b64decode(session_data.encode('ascii'))\nFile \"/usr/local/lib/python3.8/base64.py\", line 87, in b64decode\nreturn binascii.a2b_base64(s)\nbinascii.Error: Incorrect padding\n",
+      "repo": "django/django",
+      "base_commit": "35b03788b0607c1f8d2b64e4fa9e1669b0907ea4",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The session decode method in Django's session backend does not properly handle invalid or corrupted session data. When decoding fails with BadSignature exception, it falls back to _legacy_decode which attempts base64 decoding. If the session data has incorrect padding or is otherwise corrupted, this raises a binascii.Error that is not caught, causing the entire request to crash instead of gracefully handling the invalid session by creating a new empty session.",
+      "relevant_files": [
+        "django/contrib/sessions/backends/base.py"
+      ],
+      "relevant_functions": [
+        "django.contrib.sessions.backends.base.SessionBase.decode",
+        "django.contrib.sessions.backends.base.SessionBase._legacy_decode"
+      ],
+      "fix_strategy": "1. Modify the `decode` method in `django/contrib/sessions/backends/base.py` to catch additional exceptions beyond just `signing.BadSignature`.\n2. Wrap the `_legacy_decode` call in a try-except block that catches `binascii.Error` and any other decoding-related exceptions.\n3. When any decoding exception occurs (BadSignature, binascii.Error, etc.), the method should return an empty dictionary `{}` instead of propagating the exception, which will effectively create a new session for the user.\n4. Optionally, log a warning when invalid session data is encountered to help with debugging.\n5. This approach ensures backward compatibility while gracefully handling corrupted session data from upgrades or other sources.\n\nSpecific implementation:\n- In the `decode` method around line 118-122, expand the exception handling to catch `Exception` or at minimum catch both `signing.BadSignature` and `binascii.Error`\n- In the `_legacy_decode` method around line 126, wrap the base64.b64decode call in a try-except to catch `binascii.Error` and return empty dict or re-raise as a handled exception\n- Ensure that any decoding failure results in returning `{}` so a fresh session is created",
+      "confidence": 0.95,
+      "relevant_code": "## Source Code Context\n\n## File: django/contrib/sessions/backends/base.py\n```python\n# Mock content for django/contrib/sessions/backends/base.py\n# This is a placeholder.\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder_A",
+        "diff": "--- a/django/contrib/sessions/backends/base.py\n+++ b/django/contrib/sessions/backends/base.py\n@@ -1,4 +1,5 @@\n import base64\n+import binascii\n import logging\n import string\n import warnings\n@@ -115,10 +116,13 @@\n \n     def decode(self, session_data):\n         try:\n             return signing.loads(session_data, salt=self.key_salt, serializer=self.serializer)\n         except signing.BadSignature:\n-            return self._legacy_decode(session_data)\n+            try:\n+                return self._legacy_decode(session_data)\n+            except (binascii.Error, Exception) as e:\n+                logger.warning('Session data corrupted: %s', e)\n+                return {}\n \n     def _legacy_decode(self, session_data):\n         # RemovedInDjango40Warning: pre-Django 3.1 format will be invalid.\n         encoded_data = base64.b64decode(session_data.encode('ascii'))",
+        "description": "Fix session decode crash when handling invalid/corrupted session data. The decode method now catches binascii.Error and other exceptions that can occur during legacy session decoding, returning an empty dict to create a fresh session instead of crashing. This handles cases where session data has incorrect base64 padding or is otherwise corrupted, particularly after Django upgrades.",
+        "timestamp": "2026-02-15T03:55:57.930371Z"
+      },
+      {
+        "version": 1,
+        "author": "Coder_B",
+        "diff": "--- a/django/contrib/sessions/backends/base.py\n+++ b/django/contrib/sessions/backends/base.py\n@@ -1,4 +1,5 @@\n import base64\n+import binascii\n import logging\n import string\n import warnings\n@@ -115,10 +116,13 @@\n \n     def decode(self, session_data):\n         try:\n             return signing.loads(session_data, salt=self.key_salt, serializer=self.serializer)\n         except signing.BadSignature:\n-            return self._legacy_decode(session_data)\n+            try:\n+                return self._legacy_decode(session_data)\n+            except Exception:\n+                logger.warning('Session data corrupted')\n+                return {}\n \n     def _legacy_decode(self, session_data):\n         # RemovedInDjango40Warning: pre-Django 3.1 format will be invalid.\n         encoded_data = base64.b64decode(session_data.encode('ascii'))",
+        "description": "Fix session decode crash when handling invalid/corrupted session data. The decode method now catches exceptions that may occur during legacy session decoding (including binascii.Error for incorrect padding), returning an empty dict to create a fresh session instead of crashing. This handles cases where session data is corrupted, particularly after Django upgrades.",
+        "timestamp": "2026-02-15T03:56:11.366433Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [
+          "The exception tuple '(binascii.Error, Exception)' is redundant since Exception already catches binascii.Error"
+        ],
+        "suggestions": [
+          "Consider simplifying to 'except Exception as e:' since Exception already catches binascii.Error",
+          "The detailed logging in Patch A is good for debugging - this approach is preferred over Patch B's generic message",
+          "Consider adding the exception type to the log message for even better debugging: logger.warning('Session data corrupted (%s): %s', type(e).__name__, e)"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 1,
+        "passed": true,
+        "pass_count": 42,
+        "fail_count": 0,
+        "failing_tests": [],
+        "error_traces": []
+      }
+    ],
+    "metadata": {
+      "status": "resolved",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-15T03:55:23.341477Z",
+      "end_time": null
+    }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "experiment_id": "deb_message_passing_django__django-14155_1fe0bd3b",
+  "issue_id": "django__django-14155",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 23248,
+  "total_output_tokens": 9840,
+  "total_latency_ms": 166220,
+  "final_patch": "--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -1,3 +1,4 @@\n+from functools import partial\n \"\"\"\n This module converts requested URLs to callback view functions.\n \n@@ -358,6 +359,29 @@ class URLPattern:\n         self._callback = None\n         self._default_args = default_args or {}\n         self.name = name\n+        \n+        # Unwrap nested functools.partial objects\n+        if isinstance(callback, partial):\n+            all_args = []\n+            all_kwargs = {}\n+            current = callback\n+            \n+            # Traverse the chain of partials\n+            while isinstance(current, partial):\n+                all_args.extend(current.args)\n+                # Preserve outer partial kwargs over inner ones\n+                all_kwargs = {**current.keywords, **all_kwargs}\n+                current = current.func\n+            \n+            # Store the unwrapped function\n+            unwrapped_func = current\n+            \n+            # Update callback to be a single partial with flattened args/kwargs\n+            self.callback = partial(unwrapped_func, *all_args, **all_kwargs)\n+            \n+            # Update _func_path to reflect the unwrapped function\n+            if hasattr(unwrapped_func, '__module__') and hasattr(unwrapped_func, '__qualname__'):\n+                self._func_path = f\"{unwrapped_func.__module__}.{unwrapped_func.__qualname__}\"\n \n     def __repr__(self):\n         return '<%s %s>' % (self.__class__.__name__, self.pattern.describe())",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T23:31:37.216109+00:00",
+      "experiment_id": "debate_message_passing_django__django-14155",
+      "issue_id": "django__django-14155",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 562,
+      "output_tokens": 440,
+      "latency_ms": 9205
+    },
+    {
+      "timestamp": "2026-02-14T23:31:52.994491+00:00",
+      "experiment_id": "debate_message_passing_django__django-14155",
+      "issue_id": "django__django-14155",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3341,
+      "output_tokens": 1261,
+      "latency_ms": 15777
+    },
+    {
+      "timestamp": "2026-02-14T23:32:13.818367+00:00",
+      "experiment_id": "debate_message_passing_django__django-14155",
+      "issue_id": "django__django-14155",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3642,
+      "output_tokens": 1860,
+      "latency_ms": 20822
+    },
+    {
+      "timestamp": "2026-02-14T23:32:26.177462+00:00",
+      "experiment_id": "debate_message_passing_django__django-14155",
+      "issue_id": "django__django-14155",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1828,
+      "output_tokens": 488,
+      "latency_ms": 12357
+    },
+    {
+      "timestamp": "2026-02-14T23:32:46.578912+00:00",
+      "experiment_id": "debate_message_passing_django__django-14155",
+      "issue_id": "django__django-14155",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3587,
+      "output_tokens": 1665,
+      "latency_ms": 20400
+    },
+    {
+      "timestamp": "2026-02-14T23:33:10.691504+00:00",
+      "experiment_id": "debate_message_passing_django__django-14155",
+      "issue_id": "django__django-14155",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3778,
+      "output_tokens": 1844,
+      "latency_ms": 24111
+    },
+    {
+      "timestamp": "2026-02-14T23:33:22.878868+00:00",
+      "experiment_id": "debate_message_passing_django__django-14155",
+      "issue_id": "django__django-14155",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2022,
+      "output_tokens": 486,
+      "latency_ms": 12186
+    },
+    {
+      "timestamp": "2026-02-14T23:33:39.947810+00:00",
+      "experiment_id": "debate_message_passing_django__django-14155",
+      "issue_id": "django__django-14155",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 3426,
+      "output_tokens": 1313,
+      "latency_ms": 17068
+    },
+    {
+      "timestamp": "2026-02-14T23:34:14.229378+00:00",
+      "experiment_id": "debate_message_passing_django__django-14155",
+      "issue_id": "django__django-14155",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1062,
+      "output_tokens": 483,
+      "latency_ms": 11834
+    }
+  ],
+  "blackboard_final_state": null
+}

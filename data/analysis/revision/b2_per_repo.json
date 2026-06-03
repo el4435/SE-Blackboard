@@ -1,0 +1,194 @@
+{
+  "astropy": {
+    "MP": {
+      "n_issues": 2,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": 0.147,
+      "coder_ifs_n": 2,
+      "nonempty": 2,
+      "correct_file": 1,
+      "file_targeting_rate": 0.5
+    },
+    "BB": {
+      "n_issues": 2,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": 0.4228,
+      "coder_ifs_n": 2,
+      "nonempty": 2,
+      "correct_file": 2,
+      "file_targeting_rate": 1.0
+    },
+    "Hybrid": {
+      "n_issues": 2,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": null,
+      "coder_ifs_n": 0,
+      "nonempty": 0,
+      "correct_file": 0,
+      "file_targeting_rate": null
+    }
+  },
+  "django": {
+    "MP": {
+      "n_issues": 22,
+      "resolved": 4,
+      "resolve_rate": 0.1818,
+      "coder_ifs_mean": 0.4736,
+      "coder_ifs_n": 22,
+      "nonempty": 22,
+      "correct_file": 15,
+      "file_targeting_rate": 0.6818
+    },
+    "BB": {
+      "n_issues": 22,
+      "resolved": 7,
+      "resolve_rate": 0.3182,
+      "coder_ifs_mean": 0.5546,
+      "coder_ifs_n": 21,
+      "nonempty": 21,
+      "correct_file": 16,
+      "file_targeting_rate": 0.7619
+    },
+    "Hybrid": {
+      "n_issues": 22,
+      "resolved": 5,
+      "resolve_rate": 0.2273,
+      "coder_ifs_mean": 0.5414,
+      "coder_ifs_n": 22,
+      "nonempty": 22,
+      "correct_file": 16,
+      "file_targeting_rate": 0.7273
+    }
+  },
+  "pydata": {
+    "MP": {
+      "n_issues": 1,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": 1.0,
+      "coder_ifs_n": 1,
+      "nonempty": 1,
+      "correct_file": 1,
+      "file_targeting_rate": 1.0
+    },
+    "BB": {
+      "n_issues": 1,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": 1.0,
+      "coder_ifs_n": 1,
+      "nonempty": 1,
+      "correct_file": 1,
+      "file_targeting_rate": 1.0
+    },
+    "Hybrid": {
+      "n_issues": 1,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": 1.0,
+      "coder_ifs_n": 1,
+      "nonempty": 1,
+      "correct_file": 1,
+      "file_targeting_rate": 1.0
+    }
+  },
+  "pytest-dev": {
+    "MP": {
+      "n_issues": 2,
+      "resolved": 1,
+      "resolve_rate": 0.5,
+      "coder_ifs_mean": 0.0162,
+      "coder_ifs_n": 2,
+      "nonempty": 2,
+      "correct_file": 2,
+      "file_targeting_rate": 1.0
+    },
+    "BB": {
+      "n_issues": 2,
+      "resolved": 1,
+      "resolve_rate": 0.5,
+      "coder_ifs_mean": 0.5323,
+      "coder_ifs_n": 2,
+      "nonempty": 2,
+      "correct_file": 2,
+      "file_targeting_rate": 1.0
+    },
+    "Hybrid": {
+      "n_issues": 2,
+      "resolved": 1,
+      "resolve_rate": 0.5,
+      "coder_ifs_mean": 0.0323,
+      "coder_ifs_n": 2,
+      "nonempty": 2,
+      "correct_file": 2,
+      "file_targeting_rate": 1.0
+    }
+  },
+  "sphinx-doc": {
+    "MP": {
+      "n_issues": 3,
+      "resolved": 1,
+      "resolve_rate": 0.3333,
+      "coder_ifs_mean": 0.4722,
+      "coder_ifs_n": 3,
+      "nonempty": 3,
+      "correct_file": 2,
+      "file_targeting_rate": 0.6667
+    },
+    "BB": {
+      "n_issues": 3,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": 0.8472,
+      "coder_ifs_n": 3,
+      "nonempty": 3,
+      "correct_file": 3,
+      "file_targeting_rate": 1.0
+    },
+    "Hybrid": {
+      "n_issues": 3,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": 0.875,
+      "coder_ifs_n": 1,
+      "nonempty": 1,
+      "correct_file": 1,
+      "file_targeting_rate": 1.0
+    }
+  },
+  "sympy": {
+    "MP": {
+      "n_issues": 16,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": 0.2074,
+      "coder_ifs_n": 15,
+      "nonempty": 15,
+      "correct_file": 3,
+      "file_targeting_rate": 0.2
+    },
+    "BB": {
+      "n_issues": 16,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": 0.5769,
+      "coder_ifs_n": 13,
+      "nonempty": 13,
+      "correct_file": 10,
+      "file_targeting_rate": 0.7692
+    },
+    "Hybrid": {
+      "n_issues": 16,
+      "resolved": 0,
+      "resolve_rate": 0.0,
+      "coder_ifs_mean": 0.5834,
+      "coder_ifs_n": 4,
+      "nonempty": 4,
+      "correct_file": 3,
+      "file_targeting_rate": 0.75
+    }
+  }
+}

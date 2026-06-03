@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_django__django-15388_e2002d40",
+  "issue_id": "django__django-15388",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 11591,
+  "total_output_tokens": 6210,
+  "total_latency_ms": 106803,
+  "final_patch": "--- a/django/utils/autoreload.py\n+++ b/django/utils/autoreload.py\n@@ -1,3 +1,60 @@\n-# Mock content for django/utils/autoreload.py\n-# This is a placeholder.\n+import itertools\n+import os\n+import sys\n+from pathlib import Path\n+from django.apps import apps\n+from django.conf import settings\n \n+\n+def should_skip_template_dir(path):\n+    \"\"\"\n+    Check if a template directory should be skipped from autoreload watching.\n+    Returns True if the path is within BASE_DIR (will be watched via BASE_DIR),\n+    False otherwise (should be explicitly watched).\n+    \"\"\"\n+    try:\n+        base_dir = Path(settings.BASE_DIR).resolve()\n+        path_obj = Path(path).resolve()\n+        # Skip if path is a subdirectory of BASE_DIR (but not BASE_DIR itself)\n+        return path_obj != base_dir and path_obj.is_relative_to(base_dir)\n+    except (AttributeError, ValueError, OSError):\n+        return False\n+\n+\n+def iter_all_python_module_files():\n+    \"\"\"\n+    Iterate over all Python module files and relevant directories to watch.\n+    \"\"\"\n+    # Yield Python modules\n+    for module in sys.modules.values():\n+        if module is None:\n+            continue\n+        filename = getattr(module, '__file__', None)\n+        if filename:\n+            yield Path(filename).resolve()\n+    \n+    # Yield app directories\n+    for app_config in apps.get_app_configs():\n+        yield Path(app_config.path).resolve()\n+\n+\n+def iter_template_dirs():\n+    \"\"\"\n+    Iterate over template directories that should be explicitly watched.\n+    Excludes directories that are subdirectories of BASE_DIR.\n+    \"\"\"\n+    from django.template import engines\n+    \n+    template_dirs = set()\n+    for engine in engines.all():\n+        if hasattr(engine, 'engine'):\n+            # DjangoTemplates engine\n+            dirs = engine.engine.dirs\n+            for template_dir in dirs:\n+                if not should_skip_template_dir(template_dir):\n+                    template_dirs.add(Path(template_dir).resolve())\n+    \n+    return template_dirs\n+\n+\n+def get_all_files():\n+    return itertools.chain(iter_all_python_module_files(), iter_template_dirs())",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T03:52:40.844132+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 607,
+      "output_tokens": 582,
+      "latency_ms": 13549
+    },
+    {
+      "timestamp": "2026-02-14T03:53:04.017932+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1400,
+      "output_tokens": 1665,
+      "latency_ms": 23172
+    },
+    {
+      "timestamp": "2026-02-14T03:53:16.436746+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 2093,
+      "output_tokens": 514,
+      "latency_ms": 12417
+    },
+    {
+      "timestamp": "2026-02-14T03:53:39.751550+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 4084,
+      "output_tokens": 1706,
+      "latency_ms": 23313
+    },
+    {
+      "timestamp": "2026-02-14T03:53:48.576644+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 961,
+      "output_tokens": 352,
+      "latency_ms": 8824
+    },
+    {
+      "timestamp": "2026-02-14T03:54:00.300318+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1169,
+      "output_tokens": 849,
+      "latency_ms": 11722
+    },
+    {
+      "timestamp": "2026-02-14T03:54:14.096583+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1277,
+      "output_tokens": 542,
+      "latency_ms": 13795
+    }
+  ],
+  "blackboard_final_state": null
+}

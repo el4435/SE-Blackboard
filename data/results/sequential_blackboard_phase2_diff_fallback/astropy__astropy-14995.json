@@ -1,0 +1,176 @@
+{
+  "experiment_id": "seq_blackboard_astropy__astropy-14995_43537adb",
+  "issue_id": "astropy__astropy-14995",
+  "topology": "sequential",
+  "communication": "blackboard",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 20431,
+  "total_output_tokens": 3144,
+  "total_latency_ms": 134138,
+  "final_patch": "",
+  "apply_method": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T23:17:33.336715+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-B",
+      "agent_role": "Planner",
+      "communication_mode": "blackboard",
+      "iteration": 0,
+      "input_tokens": 4050,
+      "output_tokens": 1200,
+      "latency_ms": 18932
+    },
+    {
+      "timestamp": "2026-02-22T23:18:02.219779+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 4948,
+      "output_tokens": 616,
+      "latency_ms": 11544
+    },
+    {
+      "timestamp": "2026-02-22T23:18:32.912024+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 4948,
+      "output_tokens": 616,
+      "latency_ms": 10858
+    },
+    {
+      "timestamp": "2026-02-22T23:19:09.766416+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 4948,
+      "output_tokens": 616,
+      "latency_ms": 11127
+    },
+    {
+      "timestamp": "2026-02-22T23:19:28.540640+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-B",
+      "agent_role": "Tester",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 1537,
+      "output_tokens": 96,
+      "latency_ms": 2795
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "astropy__astropy-14995",
+      "problem_statement": "In v5.3, NDDataRef mask propagation fails when one of the operand does not have a mask\n### Description\n\nThis applies to v5.3. \r\n\r\nIt looks like when one of the operand does not have a mask, the mask propagation when doing arithmetic, in particular with `handle_mask=np.bitwise_or` fails.  This is not a problem in v5.2.\r\n\r\nI don't know enough about how all that works, but it seems from the error that the operand without a mask is set as a mask of None's and then the bitwise_or tries to operate on an integer and a None and fails.\n\n### Expected behavior\n\nWhen one of the operand does not have mask, the mask that exists should just be copied over to the output.  Or whatever was done in that situation in v5.2 where there's no problem.\n\n### How to Reproduce\n\nThis is with v5.3.   With v5.2, there are no errors.\r\n\r\n```\r\n>>> import numpy as np\r\n>>> from astropy.nddata import NDDataRef\r\n\r\n>>> array = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]])\r\n>>> mask = np.array([[0, 1, 64], [8, 0, 1], [2, 1, 0]])\r\n\r\n>>> nref_nomask = NDDataRef(array)\r\n>>> nref_mask = NDDataRef(array, mask=mask)\r\n\r\n# multiply no mask by constant (no mask * no mask)\r\n>>> nref_nomask.multiply(1., handle_mask=np.bitwise_or).mask   # returns nothing, no mask,  OK\r\n\r\n# multiply no mask by itself (no mask * no mask)\r\n>>> nref_nomask.multiply(nref_nomask, handle_mask=np.bitwise_or).mask # return nothing, no mask, OK\r\n\r\n# multiply mask by constant (mask * no mask)\r\n>>> nref_mask.multiply(1., handle_mask=np.bitwise_or).mask\r\n...\r\nTypeError: unsupported operand type(s) for |: 'int' and 'NoneType'\r\n\r\n# multiply mask by itself (mask * mask)\r\n>>> nref_mask.multiply(nref_mask, handle_mask=np.bitwise_or).mask\r\narray([[ 0,  1, 64],\r\n       [ 8,  0,  1],\r\n       [ 2,  1,  0]])\r\n\r\n# multiply mask by no mask (mask * no mask)\r\n>>> nref_mask.multiply(nref_nomask, handle_mask=np.bitwise_or).mask\r\n...\r\nTypeError: unsupported operand type(s) for |: 'int' and 'NoneType'\r\n```\r\n\n\n### Versions\n\n>>> import sys; print(\"Python\", sys.version)\r\nPython 3.10.11 | packaged by conda-forge | (main, May 10 2023, 19:07:22) [Clang 14.0.6 ]\r\n>>> import astropy; print(\"astropy\", astropy.__version__)\r\nastropy 5.3\r\n>>> import numpy; print(\"Numpy\", numpy.__version__)\r\nNumpy 1.24.3\r\n>>> import erfa; print(\"pyerfa\", erfa.__version__)\r\npyerfa 2.0.0.3\r\n>>> import scipy; print(\"Scipy\", scipy.__version__)\r\nScipy 1.10.1\r\n>>> import matplotlib; print(\"Matplotlib\", matplotlib.__version__)\r\nMatplotlib 3.7.1\r\n\n",
+      "repo": "astropy/astropy",
+      "base_commit": "b16c7d12ccbc7b2d20364b89fb44285bcbfede54",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "In v5.3, when performing arithmetic operations on NDDataRef objects with handle_mask=np.bitwise_or, the mask propagation logic fails when one operand has a mask and the other doesn't. The issue occurs because the code attempts to apply np.bitwise_or between an integer mask value and None, which raises a TypeError. The mask handling code likely changed between v5.2 and v5.3 to not properly handle the case where one mask is None.",
+      "relevant_files": [
+        "astropy/nddata/mixins/ndarithmetic.py",
+        "astropy/nddata/nddata.py",
+        "astropy/nddata/nddata_base.py"
+      ],
+      "relevant_functions": [
+        "NDDataRef.multiply",
+        "NDArithmeticMixin._arithmetic",
+        "NDArithmeticMixin.multiply",
+        "_arithmetic_mask",
+        "handle_mask function/callable processing"
+      ],
+      "fix_strategy": "1. Locate the mask propagation logic in NDArithmeticMixin._arithmetic or related mask handling methods\n2. Identify where the code changed between v5.2 and v5.3 that causes None masks to be passed to np.bitwise_or\n3. Add a check before applying the handle_mask function: if one or both masks are None, handle them specially:\n   - If both masks are None, return None\n   - If only one mask is None, return the non-None mask (copy it)\n   - Only apply handle_mask function when both masks are not None\n4. Ensure this logic preserves the v5.2 behavior where operations with one masked and one unmasked operand work correctly\n5. Add or update tests to cover all combinations: (mask, mask), (mask, no_mask), (no_mask, mask), (no_mask, no_mask)",
+      "confidence": 0.85,
+      "relevant_code": "The issue is in the arithmetic mask handling code within NDArithmeticMixin. The mask propagation function needs to check if either operand's mask is None before attempting to apply np.bitwise_or or other bitwise operations. The fix should wrap the handle_mask call with logic that handles None masks appropriately, returning the non-None mask when only one exists, or None when both are None."
+    },
+    "patches": [],
+    "reviews": [
+      {
+        "patch_version": 0,
+        "author": "Reviewer",
+        "verdict": "reject",
+        "issues": [
+          "No patch provided to review",
+          "Cannot assess fix without actual code changes",
+          "Blackboard state contains only issue and analysis, but no patch implementation"
+        ],
+        "suggestions": [
+          "A Coder agent should generate a patch that implements the fix strategy outlined in the analysis",
+          "The patch should modify the mask handling logic in NDArithmeticMixin to check for None masks before applying handle_mask function",
+          "The implementation should handle three cases: both masks None (return None), one mask None (return the non-None mask), both masks present (apply handle_mask function)",
+          "Include test cases covering all combinations: (mask, mask), (mask, no_mask), (no_mask, mask), (no_mask, no_mask)"
+        ]
+      },
+      {
+        "patch_version": 0,
+        "author": "Reviewer",
+        "verdict": "reject",
+        "issues": [
+          "No patch provided to review",
+          "Cannot assess fix without actual code changes",
+          "Blackboard state contains only issue and analysis, but no patch implementation"
+        ],
+        "suggestions": [
+          "A Coder agent should generate a patch that implements the fix strategy outlined in the analysis",
+          "The patch should modify the mask handling logic in NDArithmeticMixin to check for None masks before applying handle_mask function",
+          "The implementation should handle three cases: both masks None (return None), one mask None (return the non-None mask), both masks present (apply handle_mask function)",
+          "Include test cases covering all combinations: (mask, mask), (mask, no_mask), (no_mask, mask), (no_mask, no_mask)"
+        ]
+      },
+      {
+        "patch_version": 0,
+        "author": "Reviewer",
+        "verdict": "reject",
+        "issues": [
+          "No patch provided to review",
+          "Cannot assess fix without actual code changes",
+          "Blackboard state contains only issue and analysis, but no patch implementation"
+        ],
+        "suggestions": [
+          "A Coder agent should generate a patch that implements the fix strategy outlined in the analysis",
+          "The patch should modify the mask handling logic in NDArithmeticMixin to check for None masks before applying handle_mask function",
+          "The implementation should handle three cases: both masks None (return None), one mask None (return the non-None mask), both masks present (apply handle_mask function)",
+          "Include test cases covering all combinations: (mask, mask), (mask, no_mask), (no_mask, mask), (no_mask, no_mask)"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 0,
+        "passed": false,
+        "pass_count": 0,
+        "fail_count": 1,
+        "failing_tests": [
+          "Evaluation did not complete"
+        ],
+        "error_traces": [
+          "The test evaluation process did not complete successfully. This could indicate a timeout, crash, or other critical failure during test execution."
+        ]
+      }
+    ],
+    "metadata": {
+      "status": "testing",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-22T23:17:14.402969Z",
+      "end_time": null
+    }
+  }
+}

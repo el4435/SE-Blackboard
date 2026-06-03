@@ -1,0 +1,115 @@
+{
+  "experiment_id": "seq_blackboard_django__django-16379_9cdeb2b7",
+  "issue_id": "django__django-16379",
+  "topology": "sequential",
+  "communication": "blackboard",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 17695,
+  "total_output_tokens": 2506,
+  "total_latency_ms": 129441,
+  "final_patch": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -94,9 +94,11 @@\n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n+        except FileNotFoundError:\n+            pass\n         return False\n \n     def _cull(self):\n",
+  "apply_method": "failed",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T22:52:46.249189+00:00",
+      "experiment_id": "sequential_blackboard_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-B",
+      "agent_role": "Planner",
+      "communication_mode": "blackboard",
+      "iteration": 0,
+      "input_tokens": 3352,
+      "output_tokens": 1672,
+      "latency_ms": 21747
+    },
+    {
+      "timestamp": "2026-02-22T22:52:57.036592+00:00",
+      "experiment_id": "sequential_blackboard_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 10860,
+      "output_tokens": 669,
+      "latency_ms": 9633
+    },
+    {
+      "timestamp": "2026-02-22T22:53:01.807009+00:00",
+      "experiment_id": "sequential_blackboard_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 3483,
+      "output_tokens": 165,
+      "latency_ms": 4769
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-16379",
+      "problem_statement": "FileBasedCache has_key is susceptible to race conditions\nDescription\n\t \n\t\t(last modified by Marti Raudsepp)\n\t \nI received the exception from Django's cache framework:\nFileNotFoundError: [Errno 2] No such file or directory: '/app/var/cache/d729e4cf4ba88cba5a0f48e0396ec48a.djcache'\n[...]\n File \"django/core/cache/backends/base.py\", line 229, in get_or_set\n\tself.add(key, default, timeout=timeout, version=version)\n File \"django/core/cache/backends/filebased.py\", line 26, in add\n\tif self.has_key(key, version):\n File \"django/core/cache/backends/filebased.py\", line 94, in has_key\n\twith open(fname, \"rb\") as f:\nThe code is:\n\tdef has_key(self, key, version=None):\n\t\tfname = self._key_to_file(key, version)\n\t\tif os.path.exists(fname):\n\t\t\twith open(fname, \"rb\") as f:\n\t\t\t\treturn not self._is_expired(f)\n\t\treturn False\nBetween the exists() check and open(), it's possible for the file to be deleted. In fact, the _is_expired() method itself deletes the file if it finds it to be expired. So if many threads race to read an expired cache at once, it's not that unlikely to hit this window.\n",
+      "repo": "django/django",
+      "base_commit": "1d0fa848e084cad62d0bb6bde3b51e4862558e57",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The has_key method in FileBasedCache has a time-of-check-time-of-use (TOCTOU) race condition. Between checking if a file exists with os.path.exists(fname) and opening it with open(fname, 'rb'), another thread/process can delete the file (especially through _is_expired() when finding an expired cache entry). This causes FileNotFoundError when multiple threads race to access an expired cache entry.",
+      "relevant_files": [
+        "django/core/cache/backends/filebased.py"
+      ],
+      "relevant_functions": [
+        "FileBasedCache.has_key",
+        "FileBasedCache._is_expired",
+        "FileBasedCache.add"
+      ],
+      "fix_strategy": "1. Remove the os.path.exists() check in has_key() method as it creates a race window and provides no real value.\n2. Wrap the open() call in a try-except block to catch FileNotFoundError.\n3. Return False when FileNotFoundError is caught, indicating the key doesn't exist (or was just deleted).\n4. This follows the EAFP (Easier to Ask for Forgiveness than Permission) principle, which is more robust for concurrent scenarios.\n5. Review other methods in filebased.py (like get(), delete()) for similar race condition patterns and apply the same fix if needed.\n6. The fixed code should look like:\n   def has_key(self, key, version=None):\n       fname = self._key_to_file(key, version)\n       try:\n           with open(fname, 'rb') as f:\n               return not self._is_expired(f)\n       except FileNotFoundError:\n           return False",
+      "confidence": 0.95,
+      "relevant_code": "## Source Code Context\n\n## File: django/core/cache/backends/filebased.py\n```python\n\"File-based cache backend\"\nimport glob\nimport os\nimport pickle\nimport random\nimport tempfile\nimport time\nimport zlib\n\nfrom django.core.cache.backends.base import DEFAULT_TIMEOUT, BaseCache\nfrom django.core.files import locks\nfrom django.core.files.move import file_move_safe\nfrom django.utils.crypto import md5\n\n\nclass FileBasedCache(BaseCache):\n    cache_suffix = \".djcache\"\n    pickle_protocol = pickle.HIGHEST_PROTOCOL\n\n    def __init__(self, dir, params):\n        super().__init__(params)\n        self._dir = os.path.abspath(dir)\n        self._createdir()\n\n    def add(self, key, value, timeout=DEFAULT_TIMEOUT, version=None):\n        if self.has_key(key, version):\n            return False\n        self.set(key, value, timeout, version)\n        return True\n\n    def get(self, key, default=None, version=None):\n        fname = self._key_to_file(key, version)\n        try:\n            with open(fname, \"rb\") as f:\n                if not self._is_expired(f):\n                    return pickle.loads(zlib.decompress(f.read()))\n        except FileNotFoundError:\n            pass\n        return default\n\n    def _write_content(self, file, timeout, value):\n        expiry = self.get_backend_timeout(timeout)\n        file.write(pickle.dumps(expiry, self.pickle_protocol))\n        file.write(zlib.compress(pickle.dumps(value, self.pickle_protocol)))\n\n    def set(self, key, value, timeout=DEFAULT_TIMEOUT, version=None):\n        self._createdir()  # Cache dir can be deleted at any time.\n        fname = self._key_to_file(key, version)\n        self._cull()  # make some room if necessary\n        fd, tmp_path = tempfile.mkstemp(dir=self._dir)\n        renamed = False\n        try:\n            with open(fd, \"wb\") as f:\n                self._write_content(f, timeout, value)\n            file_move_safe(tmp_path, fname, allow_overwrite=True)\n            renamed = True\n        finally:\n            if not renamed:\n                os.remove(tmp_path)\n\n    def touch(self, key, timeout=DEFAULT_TIMEOUT, version=None):\n        try:\n            with open(self._key_to_file(key, version), \"r+b\") as f:\n                try:\n                    locks.lock(f, locks.LOCK_EX)\n                    if self._is_expired(f):\n                        return False\n                    else:\n                        previous_value = pickle.loads(zlib.decompress(f.read()))\n                        f.seek(0)\n                        self._write_content(f, timeout, previous_value)\n                        return True\n                finally:\n                    locks.unlock(f)\n        except FileNotFoundError:\n            return False\n\n    def delete(self, key, version=None):\n        return self._delete(self._key_to_file(key, version))\n\n    def _delete(self, fname):\n        if not fname.startswith(self._dir) or not os.path.exists(fname):\n            return False\n        try:\n            os.remove(fname)\n        except FileNotFoundError:\n            # The file may have been removed by another process.\n            return False\n        return True\n\n    def has_key(self, key, version=None):\n        fname = self._key_to_file(key, version)\n        if os.path.exists(fname):\n            with open(fname, \"rb\") as f:\n                return not self._is_expired(f)\n        return False\n\n    def _cull(self):\n        \"\"\"\n        Remove random cache entries if max_entries is reached at a ratio\n        of num_entries / cull_frequency. A value of 0 for CULL_FREQUENCY means\n        that the entire cache will be purged.\n        \"\"\"\n        filelist = self._list_cache_files()\n        num_entries = len(filelist)\n        if num_entries < self._max_entries:\n            return  # return early if no culling is required\n        if self._cull_frequency == 0:\n            return self.clear()  # Clear the cache when CULL_FREQUENCY = 0\n        # Delete a random selection of entries\n        filelist = random.sample(filelist, int(num_entries / self._cull_frequency))\n        for fname in filelist:\n            self._delete(fname)\n\n    def _createdir(self):\n        # Set the umask because os.makedirs() doesn't apply the \"mode\" argument\n        # to intermediate-level directories.\n        old_umask = os.umask(0o077)\n        try:\n            os.makedirs(self._dir, 0o700, exist_ok=True)\n        finally:\n            os.umask(old_umask)\n\n    def _key_to_file(self, key, version=None):\n        \"\"\"\n        Convert a key into a cache file path. Basically this is the\n        root cache path joined with the md5sum of the key and a suffix.\n        \"\"\"\n        key = self.make_and_validate_key(key, version=version)\n        return os.path.join(\n            self._dir,\n            \"\".join(\n                [\n                    md5(key.encode(), usedforsecurity=False).hexdigest(),\n                    self.cache_suffix,\n                ]\n            ),\n        )\n\n    def clear(self):\n        \"\"\"\n        Remove all the cache files.\n        \"\"\"\n        for fname in self._list_cache_files():\n            self._delete(fname)\n\n    def _is_expired(self, f):\n        \"\"\"\n        Take an open cache file `f` and delete it if it's expired.\n        \"\"\"\n        try:\n            exp = pickle.load(f)\n        except EOFError:\n            exp = 0  # An empty file is considered expired.\n        if exp is not None and exp < time.time():\n            f.close()  # On Windows a file has to be closed before deleting\n            self._delete(f.name)\n            return True\n        return False\n\n    def _list_cache_files(self):\n        \"\"\"\n        Get a list of paths to all the cache files. These are all the files\n        in the root cache dir that end on the cache_suffix.\n        \"\"\"\n        return [\n            os.path.join(self._dir, fname)\n            for fname in glob.glob1(self._dir, \"*%s\" % self.cache_suffix)\n        ]\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder",
+        "diff": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -94,9 +94,11 @@\n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n+        except FileNotFoundError:\n+            pass\n         return False\n \n     def _cull(self):\n",
+        "description": "Fix race condition in FileBasedCache.has_key by removing os.path.exists() check and catching FileNotFoundError instead. This prevents FileNotFoundError when a file is deleted between the existence check and open() call, which can happen when multiple threads race to access an expired cache entry.",
+        "timestamp": "2026-02-22T22:52:57.036887Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider adding a comment explaining why FileNotFoundError is caught, to help future maintainers understand this is intentional handling of a race condition, not just defensive programming.",
+          "The 'pass' statement could be removed since the function returns False immediately after the try-except block anyway, making the code slightly cleaner.",
+          "Consider reviewing other methods in the file (like touch() and delete()) to ensure they follow similar patterns for handling race conditions - though they appear to already handle FileNotFoundError appropriately."
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 0,
+        "passed": true,
+        "pass_count": 1,
+        "fail_count": 0,
+        "failing_tests": [],
+        "error_traces": []
+      }
+    ],
+    "metadata": {
+      "status": "resolved",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-22T22:52:24.500697Z",
+      "end_time": null
+    }
+  }
+}

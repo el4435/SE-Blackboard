@@ -1,0 +1,280 @@
+{
+  "filtered_analysis": {
+    "MP": {
+      "non_empty": 49,
+      "resolved": 6,
+      "rate": 12.244897959183673
+    },
+    "BB": {
+      "non_empty": 46,
+      "resolved": 8,
+      "rate": 17.391304347826086
+    },
+    "Hybrid": {
+      "non_empty": 32,
+      "resolved": 6,
+      "rate": 18.75
+    }
+  },
+  "patch_quality": {
+    "non_empty_rate": {
+      "MP": 98.0,
+      "BB": 92.0,
+      "Hybrid": 64.0
+    },
+    "correct_file_rate": {
+      "MP": 54.0,
+      "BB": 76.0,
+      "Hybrid": 50.0
+    },
+    "correct_file_of_nonempty": {
+      "MP": 55.10204081632652,
+      "BB": 82.6086956521739,
+      "Hybrid": 78.125
+    },
+    "resolve_of_correct_file": {
+      "MP": 22.22222222222222,
+      "BB": 21.052631578947366,
+      "Hybrid": 24.0
+    }
+  },
+  "classifications": {
+    "MP": {
+      "resolved": [
+        "django__django-11179",
+        "django__django-13230",
+        "django__django-15347",
+        "django__django-16379",
+        "pytest-dev__pytest-11143",
+        "sphinx-doc__sphinx-8713"
+      ],
+      "empty_patch": [
+        "sympy__sympy-24909"
+      ],
+      "non_empty_failed": [
+        "astropy__astropy-14182",
+        "astropy__astropy-14995",
+        "django__django-11564",
+        "django__django-11620",
+        "django__django-12700",
+        "django__django-12908",
+        "django__django-12915",
+        "django__django-13028",
+        "django__django-13220",
+        "django__django-13321",
+        "django__django-14155",
+        "django__django-14238",
+        "django__django-14667",
+        "django__django-15202",
+        "django__django-15213",
+        "django__django-15388",
+        "django__django-16229",
+        "django__django-16408",
+        "django__django-16820",
+        "django__django-17051",
+        "pallets__flask-4045",
+        "pydata__xarray-3364",
+        "pylint-dev__pylint-5859",
+        "pytest-dev__pytest-5221",
+        "pytest-dev__pytest-5495",
+        "sphinx-doc__sphinx-10325",
+        "sphinx-doc__sphinx-10451",
+        "sphinx-doc__sphinx-7738",
+        "sympy__sympy-12481",
+        "sympy__sympy-13895",
+        "sympy__sympy-13971",
+        "sympy__sympy-14024",
+        "sympy__sympy-14396",
+        "sympy__sympy-15345",
+        "sympy__sympy-15346",
+        "sympy__sympy-18057",
+        "sympy__sympy-18698",
+        "sympy__sympy-18835",
+        "sympy__sympy-19254",
+        "sympy__sympy-20049",
+        "sympy__sympy-20639",
+        "sympy__sympy-21171",
+        "sympy__sympy-24213"
+      ]
+    },
+    "BB": {
+      "resolved": [
+        "django__django-11179",
+        "django__django-12700",
+        "django__django-12915",
+        "django__django-13028",
+        "django__django-13230",
+        "django__django-15347",
+        "django__django-16379",
+        "pytest-dev__pytest-11143"
+      ],
+      "empty_patch": [
+        "django__django-16408",
+        "sympy__sympy-12481",
+        "sympy__sympy-13895",
+        "sympy__sympy-15345"
+      ],
+      "non_empty_failed": [
+        "astropy__astropy-14182",
+        "astropy__astropy-14995",
+        "django__django-11564",
+        "django__django-11620",
+        "django__django-12908",
+        "django__django-13220",
+        "django__django-13321",
+        "django__django-14155",
+        "django__django-14238",
+        "django__django-14667",
+        "django__django-15202",
+        "django__django-15213",
+        "django__django-15388",
+        "django__django-16229",
+        "django__django-16820",
+        "django__django-17051",
+        "pallets__flask-4045",
+        "pydata__xarray-3364",
+        "pylint-dev__pylint-5859",
+        "pytest-dev__pytest-5221",
+        "pytest-dev__pytest-5495",
+        "sphinx-doc__sphinx-10325",
+        "sphinx-doc__sphinx-10451",
+        "sphinx-doc__sphinx-7738",
+        "sphinx-doc__sphinx-8713",
+        "sympy__sympy-13971",
+        "sympy__sympy-14024",
+        "sympy__sympy-14396",
+        "sympy__sympy-15346",
+        "sympy__sympy-18057",
+        "sympy__sympy-18698",
+        "sympy__sympy-18835",
+        "sympy__sympy-19254",
+        "sympy__sympy-20049",
+        "sympy__sympy-20639",
+        "sympy__sympy-21171",
+        "sympy__sympy-24213",
+        "sympy__sympy-24909"
+      ]
+    },
+    "Hybrid": {
+      "resolved": [
+        "django__django-11179",
+        "django__django-12700",
+        "django__django-13230",
+        "django__django-15347",
+        "django__django-16379",
+        "pytest-dev__pytest-11143"
+      ],
+      "empty_patch": [
+        "astropy__astropy-14182",
+        "astropy__astropy-14995",
+        "pylint-dev__pylint-5859",
+        "pytest-dev__pytest-5221",
+        "sphinx-doc__sphinx-10451",
+        "sphinx-doc__sphinx-7738",
+        "sympy__sympy-12481",
+        "sympy__sympy-13895",
+        "sympy__sympy-13971",
+        "sympy__sympy-14396",
+        "sympy__sympy-15345",
+        "sympy__sympy-15346",
+        "sympy__sympy-18057",
+        "sympy__sympy-18698",
+        "sympy__sympy-19254",
+        "sympy__sympy-20639",
+        "sympy__sympy-21171",
+        "sympy__sympy-24213"
+      ],
+      "non_empty_failed": [
+        "django__django-11564",
+        "django__django-11620",
+        "django__django-12908",
+        "django__django-12915",
+        "django__django-13028",
+        "django__django-13220",
+        "django__django-13321",
+        "django__django-14155",
+        "django__django-14238",
+        "django__django-14667",
+        "django__django-15202",
+        "django__django-15213",
+        "django__django-15388",
+        "django__django-16229",
+        "django__django-16408",
+        "django__django-16820",
+        "django__django-17051",
+        "pallets__flask-4045",
+        "pydata__xarray-3364",
+        "pytest-dev__pytest-5495",
+        "sphinx-doc__sphinx-10325",
+        "sphinx-doc__sphinx-8713",
+        "sympy__sympy-14024",
+        "sympy__sympy-18835",
+        "sympy__sympy-20049",
+        "sympy__sympy-24909"
+      ]
+    }
+  },
+  "correct_file_count": {
+    "MP": 27,
+    "BB": 38,
+    "Hybrid": 25
+  },
+  "ifs_resolve_correlation": {
+    "MP": {
+      "below_median": {
+        "total": 30,
+        "resolved": 2,
+        "rate": 6.666666666666667
+      },
+      "above_median": {
+        "total": 15,
+        "resolved": 4,
+        "rate": 26.666666666666668
+      }
+    },
+    "BB": {
+      "below_median": {
+        "total": 15,
+        "resolved": 3,
+        "rate": 20.0
+      },
+      "above_median": {
+        "total": 27,
+        "resolved": 5,
+        "rate": 18.51851851851852
+      }
+    },
+    "Hybrid": {
+      "below_median": {
+        "total": 15,
+        "resolved": 3,
+        "rate": 20.0
+      },
+      "above_median": {
+        "total": 15,
+        "resolved": 3,
+        "rate": 20.0
+      }
+    }
+  },
+  "bottleneck_summary": {
+    "MP": {
+      "resolved": 6,
+      "empty_patch": 1,
+      "non_empty_failed": 43,
+      "correct_file_wrong_diff": 21
+    },
+    "BB": {
+      "resolved": 8,
+      "empty_patch": 4,
+      "non_empty_failed": 38,
+      "correct_file_wrong_diff": 30
+    },
+    "Hybrid": {
+      "resolved": 6,
+      "empty_patch": 18,
+      "non_empty_failed": 26,
+      "correct_file_wrong_diff": 19
+    }
+  }
+}

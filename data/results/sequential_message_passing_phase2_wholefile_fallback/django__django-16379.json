@@ -1,0 +1,112 @@
+{
+  "experiment_id": "seq_message_passing_django__django-16379_0e1d897e",
+  "issue_id": "django__django-16379",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 3,
+  "total_input_tokens": 10764,
+  "total_output_tokens": 7291,
+  "total_latency_ms": 278061,
+  "final_patch": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -34,7 +34,7 @@\n             with open(fname, \"rb\") as f:\n                 if not self._is_expired(f):\n                     return pickle.loads(zlib.decompress(f.read()))\n-        except FileNotFoundError:\n+        except (FileNotFoundError, pickle.PickleError, zlib.error):\n             pass\n         return default\n \n@@ -72,7 +72,7 @@\n                         return True\n                 finally:\n                     locks.unlock(f)\n-        except FileNotFoundError:\n+        except (FileNotFoundError, pickle.PickleError, zlib.error):\n             return False\n \n     def delete(self, key, version=None):\n@@ -90,10 +90,11 @@\n \n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n-        return False\n+        except (FileNotFoundError, pickle.PickleError, zlib.error):\n+            return False\n \n     def _cull(self):\n         \"\"\"\n@@ -150,8 +151,8 @@\n         \"\"\"\n         try:\n             exp = pickle.load(f)\n-        except EOFError:\n+        except (EOFError, pickle.PickleError):\n             exp = 0  # An empty file is considered expired.\n         if exp is not None and exp < time.time():\n             f.close()  # On Windows a file has to be closed before deleting\n",
+  "apply_method": "failed",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-23T00:11:18.593909+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 794,
+      "output_tokens": 621,
+      "latency_ms": 10121
+    },
+    {
+      "timestamp": "2026-02-23T00:11:33.245656+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 2456,
+      "output_tokens": 1631,
+      "latency_ms": 13195
+    },
+    {
+      "timestamp": "2026-02-23T00:11:41.406837+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 670,
+      "output_tokens": 329,
+      "latency_ms": 8158
+    },
+    {
+      "timestamp": "2026-02-23T00:11:57.900439+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2163,
+      "output_tokens": 1967,
+      "latency_ms": 18281
+    },
+    {
+      "timestamp": "2026-02-23T00:12:03.122385+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1148,
+      "output_tokens": 190,
+      "latency_ms": 5219
+    },
+    {
+      "timestamp": "2026-02-23T00:13:40.729417+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 412,
+      "output_tokens": 193,
+      "latency_ms": 3727
+    },
+    {
+      "timestamp": "2026-02-23T00:13:58.706230+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 2131,
+      "output_tokens": 1936,
+      "latency_ms": 17976
+    },
+    {
+      "timestamp": "2026-02-23T00:14:08.312798+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 990,
+      "output_tokens": 424,
+      "latency_ms": 9604
+    }
+  ],
+  "blackboard_final_state": null
+}

@@ -16,7 +16,10 @@ from typing import Any
 from src.blackboard.schema import TestResult
 
 logger = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
 # Windows compatibility: stub out Unix-only 'resource' module
+# ---------------------------------------------------------------------------
 if sys.platform == "win32":
     # Stub out Unix-only 'resource' module
     if "resource" not in sys.modules:
@@ -56,7 +59,10 @@ class SWEBenchRunner:
             data = json.loads(ipath.read_text(encoding="utf-8"))
             self._issues = {item["instance_id"]: item for item in data}
             logger.info("Loaded %d issues from %s", len(self._issues), issues_path)
+
+    # ------------------------------------------------------------------
     # Setup: clone repo, checkout base_commit
+    # ------------------------------------------------------------------
 
     async def setup_instance(self, instance_id: str) -> str:
         """Clone the repo (once) and checkout the correct base_commit.
@@ -96,7 +102,10 @@ class SWEBenchRunner:
 
         self.current_workspace = str(repo_dir)
         return str(repo_dir)
+
+    # ------------------------------------------------------------------
     # Code context retrieval
+    # ------------------------------------------------------------------
 
     async def get_repo_structure(self, workspace: str, max_depth: int = 3) -> str:
         """Return a tree-like representation of the repository structure."""
@@ -143,7 +152,10 @@ class SWEBenchRunner:
             return matches
         except Exception:
             return []
+
+    # ------------------------------------------------------------------
     # Patch application
+    # ------------------------------------------------------------------
 
     async def apply_patch(self, workspace: str, patch_diff: str) -> bool:
         """Apply a unified diff patch to the workspace. Return True on success.
@@ -299,7 +311,10 @@ class SWEBenchRunner:
                 os.unlink(patch_file)
             except OSError:
                 pass
+
+    # ------------------------------------------------------------------
     # Test execution via swebench Docker harness
+    # ------------------------------------------------------------------
 
     async def run_tests(self, instance_id: str, patch_diff: str) -> TestResult:
         """Run tests using the swebench Docker harness.
@@ -497,7 +512,10 @@ class SWEBenchRunner:
             "On Windows, enable 'Expose daemon on tcp://localhost:2375' in "
             "Docker Desktop settings, or start Docker Desktop."
         )
+
+    # ------------------------------------------------------------------
     # Helpers
+    # ------------------------------------------------------------------
 
     @staticmethod
     async def _run_cmd(

@@ -1,0 +1,123 @@
+{
+  "experiment_id": "deb_message_passing_django__django-15213_e31ebc8d",
+  "issue_id": "django__django-15213",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 13841,
+  "total_output_tokens": 5410,
+  "total_latency_ms": 124268,
+  "final_patch": "--- a/django/db/models/sql/where.py\n+++ b/django/db/models/sql/where.py\n@@ -100,6 +100,7 @@\n     def as_sql(self, compiler, connection):\n         result = []\n         result_params = []\n+        empty = False\n         for child in self.children:\n             try:\n                 sql, params = compiler.compile(child)\n@@ -107,14 +108,28 @@\n                 # Can happen when attempting to compile a conditional expression\n                 # whose condition is empty.\n                 pass\n             except EmptyResultSet:\n-                # Skip empty results.\n-                continue\n+                # Handle EmptyResultSet based on connector and negation\n+                if self.negated:\n+                    # NOT(empty) = TRUE, so we can skip this child\n+                    # For OR: NOT(A OR empty) = NOT A AND NOT empty = NOT A AND TRUE = NOT A\n+                    # For AND: NOT(A AND empty) = NOT A OR NOT empty = NOT A OR TRUE = TRUE\n+                    if self.connector == \"AND\":\n+                        # NOT(A AND empty) = TRUE, entire expression is TRUE\n+                        empty = True\n+                        break\n+                    # For OR connector, just skip the child\n+                else:\n+                    # For non-negated case\n+                    if self.connector == \"AND\":\n+                        # A AND empty = empty, entire expression is empty\n+                        raise\n+                    # For OR connector, just skip the child (A OR empty = A)\n             else:\n                 result.append(sql)\n                 result_params.extend(params)\n-        if not result:\n-            raise EmptyResultSet\n+        if not result and not empty:\n+            raise EmptyResultSet\n \n         conn = ' %s ' % self.connector\n         sql_string = conn.join(result)",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T23:39:45.536824+00:00",
+      "experiment_id": "debate_message_passing_django__django-15213",
+      "issue_id": "django__django-15213",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 670,
+      "output_tokens": 746,
+      "latency_ms": 16109
+    },
+    {
+      "timestamp": "2026-02-14T23:40:11.019409+00:00",
+      "experiment_id": "debate_message_passing_django__django-15213",
+      "issue_id": "django__django-15213",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1623,
+      "output_tokens": 353,
+      "latency_ms": 7662
+    },
+    {
+      "timestamp": "2026-02-14T23:40:21.005644+00:00",
+      "experiment_id": "debate_message_passing_django__django-15213",
+      "issue_id": "django__django-15213",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 817,
+      "output_tokens": 430,
+      "latency_ms": 9985
+    },
+    {
+      "timestamp": "2026-02-14T23:40:36.295697+00:00",
+      "experiment_id": "debate_message_passing_django__django-15213",
+      "issue_id": "django__django-15213",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3478,
+      "output_tokens": 1023,
+      "latency_ms": 15288
+    },
+    {
+      "timestamp": "2026-02-14T23:40:46.122359+00:00",
+      "experiment_id": "debate_message_passing_django__django-15213",
+      "issue_id": "django__django-15213",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1306,
+      "output_tokens": 499,
+      "latency_ms": 9825
+    },
+    {
+      "timestamp": "2026-02-14T23:40:58.989749+00:00",
+      "experiment_id": "debate_message_passing_django__django-15213",
+      "issue_id": "django__django-15213",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1353,
+      "output_tokens": 529,
+      "latency_ms": 12866
+    },
+    {
+      "timestamp": "2026-02-14T23:41:10.590845+00:00",
+      "experiment_id": "debate_message_passing_django__django-15213",
+      "issue_id": "django__django-15213",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1405,
+      "output_tokens": 668,
+      "latency_ms": 11600
+    },
+    {
+      "timestamp": "2026-02-14T23:41:22.214351+00:00",
+      "experiment_id": "debate_message_passing_django__django-15213",
+      "issue_id": "django__django-15213",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1405,
+      "output_tokens": 668,
+      "latency_ms": 11622
+    },
+    {
+      "timestamp": "2026-02-14T23:41:33.694916+00:00",
+      "experiment_id": "debate_message_passing_django__django-15213",
+      "issue_id": "django__django-15213",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1784,
+      "output_tokens": 494,
+      "latency_ms": 11479
+    }
+  ],
+  "blackboard_final_state": null
+}

@@ -1,0 +1,241 @@
+{
+  "experiment_id": "seq_blackboard_django__django-13028_4603ca32",
+  "issue_id": "django__django-13028",
+  "topology": "sequential",
+  "communication": "blackboard",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 86022,
+  "total_output_tokens": 52721,
+  "total_latency_ms": 926474,
+  "final_patch": "",
+  "apply_method": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T23:25:24.569807+00:00",
+      "experiment_id": "sequential_blackboard_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-B",
+      "agent_role": "Planner",
+      "communication_mode": "blackboard",
+      "iteration": 0,
+      "input_tokens": 4455,
+      "output_tokens": 1587,
+      "latency_ms": 28478
+    },
+    {
+      "timestamp": "2026-02-22T23:30:02.321467+00:00",
+      "experiment_id": "sequential_blackboard_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 13409,
+      "output_tokens": 16384,
+      "latency_ms": 277296
+    },
+    {
+      "timestamp": "2026-02-22T23:30:13.144256+00:00",
+      "experiment_id": "sequential_blackboard_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 9615,
+      "output_tokens": 425,
+      "latency_ms": 10817
+    },
+    {
+      "timestamp": "2026-02-22T23:34:50.681117+00:00",
+      "experiment_id": "sequential_blackboard_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 13409,
+      "output_tokens": 16384,
+      "latency_ms": 277535
+    },
+    {
+      "timestamp": "2026-02-22T23:35:00.589178+00:00",
+      "experiment_id": "sequential_blackboard_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 9705,
+      "output_tokens": 371,
+      "latency_ms": 9904
+    },
+    {
+      "timestamp": "2026-02-22T23:39:35.962201+00:00",
+      "experiment_id": "sequential_blackboard_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 13409,
+      "output_tokens": 16384,
+      "latency_ms": 275371
+    },
+    {
+      "timestamp": "2026-02-22T23:39:56.447571+00:00",
+      "experiment_id": "sequential_blackboard_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 20364,
+      "output_tokens": 939,
+      "latency_ms": 20481
+    },
+    {
+      "timestamp": "2026-02-22T23:40:22.562595+00:00",
+      "experiment_id": "sequential_blackboard_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-B",
+      "agent_role": "Tester",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 1656,
+      "output_tokens": 247,
+      "latency_ms": 6460
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-13028",
+      "problem_statement": "Queryset raises NotSupportedError when RHS has filterable=False attribute.\nDescription\n\t \n\t\t(last modified by Nicolas Baccelli)\n\t \nI'm migrating my app to django 3.0.7 and I hit a strange behavior using a model class with a field labeled filterable\nclass ProductMetaDataType(models.Model):\n\tlabel = models.CharField(max_length=255, unique=True, blank=False, null=False)\n\tfilterable = models.BooleanField(default=False, verbose_name=_(\"filterable\"))\n\tclass Meta:\n\t\tapp_label = \"adminpricing\"\n\t\tverbose_name = _(\"product meta data type\")\n\t\tverbose_name_plural = _(\"product meta data types\")\n\tdef __str__(self):\n\t\treturn self.label\nclass ProductMetaData(models.Model):\n\tid = models.BigAutoField(primary_key=True)\n\tproduct = models.ForeignKey(\n\t\tProduit, null=False, blank=False, on_delete=models.CASCADE\n\t)\n\tvalue = models.TextField(null=False, blank=False)\n\tmarketplace = models.ForeignKey(\n\t\tPlateforme, null=False, blank=False, on_delete=models.CASCADE\n\t)\n\tdate_created = models.DateTimeField(null=True, default=timezone.now)\n\tmetadata_type = models.ForeignKey(\n\t\tProductMetaDataType, null=False, blank=False, on_delete=models.CASCADE\n\t)\n\tclass Meta:\n\t\tapp_label = \"adminpricing\"\n\t\tverbose_name = _(\"product meta data\")\n\t\tverbose_name_plural = _(\"product meta datas\")\nError happened when filtering ProductMetaData with a metadata_type :\nProductMetaData.objects.filter(value=\"Dark Vador\", metadata_type=self.brand_metadata)\nError traceback :\nTraceback (most recent call last):\n File \"/backoffice/backoffice/adminpricing/tests/test_pw.py\", line 481, in test_checkpolicywarning_by_fields\n\tfor p in ProductMetaData.objects.filter(\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/manager.py\", line 82, in manager_method\n\treturn getattr(self.get_queryset(), name)(*args, **kwargs)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/query.py\", line 904, in filter\n\treturn self._filter_or_exclude(False, *args, **kwargs)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/query.py\", line 923, in _filter_or_exclude\n\tclone.query.add_q(Q(*args, **kwargs))\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1351, in add_q\n\tclause, _ = self._add_q(q_object, self.used_aliases)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1378, in _add_q\n\tchild_clause, needed_inner = self.build_filter(\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1264, in build_filter\n\tself.check_filterable(value)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1131, in check_filterable\n\traise NotSupportedError(\ndjango.db.utils.NotSupportedError: ProductMetaDataType is disallowed in the filter clause.\nI changed label to filterable_test and it fixed this issue\nThis should be documented or fix.\n",
+      "repo": "django/django",
+      "base_commit": "78ad4b4b0201003792bfdbf1a7781cbc9ee03539",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "Django's `check_filterable` method in the Query class checks if an object has a `filterable` attribute to determine if it can be used in filter clauses. When a model instance has a field named `filterable` set to `False`, Django incorrectly interprets this model field as an internal Django attribute indicating the object is not filterable, causing a NotSupportedError. This is a naming collision between user-defined model fields and Django's internal attribute checking mechanism.",
+      "relevant_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "relevant_functions": [
+        "django.db.models.sql.query.Query.check_filterable",
+        "django.db.models.sql.query.Query.build_filter"
+      ],
+      "fix_strategy": "1. Locate the `check_filterable` method in `django/db/models/sql/query.py` (around line 1131 based on the traceback).\n\n2. Examine how the method checks for the `filterable` attribute. It likely uses `hasattr(value, 'filterable')` or `getattr(value, 'filterable', True)`.\n\n3. Modify the check to be more specific and avoid conflicts with model fields. The best approach is to:\n   a) Check if the object is a Model instance first, and if so, skip the filterable check since model instances should always be filterable in filter clauses\n   b) Only check the `filterable` attribute on objects that are expressions, lookups, or other Django query constructs\n   c) Use a more defensive check that verifies the `filterable` attribute is actually a Django internal marker and not a model field\n\n4. The fix should distinguish between:\n   - Model instances (which should always be allowed in filters regardless of any `filterable` field)\n   - Django expression/lookup objects (which may have a legitimate `filterable=False` attribute)\n\n5. Add test cases to verify that model instances with a `filterable` field can be used in filter clauses without raising NotSupportedError.\n\n6. Consider documenting reserved attribute names or making the internal checking mechanism more robust to avoid similar issues in the future.",
+      "confidence": 0.95,
+      "relevant_code": "## Complete Source Files (for whole-file rewrite)\n\n**File: django/db/models/sql/query.py** (2414 lines — TOO LARGE for full rewrite, showing first 500 lines. Use diff mode for this file.)\n```python\n   1| \"\"\"\n   2| Create SQL statements for QuerySets.\n   3| \n   4| The code in here encapsulates all of the SQL construction so that QuerySets\n   5| themselves do not have to (and could be backed by things other than SQL\n   6| databases). The abstraction barrier only works one way: this module has to know\n   7| all about the internals of models in order to get the information it needs.\n   8| \"\"\"\n   9| import copy\n  10| import difflib\n  11| import functools\n  12| import inspect\n  13| import sys\n  14| import warnings\n  15| from collections import Counter, namedtuple\n  16| from collections.abc import Iterator, Mapping\n  17| from itertools import chain, count, product\n  18| from string import ascii_uppercase\n  19| \n  20| from django.core.exceptions import (\n  21|     EmptyResultSet, FieldDoesNotExist, FieldError,\n  22| )\n  23| from django.db import DEFAULT_DB_ALIAS, NotSupportedError, connections\n  24| from django.db.models.aggregates import Count\n  25| from django.db.models.constants import LOOKUP_SEP\n  26| from django.db.models.expressions import BaseExpression, Col, F, OuterRef, Ref\n  27| from django.db.models.fields import Field\n  28| from django.db.models.fields.related_lookups import MultiColSource\n  29| from django.db.models.lookups import Lookup\n  30| from django.db.models.query_utils import (\n  31|     Q, check_rel_lookup_compatibility, refs_expression,\n  32| )\n  33| from django.db.models.sql.constants import INNER, LOUTER, ORDER_DIR, SINGLE\n  34| from django.db.models.sql.datastructures import (\n  35|     BaseTable, Empty, Join, MultiJoin,\n  36| )\n  37| from django.db.models.sql.where import (\n  38|     AND, OR, ExtraWhere, NothingNode, WhereNode,\n  39| )\n  40| from django.utils.deprecation import RemovedInDjango40Warning\n  41| from django.utils.functional import cached_property\n  42| from django.utils.tree import Node\n  43| \n  44| __all__ = ['Query', 'RawQuery']\n  45| \n  46| \n  47| def get_field_names_from_opts(opts):\n  48|     return set(chain.from_iterable(\n  49|         (f.name, f.attname) if f.concrete else (f.name,)\n  50|         for f in opts.get_fields()\n  51|     ))\n  52| \n  53| \n  54| def get_children_from_q(q):\n  55|     for child in q.children:\n  56|         if isinstance(child, Node):\n  57|             yield from get_children_from_q(child)\n  58|         else:\n  59|             yield child\n  60| \n  61| \n  62| JoinInfo = namedtuple(\n  63|     'JoinInfo',\n  64|     ('final_field', 'targets', 'opts', 'joins', 'path', 'transform_function')\n  65| )\n  66| \n  67| \n  68| class RawQuery:\n  69|     \"\"\"A single raw SQL query.\"\"\"\n  70| \n  71|     def __init__(self, sql, using, params=None):\n  72|         self.params = params or ()\n  73|         self.sql = sql\n  74|         self.using = using\n  75|         self.cursor = None\n  76| \n  77|         # Mirror some properties of a normal query so that\n  78|         # the compiler can be used to process results.\n  79|         self.low_mark, self.high_mark = 0, None  # Used for offset/limit\n  80|         self.extra_select = {}\n  81|         self.annotation_select = {}\n  82| \n  83|     def chain(self, using):\n  84|         return self.clone(using)\n  85| \n  86|     def clone(self, using):\n  87|         return RawQuery(self.sql, using, params=self.params)\n  88| \n  89|     def get_columns(self):\n  90|         if self.cursor is None:\n  91|             self._execute_query()\n  92|         converter = connections[self.using].introspection.identifier_converter\n  93|         return [converter(column_meta[0])\n  94|                 for column_meta in self.cursor.description]\n  95| \n  96|     def __iter__(self):\n  97|         # Always execute a new query for a new iterator.\n  98|         # This could be optimized with a cache at the expense of RAM.\n  99|         self._execute_query()\n 100|         if not connections[self.using].features.can_use_chunked_reads:\n 101|             # If the database can't use chunked reads we need to make sure we\n 102|             # evaluate the entire query up front.\n 103|             result = list(self.cursor)\n 104|         else:\n 105|             result = self.cursor\n 106|         return iter(result)\n 107| \n 108|     def __repr__(self):\n 109|         return \"<%s: %s>\" % (self.__class__.__name__, self)\n 110| \n 111|     @property\n 112|     def params_type(self):\n 113|         return dict if isinstance(self.params, Mapping) else tuple\n 114| \n 115|     def __str__(self):\n 116|         return self.sql % self.params_type(self.params)\n 117| \n 118|     def _execute_query(self):\n 119|         connection = connections[self.using]\n 120| \n 121|         # Adapt parameters to the database, as much as possible considering\n 122|         # that the target type isn't known. See #17755.\n 123|         params_type = self.params_type\n 124|         adapter = connection.ops.adapt_unknown_value\n 125|         if params_type is tuple:\n 126|             params = tuple(adapter(val) for val in self.params)\n 127|         elif params_type is dict:\n 128|             params = {key: adapter(val) for key, val in self.params.items()}\n 129|         else:\n 130|             raise RuntimeError(\"Unexpected params type: %s\" % params_type)\n 131| \n 132|         self.cursor = connection.cursor()\n 133|         self.cursor.execute(self.sql, params)\n 134| \n 135| \n 136| class Query(BaseExpression):\n 137|     \"\"\"A single SQL query.\"\"\"\n 138| \n 139|     alias_prefix = 'T'\n 140|     subq_aliases = frozenset([alias_prefix])\n 141| \n 142|     compiler = 'SQLCompiler'\n 143| \n 144|     def __init__(self, model, where=WhereNode, alias_cols=True):\n 145|         self.model = model\n 146|         self.alias_refcount = {}\n 147|         # alias_map is the most important data structure regarding joins.\n 148|         # It's used for recording which joins exist in the query and what\n 149|         # types they are. The key is the alias of the joined table (possibly\n 150|         # the table name) and the value is a Join-like object (see\n 151|         # sql.datastructures.Join for more information).\n 152|         self.alias_map = {}\n 153|         # Whether to provide alias to columns during reference resolving.\n 154|         self.alias_cols = alias_cols\n 155|         # Sometimes the query contains references to aliases in outer queries (as\n 156|         # a result of split_exclude). Correct alias quoting needs to know these\n 157|         # aliases too.\n 158|         # Map external tables to whether they are aliased.\n 159|         self.external_aliases = {}\n 160|         self.table_map = {}     # Maps table names to list of aliases.\n 161|         self.default_cols = True\n 162|         self.default_ordering = True\n 163|         self.standard_ordering = True\n 164|         self.used_aliases = set()\n 165|         self.filter_is_sticky = False\n 166|         self.subquery = False\n 167| \n 168|         # SQL-related attributes\n 169|         # Select and related select clauses are expressions to use in the\n 170|         # SELECT clause of the query.\n 171|         # The select is used for cases where we want to set up the select\n 172|         # clause to contain other than default fields (values(), subqueries...)\n 173|         # Note that annotations go to annotations dictionary.\n 174|         self.select = ()\n 175|         self.where = where()\n 176|         self.where_class = where\n 177|         # The group_by attribute can have one of the following forms:\n 178|         #  - None: no group by at all in the query\n 179|         #  - A tuple of expressions: group by (at least) those expressions.\n 180|         #    String refs are also allowed for now.\n 181|         #  - True: group by all select fields of the model\n 182|         # See compiler.get_group_by() for details.\n 183|         self.group_by = None\n 184|         self.order_by = ()\n 185|         self.low_mark, self.high_mark = 0, None  # Used for offset/limit\n 186|         self.distinct = False\n 187|         self.distinct_fields = ()\n 188|         self.select_for_update = False\n 189|         self.select_for_update_nowait = False\n 190|         self.select_for_update_skip_locked = False\n 191|         self.select_for_update_of = ()\n 192|         self.select_for_no_key_update = False\n 193| \n 194|         self.select_related = False\n 195|         # Arbitrary limit for select_related to prevents infinite recursion.\n 196|         self.max_depth = 5\n 197| \n 198|         # Holds the selects defined by a call to values() or values_list()\n 199|         # excluding annotation_select and extra_select.\n 200|         self.values_select = ()\n 201| \n 202|         # SQL annotation-related attributes\n 203|         self.annotations = {}  # Maps alias -> Annotation Expression\n 204|         self.annotation_select_mask = None\n 205|         self._annotation_select_cache = None\n 206| \n 207|         # Set combination attributes\n 208|         self.combinator = None\n 209|         self.combinator_all = False\n 210|         self.combined_queries = ()\n 211| \n 212|         # These are for extensions. The contents are more or less appended\n 213|         # verbatim to the appropriate clause.\n 214|         self.extra = {}  # Maps col_alias -> (col_sql, params).\n 215|         self.extra_select_mask = None\n 216|         self._extra_select_cache = None\n 217| \n 218|         self.extra_tables = ()\n 219|         self.extra_order_by = ()\n 220| \n 221|         # A tuple that is a set of model field names and either True, if these\n 222|         # are the fields to defer, or False if these are the only fields to\n 223|         # load.\n 224|         self.deferred_loading = (frozenset(), True)\n 225| \n 226|         self._filtered_relations = {}\n 227| \n 228|         self.explain_query = False\n 229|         self.explain_format = None\n 230|         self.explain_options = {}\n 231| \n 232|     @property\n 233|     def output_field(self):\n 234|         if len(self.select) == 1:\n 235|             select = self.select[0]\n 236|             return getattr(select, 'target', None) or select.field\n 237|         elif len(self.annotation_select) == 1:\n 238|             return next(iter(self.annotation_select.values())).output_field\n 239| \n 240|     @property\n 241|     def has_select_fields(self):\n 242|         return bool(self.select or self.annotation_select_mask or self.extra_select_mask)\n 243| \n 244|     @cached_property\n 245|     def base_table(self):\n 246|         for alias in self.alias_map:\n 247|             return alias\n 248| \n 249|     def __str__(self):\n 250|         \"\"\"\n 251|         Return the query as a string of SQL with the parameter values\n 252|         substituted in (use sql_with_params() to see the unsubstituted string).\n 253| \n 254|         Parameter values won't necessarily be quoted correctly, since that is\n 255|         done by the database interface at execution time.\n 256|         \"\"\"\n 257|         sql, params = self.sql_with_params()\n 258|         return sql % params\n 259| \n 260|     def sql_with_params(self):\n 261|         \"\"\"\n 262|         Return the query as an SQL string and the parameters that will be\n 263|         substituted into the query.\n 264|         \"\"\"\n 265|         return self.get_compiler(DEFAULT_DB_ALIAS).as_sql()\n 266| \n 267|     def __deepcopy__(self, memo):\n 268|         \"\"\"Limit the amount of work when a Query is deepcopied.\"\"\"\n 269|         result = self.clone()\n 270|         memo[id(self)] = result\n 271|         return result\n 272| \n 273|     def get_compiler(self, using=None, connection=None):\n 274|         if using is None and connection is None:\n 275|             raise ValueError(\"Need either using or connection\")\n 276|         if using:\n 277|             connection = connections[using]\n 278|         return connection.ops.compiler(self.compiler)(self, connection, using)\n 279| \n 280|     def get_meta(self):\n 281|         \"\"\"\n 282|         Return the Options instance (the model._meta) from which to start\n 283|         processing. Normally, this is self.model._meta, but it can be changed\n 284|         by subclasses.\n 285|         \"\"\"\n 286|         return self.model._meta\n 287| \n 288|     def clone(self):\n 289|         \"\"\"\n 290|         Return a copy of the current Query. A lightweight alternative to\n 291|         to deepcopy().\n 292|         \"\"\"\n 293|         obj = Empty()\n 294|         obj.__class__ = self.__class__\n 295|         # Copy references to everything.\n 296|         obj.__dict__ = self.__dict__.copy()\n 297|         # Clone attributes that can't use shallow copy.\n 298|         obj.alias_refcount = self.alias_refcount.copy()\n 299|         obj.alias_map = self.alias_map.copy()\n 300|         obj.external_aliases = self.external_aliases.copy()\n 301|         obj.table_map = self.table_map.copy()\n 302|         obj.where = self.where.clone()\n 303|         obj.annotations = self.annotations.copy()\n 304|         if self.annotation_select_mask is None:\n 305|             obj.annotation_select_mask = None\n 306|         else:\n 307|             obj.annotation_select_mask = self.annotation_select_mask.copy()\n 308|         # _annotation_select_cache cannot be copied, as doing so breaks the\n 309|         # (necessary) state in which both annotations and\n 310|         # _annotation_select_cache point to the same underlying objects.\n 311|         # It will get re-populated in the cloned queryset the next time it's\n 312|         # used.\n 313|         obj._annotation_select_cache = None\n 314|         obj.extra = self.extra.copy()\n 315|         if self.extra_select_mask is None:\n 316|             obj.extra_select_mask = None\n 317|         else:\n 318|             obj.extra_select_mask = self.extra_select_mask.copy()\n 319|         if self._extra_select_cache is None:\n 320|             obj._extra_select_cache = None\n 321|         else:\n 322|             obj._extra_select_cache = self._extra_select_cache.copy()\n 323|         if self.select_related is not False:\n 324|             # Use deepcopy because select_related stores fields in nested\n 325|             # dicts.\n 326|             obj.select_related = copy.deepcopy(obj.select_related)\n 327|         if 'subq_aliases' in self.__dict__:\n 328|             obj.subq_aliases = self.subq_aliases.copy()\n 329|         obj.used_aliases = self.used_aliases.copy()\n 330|         obj._filtered_relations = self._filtered_relations.copy()\n 331|         # Clear the cached_property\n 332|         try:\n 333|             del obj.base_table\n 334|         except AttributeError:\n 335|             pass\n 336|         return obj\n 337| \n 338|     def chain(self, klass=None):\n 339|         \"\"\"\n 340|         Return a copy of the current Query that's ready for another operation.\n 341|         The klass argument changes the type of the Query, e.g. UpdateQuery.\n 342|         \"\"\"\n 343|         obj = self.clone()\n 344|         if klass and obj.__class__ != klass:\n 345|             obj.__class__ = klass\n 346|         if not obj.filter_is_sticky:\n 347|             obj.used_aliases = set()\n 348|         obj.filter_is_sticky = False\n 349|         if hasattr(obj, '_setup_query'):\n 350|             obj._setup_query()\n 351|         return obj\n 352| \n 353|     def relabeled_clone(self, change_map):\n 354|         clone = self.clone()\n 355|         clone.change_aliases(change_map)\n 356|         return clone\n 357| \n 358|     def _get_col(self, target, field, alias):\n 359|         if not self.alias_cols:\n 360|             alias = None\n 361|         return target.get_col(alias, field)\n 362| \n 363|     def rewrite_cols(self, annotation, col_cnt):\n 364|         # We must make sure the inner query has the referred columns in it.\n 365|         # If we are aggregating over an annotation, then Django uses Ref()\n 366|         # instances to note this. However, if we are annotating over a column\n 367|         # of a related model, then it might be that column isn't part of the\n 368|         # SELECT clause of the inner query, and we must manually make sure\n 369|         # the column is selected. An example case is:\n 370|         #    .aggregate(Sum('author__awards'))\n 371|         # Resolving this expression results in a join to author, but there\n 372|         # is no guarantee the awards column of author is in the select clause\n 373|         # of the query. Thus we must manually add the column to the inner\n 374|         # query.\n 375|         orig_exprs = annotation.get_source_expressions()\n 376|         new_exprs = []\n 377|         for expr in orig_exprs:\n 378|             # FIXME: These conditions are fairly arbitrary. Identify a better\n 379|             # method of having expressions decide which code path they should\n 380|             # take.\n 381|             if isinstance(expr, Ref):\n 382|                 # Its already a Ref to subquery (see resolve_ref() for\n 383|                 # details)\n 384|                 new_exprs.append(expr)\n 385|             elif isinstance(expr, (WhereNode, Lookup)):\n 386|                 # Decompose the subexpressions further. The code here is\n 387|                 # copied from the else clause, but this condition must appear\n 388|                 # before the contains_aggregate/is_summary condition below.\n 389|                 new_expr, col_cnt = self.rewrite_cols(expr, col_cnt)\n 390|                 new_exprs.append(new_expr)\n 391|             else:\n 392|                 # Reuse aliases of expressions already selected in subquery.\n 393|                 for col_alias, selected_annotation in self.annotation_select.items():\n 394|                     if selected_annotation is expr:\n 395|                         new_expr = Ref(col_alias, expr)\n 396|                         break\n 397|                 else:\n 398|                     # An expression that is not selected the subquery.\n 399|                     if isinstance(expr, Col) or (expr.contains_aggregate and not expr.is_summary):\n 400|                         # Reference column or another aggregate. Select it\n 401|                         # under a non-conflicting alias.\n 402|                         col_cnt += 1\n 403|                         col_alias = '__col%d' % col_cnt\n 404|                         self.annotations[col_alias] = expr\n 405|                         self.append_annotation_mask([col_alias])\n 406|                         new_expr = Ref(col_alias, expr)\n 407|                     else:\n 408|                         # Some other expression not referencing database values\n 409|                         # directly. Its subexpression might contain Cols.\n 410|                         new_expr, col_cnt = self.rewrite_cols(expr, col_cnt)\n 411|                 new_exprs.append(new_expr)\n 412|         annotation.set_source_expressions(new_exprs)\n 413|         return annotation, col_cnt\n 414| \n 415|     def get_aggregation(self, using, added_aggregate_names):\n 416|         \"\"\"\n 417|         Return the dictionary with the values of the existing aggregations.\n 418|         \"\"\"\n 419|         if not self.annotation_select:\n 420|             return {}\n 421|         existing_annotations = [\n 422|             annotation for alias, annotation\n 423|             in self.annotations.items()\n 424|             if alias not in added_aggregate_names\n 425|         ]\n 426|         # Decide if we need to use a subquery.\n 427|         #\n 428|         # Existing annotations would cause incorrect results as get_aggregation()\n 429|         # must produce just one result and thus must not use GROUP BY. But we\n 430|         # aren't smart enough to remove the existing annotations from the\n 431|         # query, so those would force us to use GROUP BY.\n 432|         #\n 433|         # If the query has limit or distinct, or uses set operations, then\n 434|         # those operations must be done in a subquery so that the query\n 435|         # aggregates on the limit and/or distinct results instead of applying\n 436|         # the distinct and limit after the aggregation.\n 437|         if (isinstance(self.group_by, tuple) or self.is_sliced or existing_annotations or\n 438|                 self.distinct or self.combinator):\n 439|             from django.db.models.sql.subqueries import AggregateQuery\n 440|             outer_query = AggregateQuery(self.model)\n 441|             inner_query = self.clone()\n 442|             inner_query.select_for_update = False\n 443|             inner_query.select_related = False\n 444|             inner_query.set_annotation_mask(self.annotation_select)\n 445|             if not self.is_sliced and not self.distinct_fields:\n 446|                 # Queries with distinct_fields need ordering and when a limit\n 447|                 # is applied we must take the slice from the ordered query.\n 448|                 # Otherwise no need for ordering.\n 449|                 inner_query.clear_ordering(True)\n 450|             if not inner_query.distinct:\n 451|                 # If the inner query uses default select and it has some\n 452|                 # aggregate annotations, then we must make sure the inner\n 453|                 # query is grouped by the main model's primary key. However,\n 454|                 # clearing the select clause can alter results if distinct is\n 455|                 # used.\n 456|                 has_existing_aggregate_annotations = any(\n 457|                     annotation for annotation in existing_annotations\n 458|                     if getattr(annotation, 'contains_aggregate', True)\n 459|                 )\n 460|                 if inner_query.default_cols and has_existing_aggregate_annotations:\n 461|                     inner_query.group_by = (self.model._meta.pk.get_col(inner_query.get_initial_alias()),)\n 462|                 inner_query.default_cols = False\n 463| \n 464|             relabels = {t: 'subquery' for t in inner_query.alias_map}\n 465|             relabels[None] = 'subquery'\n 466|             # Remove any aggregates marked for reduction from the subquery\n 467|             # and move them to the outer AggregateQuery.\n 468|             col_cnt = 0\n 469|             for alias, expression in list(inner_query.annotation_select.items()):\n 470|                 annotation_select_mask = inner_query.annotation_select_mask\n 471|                 if expression.is_summary:\n 472|                     expression, col_cnt = inner_query.rewrite_cols(expression, col_cnt)\n 473|                     outer_query.annotations[alias] = expression.relabeled_clone(relabels)\n 474|                     del inner_query.annotations[alias]\n 475|                     annotation_select_mask.remove(alias)\n 476|                 # Make sure the annotation_select wont use cached results.\n 477|                 inner_query.set_annotation_mask(inner_query.annotation_select_mask)\n 478|             if inner_query.select == () and not inner_query.default_cols and not inner_query.annotation_select_mask:\n 479|                 # In case of Model.objects[0:3].count(), there would be no\n 480|                 # field selected in the inner query, yet we must use a subquery.\n 481|                 # So, make sure at least one field is selected.\n 482|                 inner_query.select = (self.model._meta.pk.get_col(inner_query.get_initial_alias()),)\n 483|             try:\n 484|                 outer_query.add_subquery(inner_query, using)\n 485|             except EmptyResultSet:\n 486|                 return {\n 487|                     alias: None\n 488|                     for alias in outer_query.annotation_select\n 489|                 }\n 490|         else:\n 491|             outer_query = self\n 492|             self.select = ()\n 493|             self.default_cols = False\n 494|             self.extra = {}\n 495| \n 496|         outer_query.clear_ordering(True)\n 497|         outer_query.clear_limits()\n 498|         outer_query.select_for_update = False\n 499|         outer_query.select_related = False\n 500|         compiler = outer_query.get_compiler(using)\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder",
+        "diff": "",
+        "description": "Generated via whole-file rewrite mode",
+        "timestamp": "2026-02-22T23:30:02.325547Z"
+      },
+      {
+        "version": 2,
+        "author": "Coder",
+        "diff": "",
+        "description": "Generated via whole-file rewrite mode",
+        "timestamp": "2026-02-22T23:34:50.684155Z"
+      },
+      {
+        "version": 3,
+        "author": "Coder",
+        "diff": "",
+        "description": "Generated via whole-file rewrite mode",
+        "timestamp": "2026-02-22T23:39:35.965594Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "reject",
+        "issues": [
+          "The patch is empty - no actual code changes were provided",
+          "The file django/db/models/sql/query.py is marked as TOO LARGE for full rewrite (2414 lines), but the patch was generated in whole-file rewrite mode with no content",
+          "The critical check_filterable method (around line 1131) that needs to be fixed is not visible in the provided code snippet (only first 500 lines shown)",
+          "No implementation of the fix strategy is present - the patch does not address the root cause of checking the 'filterable' attribute on model instances",
+          "No test cases were added to verify the fix works for model instances with a 'filterable' field"
+        ],
+        "suggestions": [
+          "Switch to diff mode instead of whole-file rewrite mode since the file is too large (2414 lines)",
+          "Locate and modify the check_filterable method around line 1131 in django/db/models/sql/query.py",
+          "Implement the fix strategy: check if the value is a Model instance before checking the filterable attribute",
+          "Add a condition like: if isinstance(value, models.Model): return  # Model instances are always filterable",
+          "Alternatively, use a more defensive check: getattr(value, 'filterable', True) and not isinstance(value, models.Model)",
+          "Add test cases to verify that ProductMetaData.objects.filter(metadata_type=instance_with_filterable_field) works correctly",
+          "Consider checking if 'filterable' is actually a field on the model's _meta before treating it as a Django internal attribute"
+        ]
+      },
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "reject",
+        "issues": [
+          "Both patches (v1 and v2) have empty diff fields, indicating no actual code changes were provided",
+          "The patches claim to be generated via 'whole-file rewrite mode' but contain no file content",
+          "Without any actual code changes, it's impossible to verify if the issue is addressed",
+          "The patches do not show any modifications to the check_filterable method in django/db/models/sql/query.py",
+          "No implementation is provided to distinguish between model instances with a 'filterable' field and Django internal objects with a filterable attribute"
+        ],
+        "suggestions": [
+          "Provide actual code changes in diff format or as complete file rewrites",
+          "Implement the fix strategy outlined in the analysis: modify check_filterable to check if the value is a Model instance before checking for the filterable attribute",
+          "Add a check like 'from django.db.models import Model' and 'if isinstance(value, Model): return' at the beginning of check_filterable method",
+          "Consider using hasattr checks that are more defensive, such as checking if filterable is a boolean attribute set by Django internals rather than a model field",
+          "Include test cases that verify model instances with a 'filterable' field can be used in filter clauses",
+          "Ensure the fix handles edge cases where the filterable attribute might be accessed through __dict__ or other means to avoid model field conflicts"
+        ]
+      },
+      {
+        "patch_version": 3,
+        "author": "Reviewer",
+        "verdict": "reject",
+        "issues": [
+          "No patch content provided - the diff field is empty for all three patch versions",
+          "The file was marked as too large for full rewrite (2414 lines), but whole-file rewrite mode was used instead of diff mode",
+          "Cannot verify if the patch addresses the root cause: Django's check_filterable method incorrectly treating a model field named 'filterable' as an internal Django attribute",
+          "Cannot verify if the fix properly distinguishes between Model instances (which should always be filterable) and Django expression/lookup objects (which may have legitimate filterable=False attributes)",
+          "No test cases visible to verify the fix works for model instances with a 'filterable' field",
+          "Unable to assess if the patch introduces any regressions or maintains code style consistency"
+        ],
+        "suggestions": [
+          "Use diff mode instead of whole-file rewrite for large files like django/db/models/sql/query.py",
+          "Focus the patch on the specific check_filterable method (around line 1131 based on the traceback) that needs modification",
+          "The fix should check if the value is a Model instance before checking the filterable attribute, e.g., 'from django.db import models' and 'if isinstance(value, models.Model): return'",
+          "Alternatively, use a more defensive check that verifies the filterable attribute is actually a Django internal marker and not a model field",
+          "Include test cases that verify ProductMetaData.objects.filter(metadata_type=instance) works when the ProductMetaDataType model has a filterable field set to False",
+          "Consider documenting this as a reserved attribute name or making the internal checking mechanism more robust to avoid similar issues with other attribute names"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 0,
+        "passed": false,
+        "pass_count": 0,
+        "fail_count": 1,
+        "failing_tests": [],
+        "error_traces": [
+          "Evaluation did not complete."
+        ]
+      }
+    ],
+    "metadata": {
+      "status": "testing",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-22T23:24:56.088553Z",
+      "end_time": null
+    }
+  }
+}

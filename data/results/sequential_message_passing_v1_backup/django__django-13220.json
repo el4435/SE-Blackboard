@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_django__django-13220_dea0a6df",
+  "issue_id": "django__django-13220",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 19228,
+  "total_output_tokens": 12485,
+  "total_latency_ms": 152077,
+  "final_patch": "--- a/django/core/exceptions.py\n+++ b/django/core/exceptions.py\n@@ -1,3 +1,5 @@\n+import json\n+\n \"\"\"\n Core exceptions raised by Django.\n \"\"\"\n@@ -100,6 +102,89 @@\n \n     def __eq__(self, other):\n         if not isinstance(other, ValidationError):\n             return NotImplemented\n-        return self.messages == other.messages and self.code == other.code\n+        \n+        # Helper function to normalize params for comparison\n+        def normalize_params(params):\n+            if params is None:\n+                return None\n+            try:\n+                # Try to sort if all values are hashable\n+                return tuple(sorted(params.items()))\n+            except (TypeError, AttributeError):\n+                # Fall back to JSON serialization for unhashable values\n+                try:\n+                    return json.dumps(params, sort_keys=True, default=str)\n+                except (TypeError, ValueError):\n+                    # Last resort: convert to string\n+                    return str(params)\n+        \n+        # Helper function to extract comparable data from a ValidationError\n+        def extract_error_data(error):\n+            if isinstance(error, ValidationError):\n+                # Recursively handle nested ValidationErrors\n+                if hasattr(error, 'error_dict') and error.error_dict:\n+                    return ('dict', extract_dict_data(error.error_dict))\n+                elif hasattr(error, 'error_list') and error.error_list:\n+                    return ('list', extract_list_data(error.error_list))\n+                else:\n+                    return (error.message, error.code, normalize_params(error.params))\n+            else:\n+                # Handle string errors\n+                return (str(error), None, None)\n+        \n+        # Helper function to extract comparable data from error_dict\n+        def extract_dict_data(error_dict):\n+            result = {}\n+            for key, value in error_dict.items():\n+                if isinstance(value, list):\n+                    result[key] = tuple(extract_error_data(e) for e in value)\n+                elif isinstance(value, ValidationError):\n+                    result[key] = (extract_error_data(value),)\n+                else:\n+                    result[key] = (extract_error_data(value),)\n+            return tuple(sorted(result.items()))\n+        \n+        # Helper function to extract comparable data from error_list\n+        def extract_list_data(error_list):\n+            return tuple(extract_error_data(e) for e in error_list)\n+        \n+        # Check if both have error_dict\n+        self_has_dict = hasattr(self, 'error_dict') and self.error_dict\n+        other_has_dict = hasattr(other, 'error_dict') and other.error_dict\n+        \n+        # Check if both have error_list\n+        self_has_list = hasattr(self, 'error_list') and self.error_list\n+        other_has_list = hasattr(other, 'error_list') and other.error_list\n+        \n+        # If structures don't match, they're not equal\n+        if self_has_dict != other_has_dict:\n+            return False\n+        \n+        # Both have error_dict\n+        if self_has_dict and other_has_dict:\n+            try:\n+                self_dict_data = extract_dict_data(self.error_dict)\n+                other_dict_data = extract_dict_data(other.error_dict)\n+                return self_dict_data == other_dict_data\n+            except (AttributeError, TypeError):\n+                return False\n+        \n+        # Both have error_list (or neither has error_dict)\n+        if self_has_list and other_has_list:\n+            try:\n+                self_list_data = extract_list_data(self.error_list)\n+                other_list_data = extract_list_data(other.error_list)\n+                return self_list_data == other_list_data\n+            except (AttributeError, TypeError):\n+                return False\n+        \n+        # Fall back to simple comparison for basic cases\n+        # (neither has error_dict or error_list, or one is empty)\n+        try:\n+            return (self.message == other.message and \n+                    self.code == other.code and \n+                    normalize_params(self.params) == normalize_params(other.params))\n+        except (AttributeError, TypeError):\n+            return False\n \n     def __hash__(self):\n--- a/tests/test_exceptions/test_validation_error.py\n+++ b/tests/test_exceptions/test_validation_error.py\n@@ -1,3 +1,122 @@\n+import unittest\n+from django.core.exceptions import ValidationError\n \n-# Mock content for tests/test_exceptions/test_validation_error.py\n-# This is a placeholder.\n+\n+class ValidationErrorEqualityTests(unittest.TestCase):\n+    \n+    def test_simple_equality(self):\n+        \"\"\"Test equality of simple ValidationErrors with same message and code.\"\"\"\n+        error1 = ValidationError('Error message', code='invalid')\n+        error2 = ValidationError('Error message', code='invalid')\n+        self.assertEqual(error1, error2)\n+    \n+    def test_simple_inequality_different_message(self):\n+        \"\"\"Test inequality when messages differ.\"\"\"\n+        error1 = ValidationError('Error message 1', code='invalid')\n+        error2 = ValidationError('Error message 2', code='invalid')\n+        self.assertNotEqual(error1, error2)\n+    \n+    def test_simple_inequality_different_code(self):\n+        \"\"\"Test inequality when codes differ.\"\"\"\n+        error1 = ValidationError('Error message', code='invalid')\n+        error2 = ValidationError('Error message', code='required')\n+        self.assertNotEqual(error1, error2)\n+    \n+    def test_equality_with_params(self):\n+        \"\"\"Test equality with params.\"\"\"\n+        error1 = ValidationError('Error %(value)s', code='invalid', params={'value': 'test'})\n+        error2 = ValidationError('Error %(value)s', code='invalid', params={'value': 'test'})\n+        self.assertEqual(error1, error2)\n+    \n+    def test_inequality_different_params(self):\n+        \"\"\"Test inequality when params differ.\"\"\"\n+        error1 = ValidationError('Error %(value)s', code='invalid', params={'value': 'test1'})\n+        error2 = ValidationError('Error %(value)s', code='invalid', params={'value': 'test2'})\n+        self.assertNotEqual(error1, error2)\n+    \n+    def test_equality_with_unhashable_params(self):\n+        \"\"\"Test equality when params contain unhashable values like lists.\"\"\"\n+        error1 = ValidationError('Error', code='invalid', params={'values': [1, 2, 3]})\n+        error2 = ValidationError('Error', code='invalid', params={'values': [1, 2, 3]})\n+        self.assertEqual(error1, error2)\n+    \n+    def test_equality_with_nested_dict_params(self):\n+        \"\"\"Test equality when params contain nested dicts.\"\"\"\n+        error1 = ValidationError('Error', code='invalid', params={'data': {'key': 'value'}})\n+        error2 = ValidationError('Error', code='invalid', params={'data': {'key': 'value'}})\n+        self.assertEqual(error1, error2)\n+    \n+    def test_error_list_equality(self):\n+        \"\"\"Test equality of ValidationErrors with error_list.\"\"\"\n+        error1 = ValidationError([\n+            ValidationError('Error 1', code='invalid'),\n+            ValidationError('Error 2', code='required')\n+        ])\n+        error2 = ValidationError([\n+            ValidationError('Error 1', code='invalid'),\n+            ValidationError('Error 2', code='required')\n+        ])\n+        self.assertEqual(error1, error2)\n+    \n+    def test_error_list_inequality_different_order(self):\n+        \"\"\"Test inequality when error_list has different order.\"\"\"\n+        error1 = ValidationError([\n+            ValidationError('Error 1', code='invalid'),\n+            ValidationError('Error 2', code='required')\n+        ])\n+        error2 = ValidationError([\n+            ValidationError('Error 2', code='required'),\n+            ValidationError('Error 1', code='invalid')\n+        ])\n+        self.assertNotEqual(error1, error2)\n+    \n+    def test_error_dict_equality(self):\n+        \"\"\"Test equality of ValidationErrors with error_dict.\"\"\"\n+        error1 = ValidationError({\n+            'field1': [ValidationError('Error 1', code='invalid')],\n+            'field2': [ValidationError('Error 2', code='required')]\n+        })\n+        error2 = ValidationError({\n+            'field1': [ValidationError('Error 1', code='invalid')],\n+            'field2': [ValidationError('Error 2', code='required')]\n+        })\n+        self.assertEqual(error1, error2)\n+    \n+    def test_error_dict_inequality(self):\n+        \"\"\"Test inequality when error_dict differs.\"\"\"\n+        error1 = ValidationError({\n+            'field1': [ValidationError('Error 1', code='invalid')]\n+        })\n+        error2 = ValidationError({\n+            'field1': [ValidationError('Error 2', code='invalid')]\n+        })\n+        self.assertNotEqual(error1, error2)\n+    \n+    def test_error_dict_vs_error_list_inequality(self):\n+        \"\"\"Test that error_dict and error_list are not equal even with same errors.\"\"\"\n+        error1 = ValidationError({'field': [ValidationError('Error', code='invalid')]})\n+        error2 = ValidationError([ValidationError('Error', code='invalid')])\n+        self.assertNotEqual(error1, error2)\n+    \n+    def test_nested_validation_errors(self):\n+        \"\"\"Test equality with nested ValidationErrors.\"\"\"\n+        error1 = ValidationError([\n+            ValidationError([ValidationError('Nested error', code='invalid')])\n+        ])\n+        error2 = ValidationError([\n+            ValidationError([ValidationError('Nested error', code='invalid')])\n+        ])\n+        self.assertEqual(error1, error2)\n+    \n+    def test_string_vs_validation_error_list(self):\n+        \"\"\"Test that string errors and ValidationError objects are handled.\"\"\"\n+        error1 = ValidationError(['Error message'])\n+        error2 = ValidationError(['Error message'])\n+        self.assertEqual(error1, error2)\n+    \n+    def test_inequality_with_non_validation_error(self):\n+        \"\"\"Test that comparing with non-ValidationError returns NotImplemented.\"\"\"\n+        error = ValidationError('Error message', code='invalid')\n+        result = error.__eq__('not a validation error')\n+        self.assertEqual(result, NotImplemented)\n+    \n+    def test_inequality_with_none(self):\n+        \"\"\"Test that comparing with None works correctly.\"\"\"\n+        error = ValidationError('Error message', code='invalid')\n+        self.assertNotEqual(error, None)",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T04:54:18.853289+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 533,
+      "output_tokens": 586,
+      "latency_ms": 12939
+    },
+    {
+      "timestamp": "2026-02-14T04:54:42.845447+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1377,
+      "output_tokens": 2196,
+      "latency_ms": 23990
+    },
+    {
+      "timestamp": "2026-02-14T04:54:54.819521+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 2622,
+      "output_tokens": 436,
+      "latency_ms": 11972
+    },
+    {
+      "timestamp": "2026-02-14T04:55:13.384595+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3566,
+      "output_tokens": 1637,
+      "latency_ms": 18563
+    },
+    {
+      "timestamp": "2026-02-14T04:55:24.830297+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1200,
+      "output_tokens": 518,
+      "latency_ms": 11444
+    },
+    {
+      "timestamp": "2026-02-14T04:56:26.667398+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 6238,
+      "output_tokens": 6637,
+      "latency_ms": 61835
+    },
+    {
+      "timestamp": "2026-02-14T04:56:37.989211+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 3692,
+      "output_tokens": 475,
+      "latency_ms": 11320
+    }
+  ],
+  "blackboard_final_state": null
+}

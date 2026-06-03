@@ -1,0 +1,2354 @@
+{
+  "sequential_message_passing": {
+    "django__django-13028": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0857,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0857,
+      "resolved": false,
+      "entity_count": 35,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-13230": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 1.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": true,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-11179": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 1.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": true,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-12908": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.1429,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.1429,
+      "resolved": false,
+      "entity_count": 14,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-15347": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.2727,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.2727,
+      "resolved": true,
+      "entity_count": 11,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-14238": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0909,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0909,
+      "resolved": false,
+      "entity_count": 33,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-12700": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.4286,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.4286,
+      "resolved": false,
+      "entity_count": 7,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-16379": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.8182,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.8182,
+      "resolved": true,
+      "entity_count": 11,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-15388": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-11620": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.6667,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.6667,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-15345": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-21171": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 27,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-15346": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-13971": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-18057": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.2222,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.2222,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-24213": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.6667,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.6667,
+      "resolved": false,
+      "entity_count": 6,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "pytest-dev__pytest-11143": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0323,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0323,
+      "resolved": true,
+      "entity_count": 31,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "astropy__astropy-14995": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 8,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sphinx-doc__sphinx-7738": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.6667,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.6667,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-14667": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.6,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.6,
+      "resolved": false,
+      "entity_count": 5,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-17051": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.1818,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.1818,
+      "resolved": false,
+      "entity_count": 11,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-16229": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.25,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.25,
+      "resolved": false,
+      "entity_count": 16,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-14155": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.25,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.25,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-13321": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.1489,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.1489,
+      "resolved": false,
+      "entity_count": 47,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-16408": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 14,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-15213": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.4,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.4,
+      "resolved": false,
+      "entity_count": 5,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-12915": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.75,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.75,
+      "resolved": false,
+      "entity_count": 12,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-15202": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.3333,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.3333,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-14024": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-18698": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-12481": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 1.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-13895": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-14396": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.2222,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.2222,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-24909": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": null,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": false,
+        "Coder": false,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sphinx-doc__sphinx-8713": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.75,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.75,
+      "resolved": true,
+      "entity_count": 8,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "pydata__xarray-3364": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 1.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-20049": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-20639": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-18835": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sympy__sympy-19254": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 1.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-16820": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 1.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-11564": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 1.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "django__django-13220": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 1.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "pytest-dev__pytest-5495": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "sphinx-doc__sphinx-10451": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.0,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    },
+    "astropy__astropy-14182": {
+      "stage_ifs": {
+        "Planner": null,
+        "Coder": 0.2941,
+        "Reviewer": null,
+        "Tester": null
+      },
+      "end_to_end_ifs": 0.2941,
+      "resolved": false,
+      "entity_count": 17,
+      "data_available": {
+        "Planner": false,
+        "Coder": true,
+        "Reviewer": false,
+        "Tester": false
+      }
+    }
+  },
+  "sequential_blackboard": {
+    "django__django-13028": {
+      "stage_ifs": {
+        "Planner": 0.5429,
+        "Coder": 0.1714,
+        "Reviewer": 0.2,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.1429,
+      "resolved": true,
+      "entity_count": 35,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-13230": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 0.6667,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": true,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-11179": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": true,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-12908": {
+      "stage_ifs": {
+        "Planner": 0.6429,
+        "Coder": 0.2857,
+        "Reviewer": 0.2143,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.1429,
+      "resolved": false,
+      "entity_count": 14,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-15347": {
+      "stage_ifs": {
+        "Planner": 0.9091,
+        "Coder": 0.4545,
+        "Reviewer": 0.3636,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.2727,
+      "resolved": true,
+      "entity_count": 11,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-14238": {
+      "stage_ifs": {
+        "Planner": 0.6364,
+        "Coder": 0.2727,
+        "Reviewer": 0.2121,
+        "Tester": 0.1818
+      },
+      "end_to_end_ifs": 0.0606,
+      "resolved": false,
+      "entity_count": 33,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-12700": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.8571,
+        "Reviewer": 0.1429,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.4286,
+      "resolved": true,
+      "entity_count": 7,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-16379": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.8182,
+        "Reviewer": 0.4545,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.8182,
+      "resolved": true,
+      "entity_count": 11,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-15388": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.0,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-11620": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.6667,
+        "Reviewer": 0.6667,
+        "Tester": 0.3333
+      },
+      "end_to_end_ifs": 0.6667,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-15345": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": null,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-21171": {
+      "stage_ifs": {
+        "Planner": 0.1852,
+        "Coder": 0.1111,
+        "Reviewer": 0.0741,
+        "Tester": 0.0741
+      },
+      "end_to_end_ifs": 0.0741,
+      "resolved": false,
+      "entity_count": 27,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-15346": {
+      "stage_ifs": {
+        "Planner": 0.5,
+        "Coder": 0.5,
+        "Reviewer": 0.5,
+        "Tester": 0.5
+      },
+      "end_to_end_ifs": 0.5,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-13971": {
+      "stage_ifs": {
+        "Planner": 0.3333,
+        "Coder": 0.6667,
+        "Reviewer": 0.3333,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-18057": {
+      "stage_ifs": {
+        "Planner": 0.7778,
+        "Coder": 0.6667,
+        "Reviewer": 0.4444,
+        "Tester": 0.1111
+      },
+      "end_to_end_ifs": 0.4444,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-24213": {
+      "stage_ifs": {
+        "Planner": 0.6667,
+        "Coder": 0.6667,
+        "Reviewer": 0.1667,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.3333,
+      "resolved": false,
+      "entity_count": 6,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "pytest-dev__pytest-11143": {
+      "stage_ifs": {
+        "Planner": 0.1613,
+        "Coder": 0.0645,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0323,
+      "resolved": true,
+      "entity_count": 31,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "astropy__astropy-14995": {
+      "stage_ifs": {
+        "Planner": 0.75,
+        "Coder": 0.375,
+        "Reviewer": 0.25,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.125,
+      "resolved": false,
+      "entity_count": 8,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sphinx-doc__sphinx-7738": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.6667,
+        "Reviewer": 0.3333,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.6667,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-14667": {
+      "stage_ifs": {
+        "Planner": 0.8,
+        "Coder": 0.6,
+        "Reviewer": 0.4,
+        "Tester": 0.6
+      },
+      "end_to_end_ifs": 0.4,
+      "resolved": false,
+      "entity_count": 5,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-17051": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.8182,
+        "Reviewer": 0.5455,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.2727,
+      "resolved": false,
+      "entity_count": 11,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-16229": {
+      "stage_ifs": {
+        "Planner": 0.6875,
+        "Coder": 0.3125,
+        "Reviewer": 0.3125,
+        "Tester": 0.1875
+      },
+      "end_to_end_ifs": 0.3125,
+      "resolved": false,
+      "entity_count": 16,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-14155": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 1.0,
+        "Tester": 0.75
+      },
+      "end_to_end_ifs": 0.75,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-13321": {
+      "stage_ifs": {
+        "Planner": 0.4043,
+        "Coder": 0.1064,
+        "Reviewer": 0.0851,
+        "Tester": 0.0426
+      },
+      "end_to_end_ifs": 0.0851,
+      "resolved": false,
+      "entity_count": 47,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-16408": {
+      "stage_ifs": {
+        "Planner": 0.7857,
+        "Coder": null,
+        "Reviewer": 0.3571,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 14,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-15213": {
+      "stage_ifs": {
+        "Planner": 0.8,
+        "Coder": 0.2,
+        "Reviewer": 0.2,
+        "Tester": 0.2
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 5,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-12915": {
+      "stage_ifs": {
+        "Planner": 0.9167,
+        "Coder": 0.5,
+        "Reviewer": 0.4167,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.4167,
+      "resolved": true,
+      "entity_count": 12,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-15202": {
+      "stage_ifs": {
+        "Planner": 0.7778,
+        "Coder": 0.3333,
+        "Reviewer": 0.3333,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.3333,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-14024": {
+      "stage_ifs": {
+        "Planner": 0.0,
+        "Coder": 0.0,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-18698": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-12481": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": null,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-13895": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": null,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-14396": {
+      "stage_ifs": {
+        "Planner": 0.5556,
+        "Coder": 0.5556,
+        "Reviewer": 0.1111,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.5556,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-24909": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sphinx-doc__sphinx-8713": {
+      "stage_ifs": {
+        "Planner": 0.875,
+        "Coder": 0.875,
+        "Reviewer": 0.5,
+        "Tester": 0.125
+      },
+      "end_to_end_ifs": 0.75,
+      "resolved": false,
+      "entity_count": 8,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "pydata__xarray-3364": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-20049": {
+      "stage_ifs": {
+        "Planner": 0.6667,
+        "Coder": 0.6667,
+        "Reviewer": 0.4444,
+        "Tester": 0.2222
+      },
+      "end_to_end_ifs": 0.5556,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-20639": {
+      "stage_ifs": {
+        "Planner": 0.0,
+        "Coder": 0.0,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-18835": {
+      "stage_ifs": {
+        "Planner": 0.6667,
+        "Coder": 0.6667,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.3333,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-19254": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-16820": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-11564": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.25,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.25,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-13220": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 0.75,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "pytest-dev__pytest-5495": {
+      "stage_ifs": {
+        "Planner": 0.0,
+        "Coder": 1.0,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sphinx-doc__sphinx-10451": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "astropy__astropy-14182": {
+      "stage_ifs": {
+        "Planner": 0.4118,
+        "Coder": 0.4706,
+        "Reviewer": 0.4118,
+        "Tester": 0.0588
+      },
+      "end_to_end_ifs": 0.4118,
+      "resolved": false,
+      "entity_count": 17,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    }
+  },
+  "sequential_hybrid": {
+    "django__django-13028": {
+      "stage_ifs": {
+        "Planner": 0.5429,
+        "Coder": 0.1429,
+        "Reviewer": 0.2286,
+        "Tester": 0.0286
+      },
+      "end_to_end_ifs": 0.1429,
+      "resolved": false,
+      "entity_count": 35,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-13230": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 0.6667,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": true,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-11179": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 0.5,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": true,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-12908": {
+      "stage_ifs": {
+        "Planner": 0.7143,
+        "Coder": 0.2857,
+        "Reviewer": 0.2143,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.1429,
+      "resolved": false,
+      "entity_count": 14,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-15347": {
+      "stage_ifs": {
+        "Planner": 0.9091,
+        "Coder": 0.4545,
+        "Reviewer": 0.3636,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.2727,
+      "resolved": true,
+      "entity_count": 11,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-14238": {
+      "stage_ifs": {
+        "Planner": 0.6364,
+        "Coder": 0.2727,
+        "Reviewer": 0.1818,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0606,
+      "resolved": false,
+      "entity_count": 33,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-12700": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.4286,
+        "Reviewer": 0.2857,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.4286,
+      "resolved": true,
+      "entity_count": 7,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-16379": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.8182,
+        "Reviewer": 0.3636,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.8182,
+      "resolved": true,
+      "entity_count": 11,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-15388": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.0,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-11620": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.6667,
+        "Reviewer": 0.6667,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.6667,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-15345": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": null,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-21171": {
+      "stage_ifs": {
+        "Planner": 0.1481,
+        "Coder": null,
+        "Reviewer": 0.1111,
+        "Tester": 0.1111
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 27,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-15346": {
+      "stage_ifs": {
+        "Planner": 0.5,
+        "Coder": null,
+        "Reviewer": 0.5,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-13971": {
+      "stage_ifs": {
+        "Planner": 0.3333,
+        "Coder": null,
+        "Reviewer": 0.3333,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-18057": {
+      "stage_ifs": {
+        "Planner": 0.7778,
+        "Coder": null,
+        "Reviewer": 0.6667,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-24213": {
+      "stage_ifs": {
+        "Planner": 0.8333,
+        "Coder": null,
+        "Reviewer": 0.6667,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 6,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "pytest-dev__pytest-11143": {
+      "stage_ifs": {
+        "Planner": 0.129,
+        "Coder": 0.0645,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0323,
+      "resolved": true,
+      "entity_count": 31,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "astropy__astropy-14995": {
+      "stage_ifs": {
+        "Planner": 0.75,
+        "Coder": null,
+        "Reviewer": 0.375,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 8,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sphinx-doc__sphinx-7738": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": null,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-14667": {
+      "stage_ifs": {
+        "Planner": 0.8,
+        "Coder": 0.6,
+        "Reviewer": 0.4,
+        "Tester": 0.6
+      },
+      "end_to_end_ifs": 0.4,
+      "resolved": false,
+      "entity_count": 5,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-17051": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.9091,
+        "Reviewer": 0.5455,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.3636,
+      "resolved": false,
+      "entity_count": 11,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-16229": {
+      "stage_ifs": {
+        "Planner": 0.625,
+        "Coder": 0.4375,
+        "Reviewer": 0.4375,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.1875,
+      "resolved": false,
+      "entity_count": 16,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-14155": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 0.5,
+        "Tester": 1.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-13321": {
+      "stage_ifs": {
+        "Planner": 0.4043,
+        "Coder": 0.1702,
+        "Reviewer": 0.0851,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.1064,
+      "resolved": false,
+      "entity_count": 47,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-16408": {
+      "stage_ifs": {
+        "Planner": 0.8571,
+        "Coder": 0.3571,
+        "Reviewer": 0.7143,
+        "Tester": 0.7857
+      },
+      "end_to_end_ifs": 0.2143,
+      "resolved": false,
+      "entity_count": 14,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-15213": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.2,
+        "Reviewer": 0.2,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 5,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-12915": {
+      "stage_ifs": {
+        "Planner": 0.9167,
+        "Coder": 0.5833,
+        "Reviewer": 0.6667,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.4167,
+      "resolved": false,
+      "entity_count": 12,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-15202": {
+      "stage_ifs": {
+        "Planner": 0.8889,
+        "Coder": 0.3333,
+        "Reviewer": 0.3333,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.3333,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-14024": {
+      "stage_ifs": {
+        "Planner": 0.0,
+        "Coder": 0.0,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-18698": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": null,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-12481": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": null,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-13895": {
+      "stage_ifs": {
+        "Planner": 0.0,
+        "Coder": null,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-14396": {
+      "stage_ifs": {
+        "Planner": 0.5556,
+        "Coder": null,
+        "Reviewer": 0.4444,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-24909": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.5,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sphinx-doc__sphinx-8713": {
+      "stage_ifs": {
+        "Planner": 0.875,
+        "Coder": 0.875,
+        "Reviewer": 0.5,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.75,
+      "resolved": false,
+      "entity_count": 8,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "pydata__xarray-3364": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-20049": {
+      "stage_ifs": {
+        "Planner": 0.6667,
+        "Coder": 0.6667,
+        "Reviewer": 0.3333,
+        "Tester": 0.1111
+      },
+      "end_to_end_ifs": 0.5556,
+      "resolved": false,
+      "entity_count": 9,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-20639": {
+      "stage_ifs": {
+        "Planner": 0.0,
+        "Coder": null,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-18835": {
+      "stage_ifs": {
+        "Planner": 0.6667,
+        "Coder": 0.6667,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.3333,
+      "resolved": false,
+      "entity_count": 3,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sympy__sympy-19254": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": null,
+        "Reviewer": 0.75,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-16820": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 1.0,
+        "Tester": 1.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-11564": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 0.25,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.25,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "django__django-13220": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": 1.0,
+        "Reviewer": 0.75,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 1.0,
+      "resolved": false,
+      "entity_count": 4,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "pytest-dev__pytest-5495": {
+      "stage_ifs": {
+        "Planner": 0.0,
+        "Coder": 0.0,
+        "Reviewer": 0.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 2,
+      "data_available": {
+        "Planner": true,
+        "Coder": true,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "sphinx-doc__sphinx-10451": {
+      "stage_ifs": {
+        "Planner": 1.0,
+        "Coder": null,
+        "Reviewer": 1.0,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 1,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    },
+    "astropy__astropy-14182": {
+      "stage_ifs": {
+        "Planner": 0.4118,
+        "Coder": null,
+        "Reviewer": 0.3529,
+        "Tester": 0.0
+      },
+      "end_to_end_ifs": 0.0,
+      "resolved": false,
+      "entity_count": 17,
+      "data_available": {
+        "Planner": true,
+        "Coder": false,
+        "Reviewer": true,
+        "Tester": true
+      }
+    }
+  }
+}

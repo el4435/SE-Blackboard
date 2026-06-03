@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_django__django-12908_b7d71fb7",
+  "issue_id": "django__django-12908",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 34741,
+  "total_output_tokens": 3939,
+  "total_latency_ms": 136428,
+  "final_patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1086,6 +1086,8 @@\n     def distinct(self, *field_names):\n         \"\"\"Return a new QuerySet instance that will select only distinct results.\"\"\"\n+        if self.query.combinator:\n+            raise NotSupportedError('Calling distinct() after %s() is not supported.' % self.query.combinator)\n         assert not self.query.is_sliced, \\\n             \"Cannot create distinct fields once a slice has been taken.\"\n@@ -1394,6 +1396,8 @@\n         Return a new QuerySet instance that will select related objects.\n         \"\"\"\n         self._not_support_combined_queries('select_related')\n+        if self.query.combinator:\n+            raise NotSupportedError('Calling select_related() after %s() is not supported.' % self.query.combinator)\n         if self._fields is not None:\n             raise TypeError(\"Cannot call select_related() after .values() or .values_list()\")\n \n@@ -1420,6 +1424,8 @@\n         Return a new QuerySet instance that will prefetch the specified\n         Many-To-One and Many-To-Many related objects when the QuerySet is\n         evaluated.\n+        if self.query.combinator:\n+            raise NotSupportedError('Calling prefetch_related() after %s() is not supported.' % self.query.combinator)\n \n         When prefetch_related() is called more than once, append to the list of\n         prefetch lookups. If prefetch_related(None) is called, clear the list.\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-20T17:22:36.781036+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 822,
+      "output_tokens": 724,
+      "latency_ms": 14403
+    },
+    {
+      "timestamp": "2026-02-20T17:22:48.742595+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 15380,
+      "output_tokens": 667,
+      "latency_ms": 11126
+    },
+    {
+      "timestamp": "2026-02-20T17:22:58.294689+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 722,
+      "output_tokens": 406,
+      "latency_ms": 9550
+    },
+    {
+      "timestamp": "2026-02-20T17:23:20.169966+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 15977,
+      "output_tokens": 1476,
+      "latency_ms": 21874
+    },
+    {
+      "timestamp": "2026-02-20T17:23:27.326973+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 986,
+      "output_tokens": 360,
+      "latency_ms": 7155
+    },
+    {
+      "timestamp": "2026-02-20T17:24:19.515485+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 446,
+      "output_tokens": 195,
+      "latency_ms": 5813
+    },
+    {
+      "timestamp": "2026-02-20T17:24:38.804316+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 111,
+      "latency_ms": 3257
+    }
+  ],
+  "blackboard_final_state": null
+}

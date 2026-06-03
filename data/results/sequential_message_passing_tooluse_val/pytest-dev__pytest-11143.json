@@ -1,0 +1,123 @@
+{
+  "experiment_id": "seq_message_passing_pytest-dev__pytest-11143_6a5b28b3",
+  "issue_id": "pytest-dev__pytest-11143",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 8096,
+  "total_output_tokens": 2086,
+  "total_latency_ms": 111624,
+  "final_patch": "--- a/src/_pytest/doctest.py\n+++ b/src/_pytest/doctest.py\n@@ -524,6 +524,9 @@\n \n     def _find_doctest(self, obj, name, module, globs, extraglobs):\n         \"\"\"Find doctests in an object.\"\"\"\n+        # Check if docstring is a string to avoid AttributeError on non-string constants\n+        if not isinstance(getattr(obj, \"__doc__\", None), str):\n+            return\n         finder = MockAwareDocTestFinder()\n         optionflags = get_optionflags(self.config)\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-20T22:49:28.124865+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 2611,
+      "output_tokens": 753,
+      "latency_ms": 14733
+    },
+    {
+      "timestamp": "2026-02-20T22:49:32.354162+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1464,
+      "output_tokens": 270,
+      "latency_ms": 4210
+    },
+    {
+      "timestamp": "2026-02-20T22:49:35.309202+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 698,
+      "output_tokens": 111,
+      "latency_ms": 2953
+    },
+    {
+      "timestamp": "2026-02-20T22:49:57.065396+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 408,
+      "output_tokens": 111,
+      "latency_ms": 3155
+    },
+    {
+      "timestamp": "2026-02-20T22:50:02.126963+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 952,
+      "output_tokens": 269,
+      "latency_ms": 5060
+    },
+    {
+      "timestamp": "2026-02-20T22:50:06.490209+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 697,
+      "output_tokens": 161,
+      "latency_ms": 4362
+    },
+    {
+      "timestamp": "2026-02-20T22:50:29.978793+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 412,
+      "output_tokens": 90,
+      "latency_ms": 1521
+    },
+    {
+      "timestamp": "2026-02-20T22:50:45.352841+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 446,
+      "output_tokens": 195,
+      "latency_ms": 5284
+    },
+    {
+      "timestamp": "2026-02-20T22:51:05.014517+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-11143",
+      "issue_id": "pytest-dev__pytest-11143",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 126,
+      "latency_ms": 3818
+    }
+  ],
+  "blackboard_final_state": null
+}

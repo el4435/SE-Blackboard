@@ -250,7 +250,10 @@ class PeerDebate:
             agent_traces=entries,
             blackboard_final_state=bb_state,
         )
+
+    # ------------------------------------------------------------------
     # Code context retrieval (shared logic with SequentialPipeline)
+    # ------------------------------------------------------------------
 
     async def _fetch_code_context(
         self,
@@ -346,7 +349,10 @@ class PeerDebate:
             bb.update_analysis(state.analysis)
 
         return code_context
+
+    # ------------------------------------------------------------------
     # Internal helpers
+    # ------------------------------------------------------------------
 
     async def _run_agent(
         self,

@@ -1,0 +1,112 @@
+{
+  "experiment_id": "seq_message_passing_django__django-13028_886536f5",
+  "issue_id": "django__django-13028",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 21025,
+  "total_output_tokens": 34335,
+  "total_latency_ms": 651514,
+  "final_patch": "",
+  "apply_method": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T21:01:22.714025+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1388,
+      "output_tokens": 606,
+      "latency_ms": 12933
+    },
+    {
+      "timestamp": "2026-02-22T21:06:00.463299+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 6175,
+      "output_tokens": 16384,
+      "latency_ms": 277350
+    },
+    {
+      "timestamp": "2026-02-22T21:06:05.151847+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 498,
+      "output_tokens": 194,
+      "latency_ms": 4684
+    },
+    {
+      "timestamp": "2026-02-22T21:06:11.065629+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 5762,
+      "output_tokens": 190,
+      "latency_ms": 5913
+    },
+    {
+      "timestamp": "2026-02-22T21:06:15.801786+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 498,
+      "output_tokens": 230,
+      "latency_ms": 4735
+    },
+    {
+      "timestamp": "2026-02-22T21:11:34.546517+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 5798,
+      "output_tokens": 16384,
+      "latency_ms": 318744
+    },
+    {
+      "timestamp": "2026-02-22T21:11:40.565741+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 498,
+      "output_tokens": 231,
+      "latency_ms": 6016
+    },
+    {
+      "timestamp": "2026-02-22T21:12:01.292228+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 116,
+      "latency_ms": 2348
+    }
+  ],
+  "blackboard_final_state": null
+}

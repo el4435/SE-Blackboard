@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-12908_4da46724",
+  "issue_id": "django__django-12908",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 48710,
+  "total_output_tokens": 4212,
+  "total_latency_ms": 110612,
+  "final_patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1243,6 +1243,11 @@\n \n     def distinct(self, *field_names):\n         \"\"\"\n         Return a new QuerySet instance that will select only distinct results.\n         \"\"\"\n+        if self.query.combinator:\n+            raise NotSupportedError(\n+                'Calling distinct() after %s() is not supported.'\n+                % self.query.combinator.lower()\n+            )\n         assert not self.query.is_sliced, \\\n             \"Cannot create distinct fields once a slice has been taken.\"\n         obj = self._chain()",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:20:56.805929+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 822,
+      "output_tokens": 643,
+      "latency_ms": 12941
+    },
+    {
+      "timestamp": "2026-02-16T17:21:09.025536+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 14971,
+      "output_tokens": 664,
+      "latency_ms": 11383
+    },
+    {
+      "timestamp": "2026-02-16T17:21:17.997824+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 718,
+      "output_tokens": 416,
+      "latency_ms": 8970
+    },
+    {
+      "timestamp": "2026-02-16T17:21:35.282894+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 15235,
+      "output_tokens": 842,
+      "latency_ms": 17284
+    },
+    {
+      "timestamp": "2026-02-16T17:21:43.872604+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 702,
+      "output_tokens": 330,
+      "latency_ms": 8588
+    },
+    {
+      "timestamp": "2026-02-16T17:21:58.733432+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 15122,
+      "output_tokens": 749,
+      "latency_ms": 14859
+    },
+    {
+      "timestamp": "2026-02-16T17:22:07.242963+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 728,
+      "output_tokens": 357,
+      "latency_ms": 8508
+    },
+    {
+      "timestamp": "2026-02-16T17:22:34.474582+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 412,
+      "output_tokens": 211,
+      "latency_ms": 5184
+    }
+  ],
+  "blackboard_final_state": null
+}

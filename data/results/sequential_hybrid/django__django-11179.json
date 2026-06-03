@@ -1,0 +1,211 @@
+{
+  "experiment_id": "seq_hybrid_django__django-11179_4d40606b",
+  "issue_id": "django__django-11179",
+  "topology": "sequential",
+  "communication": "hybrid",
+  "resolved": true,
+  "iterations": 3,
+  "total_input_tokens": 66474,
+  "total_output_tokens": 5409,
+  "total_latency_ms": 126799,
+  "final_patch": "--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -278,6 +278,7 @@\n             if self.can_fast_delete(instance):\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)\n+                setattr(instance, model._meta.pk.attname, None)\n                 return count, {model._meta.label: count}\n \n         with transaction.atomic(using=self.using, savepoint=False):\n@@ -289,6 +290,9 @@\n             # fast deletes\n             for qs in self.fast_deletes:\n                 count = qs._raw_delete(using=self.using)\n+                if hasattr(qs, '_result_cache') and qs._result_cache is not None:\n+                    for instance in qs._result_cache:\n+                        setattr(instance, qs.model._meta.pk.attname, None)\n                 deleted_counter[qs.model._meta.label] += count\n \n             # update fields\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:48:22.489293+00:00",
+      "experiment_id": "sequential_hybrid_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-H",
+      "agent_role": "Planner",
+      "communication_mode": "hybrid",
+      "iteration": 0,
+      "input_tokens": 2250,
+      "output_tokens": 1054,
+      "latency_ms": 17561
+    },
+    {
+      "timestamp": "2026-02-16T18:48:46.394319+00:00",
+      "experiment_id": "sequential_hybrid_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 15897,
+      "output_tokens": 1382,
+      "latency_ms": 23114
+    },
+    {
+      "timestamp": "2026-02-16T18:48:57.846568+00:00",
+      "experiment_id": "sequential_hybrid_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 5459,
+      "output_tokens": 335,
+      "latency_ms": 11451
+    },
+    {
+      "timestamp": "2026-02-16T18:49:13.727647+00:00",
+      "experiment_id": "sequential_hybrid_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 2,
+      "input_tokens": 15372,
+      "output_tokens": 860,
+      "latency_ms": 15880
+    },
+    {
+      "timestamp": "2026-02-16T18:49:22.612423+00:00",
+      "experiment_id": "sequential_hybrid_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 2,
+      "input_tokens": 5745,
+      "output_tokens": 329,
+      "latency_ms": 8883
+    },
+    {
+      "timestamp": "2026-02-16T18:49:38.542113+00:00",
+      "experiment_id": "sequential_hybrid_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 3,
+      "input_tokens": 15437,
+      "output_tokens": 1074,
+      "latency_ms": 15928
+    },
+    {
+      "timestamp": "2026-02-16T18:49:48.397272+00:00",
+      "experiment_id": "sequential_hybrid_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 3,
+      "input_tokens": 6314,
+      "output_tokens": 375,
+      "latency_ms": 9854
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-11179",
+      "problem_statement": "delete() on instances of models without any dependencies doesn't clear PKs.\nDescription\n\t\nDeleting any model with no dependencies not updates the PK on the model. It should be set to None after .delete() call.\nSee Django.db.models.deletion:276-281. Should update the model line 280.\n",
+      "repo": "django/django",
+      "base_commit": "19fc6376ce67d01ca37a91ef2f55ef769f50513a",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "When deleting model instances without dependencies, Django's deletion logic doesn't clear the primary key field on the instance. The code path for models without dependencies (fast delete) bypasses the logic that sets PKs to None, which is only executed for models with dependencies. This inconsistency means that after calling delete() on an instance without dependencies, the instance still retains its PK value instead of having it set to None.",
+      "relevant_files": [
+        "django/db/models/deletion.py"
+      ],
+      "relevant_functions": [
+        "django.db.models.deletion.Collector.delete",
+        "django.db.models.deletion.Collector.can_fast_delete"
+      ],
+      "fix_strategy": "1. Locate the deletion logic in django/db/models/deletion.py around lines 276-281 as mentioned in the issue.\n2. Identify the code path for fast deletion (models without dependencies) where PKs are not being cleared.\n3. Add logic to set the primary key to None for instances being deleted via the fast delete path, similar to what's done for models with dependencies.\n4. Ensure that the fix maintains consistency with the existing behavior for models with dependencies.\n5. The fix should iterate through the instances being deleted and set their PK field to None after the deletion query executes.\n6. Test the fix with models that have no dependencies to verify PKs are cleared after delete().\n7. Verify that existing functionality for models with dependencies still works correctly.",
+      "confidence": 0.9,
+      "relevant_code": "## Source Code Context\n\n## File: django/db/models/deletion.py\n```python\nfrom collections import Counter\nfrom operator import attrgetter\n\nfrom django.db import IntegrityError, connections, transaction\nfrom django.db.models import signals, sql\n\n\nclass ProtectedError(IntegrityError):\n    def __init__(self, msg, protected_objects):\n        self.protected_objects = protected_objects\n        super().__init__(msg, protected_objects)\n\n\ndef CASCADE(collector, field, sub_objs, using):\n    collector.collect(sub_objs, source=field.remote_field.model,\n                      source_attr=field.name, nullable=field.null)\n    if field.null and not connections[using].features.can_defer_constraint_checks:\n        collector.add_field_update(field, None, sub_objs)\n\n\ndef PROTECT(collector, field, sub_objs, using):\n    raise ProtectedError(\n        \"Cannot delete some instances of model '%s' because they are \"\n        \"referenced through a protected foreign key: '%s.%s'\" % (\n            field.remote_field.model.__name__, sub_objs[0].__class__.__name__, field.name\n        ),\n        sub_objs\n    )\n\n\ndef SET(value):\n    if callable(value):\n        def set_on_delete(collector, field, sub_objs, using):\n            collector.add_field_update(field, value(), sub_objs)\n    else:\n        def set_on_delete(collector, field, sub_objs, using):\n            collector.add_field_update(field, value, sub_objs)\n    set_on_delete.deconstruct = lambda: ('django.db.models.SET', (value,), {})\n    return set_on_delete\n\n\ndef SET_NULL(collector, field, sub_objs, using):\n    collector.add_field_update(field, None, sub_objs)\n\n\ndef SET_DEFAULT(collector, field, sub_objs, using):\n    collector.add_field_update(field, field.get_default(), sub_objs)\n\n\ndef DO_NOTHING(collector, field, sub_objs, using):\n    pass\n\n\ndef get_candidate_relations_to_delete(opts):\n    # The candidate relations are the ones that come from N-1 and 1-1 relations.\n    # N-N  (i.e., many-to-many) relations aren't candidates for deletion.\n    return (\n        f for f in opts.get_fields(include_hidden=True)\n        if f.auto_created and not f.concrete and (f.one_to_one or f.one_to_many)\n    )\n\n\nclass Collector:\n    def __init__(self, using):\n        self.using = using\n        # Initially, {model: {instances}}, later values become lists.\n        self.data = {}\n        self.field_updates = {}  # {model: {(field, value): {instances}}}\n        # fast_deletes is a list of queryset-likes that can be deleted without\n        # fetching the objects into memory.\n        self.fast_deletes = []\n\n        # Tracks deletion-order dependency for databases without transactions\n        # or ability to defer constraint checks. Only concrete model classes\n        # should be included, as the dependencies exist only between actual\n        # database tables; proxy models are represented here by their concrete\n        # parent.\n        self.dependencies = {}  # {model: {models}}\n\n    def add(self, objs, source=None, nullable=False, reverse_dependency=False):\n        \"\"\"\n        Add 'objs' to the collection of objects to be deleted.  If the call is\n        the result of a cascade, 'source' should be the model that caused it,\n        and 'nullable' should be set to True if the relation can be null.\n\n        Return a list of all objects that were not already collected.\n        \"\"\"\n        if not objs:\n            return []\n        new_objs = []\n        model = objs[0].__class__\n        instances = self.data.setdefault(model, set())\n        for obj in objs:\n            if obj not in instances:\n                new_objs.append(obj)\n        instances.update(new_objs)\n        # Nullable relationships can be ignored -- they are nulled out before\n        # deleting, and therefore do not affect the order in which objects have\n        # to be deleted.\n        if source is not None and not nullable:\n            if reverse_dependency:\n                source, model = model, source\n            self.dependencies.setdefault(\n                source._meta.concrete_model, set()).add(model._meta.concrete_model)\n        return new_objs\n\n    def add_field_update(self, field, value, objs):\n        \"\"\"\n        Schedule a field update. 'objs' must be a homogeneous iterable\n        collection of model instances (e.g. a QuerySet).\n        \"\"\"\n        if not objs:\n            return\n        model = objs[0].__class__\n        self.field_updates.setdefault(\n            model, {}).setdefault(\n            (field, value), set()).update(objs)\n\n    def can_fast_delete(self, objs, from_field=None):\n        \"\"\"\n        Determine if the objects in the given queryset-like or single object\n        can be fast-deleted. This can be done if there are no cascades, no\n        parents and no signal listeners for the object class.\n\n        The 'from_field' tells where we are coming from - we need this to\n        determine if the objects are in fact to be deleted. Allow also\n        skipping parent -> child -> parent chain preventing fast delete of\n        the child.\n        \"\"\"\n        if from_field and from_field.remote_field.on_delete is not CASCADE:\n            return False\n        if hasattr(objs, '_meta'):\n            model = type(objs)\n        elif hasattr(objs, 'model') and hasattr(objs, '_raw_delete'):\n            model = objs.model\n        else:\n            return False\n        if (signals.pre_delete.has_listeners(model) or\n                signals.post_delete.has_listeners(model) or\n                signals.m2m_changed.has_listeners(model)):\n            return False\n        # The use of from_field comes from the need to avoid cascade back to\n        # parent when parent delete is cascading to child.\n        opts = model._meta\n        return (\n            all(link == from_field for link in opts.concrete_model._meta.parents.values()) and\n            # Foreign keys pointing to this model.\n            all(\n                related.field.remote_field.on_delete is DO_NOTHING\n                for related in get_candidate_relations_to_delete(opts)\n            ) and (\n                # Something like generic foreign key.\n                not any(hasattr(field, 'bulk_related_objects') for field in opts.private_fields)\n            )\n        )\n\n    def get_del_batches(self, objs, field):\n        \"\"\"\n        Return the objs in suitably sized batches for the used connection.\n        \"\"\"\n        conn_batch_size = max(\n            connections[self.using].ops.bulk_batch_size([field.name], objs), 1)\n        if len(objs) > conn_batch_size:\n            return [objs[i:i + conn_batch_size]\n                    for i in range(0, len(objs), conn_batch_size)]\n        else:\n            return [objs]\n\n    def collect(self, objs, source=None, nullable=False, collect_related=True,\n                source_attr=None, reverse_dependency=False, keep_parents=False):\n        \"\"\"\n        Add 'objs' to the collection of objects to be deleted as well as all\n        parent instances.  'objs' must be a homogeneous iterable collection of\n        model instances (e.g. a QuerySet).  If 'collect_related' is True,\n        related objects will be handled by their respective on_delete handler.\n\n        If the call is the result of a cascade, 'source' should be the model\n        that caused it and 'nullable' should be set to True, if the relation\n        can be null.\n\n        If 'reverse_dependency' is True, 'source' will be deleted before the\n        current model, rather than after. (Needed for cascading to parent\n        models, the one case in which the cascade follows the forwards\n        direction of an FK rather than the reverse direction.)\n\n        If 'keep_parents' is True, data of parent model's will be not deleted.\n        \"\"\"\n        if self.can_fast_delete(objs):\n            self.fast_deletes.append(objs)\n            return\n        new_objs = self.add(objs, source, nullable,\n                            reverse_dependency=reverse_dependency)\n        if not new_objs:\n            return\n\n        model = new_objs[0].__class__\n\n        if not keep_parents:\n            # Recursively collect concrete model's parent models, but not their\n            # related objects. These will be found by meta.get_fields()\n            concrete_model = model._meta.concrete_model\n            for ptr in concrete_model._meta.parents.values():\n                if ptr:\n                    parent_objs = [getattr(obj, ptr.name) for obj in new_objs]\n                    self.collect(parent_objs, source=model,\n                                 source_attr=ptr.remote_field.related_name,\n                                 collect_related=False,\n                                 reverse_dependency=True)\n        if collect_related:\n            parents = model._meta.parents\n            for related in get_candidate_relations_to_delete(model._meta):\n                # Preserve parent reverse relationships if keep_parents=True.\n                if keep_parents and related.model in parents:\n                    continue\n                field = related.field\n                if field.remote_field.on_delete == DO_NOTHING:\n                    continue\n                batches = self.get_del_batches(new_objs, field)\n                for batch in batches:\n                    sub_objs = self.related_objects(related, batch)\n                    if self.can_fast_delete(sub_objs, from_field=field):\n                        self.fast_deletes.append(sub_objs)\n                    elif sub_objs:\n                        field.remote_field.on_delete(self, field, sub_objs, self.using)\n            for field in model._meta.private_fields:\n                if hasattr(field, 'bulk_related_objects'):\n                    # It's something like generic foreign key.\n                    sub_objs = field.bulk_related_objects(new_objs, self.using)\n                    self.collect(sub_objs, source=model, nullable=True)\n\n    def related_objects(self, related, objs):\n        \"\"\"\n        Get a QuerySet of objects related to `objs` via the relation `related`.\n        \"\"\"\n        return related.related_model._base_manager.using(self.using).filter(\n            **{\"%s__in\" % related.field.name: objs}\n        )\n\n    def instances_with_model(self):\n        for model, instances in self.data.items():\n            for obj in instances:\n                yield model, obj\n\n    def sort(self):\n        sorted_models = []\n        concrete_models = set()\n        models = list(self.data)\n        while len(sorted_models) < len(models):\n            found = False\n            for model in models:\n                if model in sorted_models:\n                    continue\n                dependencies = self.dependencies.get(model._meta.concrete_model)\n                if not (dependencies and dependencies.difference(concrete_models)):\n                    sorted_models.append(model)\n                    concrete_models.add(model._meta.concrete_model)\n                    found = True\n            if not found:\n                return\n        self.data = {model: self.data[model] for model in sorted_models}\n\n    def delete(self):\n        # sort instance collections\n        for model, instances in self.data.items():\n            self.data[model] = sorted(instances, key=attrgetter(\"pk\"))\n\n        # if possible, bring the models in an order suitable for databases that\n        # don't support transactions or cannot defer constraint checks until the\n        # end of a transaction.\n        self.sort()\n        # number of objects deleted for each model label\n        deleted_counter = Counter()\n\n        # Optimize for the case with a single obj and no dependencies\n        if len(self.data) == 1 and len(instances) == 1:\n            instance = list(instances)[0]\n            if self.can_fast_delete(instance):\n                with transaction.mark_for_rollback_on_error():\n                    count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)\n                return count, {model._meta.label: count}\n\n        with transaction.atomic(using=self.using, savepoint=False):\n            # send pre_delete signals\n            for model, obj in self.instances_with_model():\n                if not model._meta.auto_created:\n                    signals.pre_delete.send(\n                        sender=model, instance=obj, using=self.using\n                    )\n\n            # fast deletes\n            for qs in self.fast_deletes:\n                count = qs._raw_delete(using=self.using)\n                deleted_counter[qs.model._meta.label] += count\n\n            # update fields\n            for model, instances_for_fieldvalues in self.field_updates.items():\n                for (field, value), instances in instances_for_fieldvalues.items():\n                    query = sql.UpdateQuery(model)\n                    query.update_batch([obj.pk for obj in instances],\n                                       {field.name: value}, self.using)\n\n            # reverse instance collections\n            for instances in self.data.values():\n                instances.reverse()\n\n            # delete instances\n            for model, instances in self.data.items():\n                query = sql.DeleteQuery(model)\n                pk_list = [obj.pk for obj in instances]\n                count = query.delete_batch(pk_list, self.using)\n                deleted_counter[model._meta.label] += count\n\n                if not model._meta.auto_created:\n                    for obj in instances:\n                        signals.post_delete.send(\n                            sender=model, instance=obj, using=self.using\n                        )\n\n        # update collected instances\n        for instances_for_fieldvalues in self.field_updates.values():\n            for (field, value), instances in instances_for_fieldvalues.items():\n                for obj in instances:\n                    setattr(obj, field.attname, value)\n        for model, instances in self.data.items():\n            for instance in instances:\n                setattr(instance, model._meta.pk.attname, None)\n        return sum(deleted_counter.values()), dict(deleted_counter)\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder",
+        "diff": "--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -275,6 +275,7 @@\n             if self.can_fast_delete(instance):\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)\n+                setattr(instance, model._meta.pk.attname, None)\n                 return count, {model._meta.label: count}\n \n         with transaction.atomic(using=self.using, savepoint=False):",
+        "description": "Fix delete() to clear PK for single model instances without dependencies. When a single instance is deleted via the fast delete optimization path, set its primary key to None to maintain consistency with the behavior for models with dependencies.",
+        "timestamp": "2026-02-16T18:48:46.394565Z"
+      },
+      {
+        "version": 2,
+        "author": "Coder",
+        "diff": "--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -277,6 +277,7 @@\n             if self.can_fast_delete(instance):\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)\n+                setattr(instance, model._meta.pk.attname, None)\n                 return count, {model._meta.label: count}\n \n         with transaction.atomic(using=self.using, savepoint=False):",
+        "description": "Fix delete() to clear primary key on instances without dependencies. When using the fast delete optimization for a single instance with no dependencies, the primary key is now set to None after deletion, making the behavior consistent with the regular delete path.",
+        "timestamp": "2026-02-16T18:49:13.727905Z"
+      },
+      {
+        "version": 3,
+        "author": "Coder",
+        "diff": "--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -278,6 +278,7 @@\n             if self.can_fast_delete(instance):\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)\n+                setattr(instance, model._meta.pk.attname, None)\n                 return count, {model._meta.label: count}\n \n         with transaction.atomic(using=self.using, savepoint=False):\n@@ -289,6 +290,9 @@\n             # fast deletes\n             for qs in self.fast_deletes:\n                 count = qs._raw_delete(using=self.using)\n+                if hasattr(qs, '_result_cache') and qs._result_cache is not None:\n+                    for instance in qs._result_cache:\n+                        setattr(instance, qs.model._meta.pk.attname, None)\n                 deleted_counter[qs.model._meta.label] += count\n \n             # update fields\n",
+        "description": "Fix delete() to clear PKs on instances without dependencies. This patch adds logic to set the primary key to None for both single-instance fast deletes and queryset-based fast deletes, ensuring consistency with the behavior for models with dependencies.",
+        "timestamp": "2026-02-16T18:49:38.542375Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "The patch only handles the single instance fast delete case (lines 275-278), but does not handle the bulk fast delete case where multiple instances are deleted via self.fast_deletes (around line 290)",
+          "When fast_deletes contains QuerySet objects that are deleted in bulk (line 290: 'for qs in self.fast_deletes'), the instances in those querysets also need their PKs cleared, but the patch doesn't address this",
+          "The fix is incomplete as it only addresses one of two fast delete code paths in the delete() method"
+        ],
+        "suggestions": [
+          "After the fast deletes loop (around line 292), iterate through self.fast_deletes and clear PKs for any instances that can be accessed. However, note that fast_deletes contains QuerySets, not instances, so you may need to track the actual instances separately",
+          "Consider storing references to instances being fast-deleted before they are deleted, then clear their PKs after deletion",
+          "An alternative approach: modify the collect() method to track instances even when they go into fast_deletes, so they can be processed later for PK clearing",
+          "Ensure the solution handles both single instance fast delete (already addressed in the patch) and bulk fast delete via self.fast_deletes"
+        ]
+      },
+      {
+        "patch_version": 2,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "The patch only handles the single instance fast delete case (lines 275-278) but does not handle the bulk fast delete case where multiple instances are deleted via self.fast_deletes (around line 290)",
+          "When fast_deletes contains QuerySet objects that are deleted in bulk (line 290: 'for qs in self.fast_deletes'), the instances in those querysets do not have their PKs cleared",
+          "The fix is incomplete - it addresses only one of two fast delete code paths in the delete() method"
+        ],
+        "suggestions": [
+          "After the fast deletes loop (around line 292), iterate through self.fast_deletes and clear PKs for any instances that can be accessed. However, note that fast_deletes contains QuerySet-like objects, not individual instances, so you may need to check if instances are available in memory",
+          "Consider that fast_deletes may contain QuerySets that haven't fetched instances into memory. You may need to track instances separately when they're added to fast_deletes via the collect() method",
+          "A more comprehensive fix would be to modify the collect() method to track instances even when using fast delete, or to ensure PKs are cleared for all deletion paths, not just the single-instance optimization"
+        ]
+      },
+      {
+        "patch_version": 3,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "The second part of the patch (lines 293-295) attempts to clear PKs for queryset-based fast deletes by checking `_result_cache`, but this is unreliable. Fast deletes use `_raw_delete()` which doesn't fetch instances into memory, so `_result_cache` will typically be None or empty.",
+          "The patch doesn't handle the case where fast deletes are performed on querysets that haven't been evaluated. The `_result_cache` check will fail to clear PKs in most real-world scenarios where fast delete is used.",
+          "The approach for queryset-based fast deletes is fundamentally flawed because fast deletes are specifically designed to avoid loading instances into memory. If instances aren't in memory, their PKs can't be cleared."
+        ],
+        "suggestions": [
+          "Remove the queryset-based fast delete PK clearing logic (lines 293-295) as it's ineffective and misleading. Fast deletes on querysets are meant to be optimizations that bypass instance loading.",
+          "Keep only the single-instance fast delete fix (line 281), which correctly handles the specific case mentioned in the issue description.",
+          "Consider documenting that PK clearing only occurs for instances that are in memory at the time of deletion. For queryset-based fast deletes, instances aren't loaded, so PKs can't be cleared.",
+          "The single-instance optimization path fix is correct and addresses the core issue. Focus on that part only."
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 0,
+        "passed": true,
+        "pass_count": 1,
+        "fail_count": 0,
+        "failing_tests": [],
+        "error_traces": []
+      }
+    ],
+    "metadata": {
+      "status": "resolved",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-16T18:48:04.926519Z",
+      "end_time": null
+    }
+  }
+}

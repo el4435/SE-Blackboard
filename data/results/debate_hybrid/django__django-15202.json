@@ -1,0 +1,183 @@
+{
+  "experiment_id": "deb_hybrid_django__django-15202_3dd14146",
+  "issue_id": "django__django-15202",
+  "topology": "debate",
+  "communication": "hybrid",
+  "resolved": true,
+  "iterations": 2,
+  "total_input_tokens": 15786,
+  "total_output_tokens": 2558,
+  "total_latency_ms": 78777,
+  "final_patch": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T04:03:14.849772+00:00",
+      "experiment_id": "debate_hybrid_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Deb-H",
+      "agent_role": "Planner",
+      "communication_mode": "hybrid",
+      "iteration": 0,
+      "input_tokens": 913,
+      "output_tokens": 469,
+      "latency_ms": 9603
+    },
+    {
+      "timestamp": "2026-02-15T04:03:25.346302+00:00",
+      "experiment_id": "debate_hybrid_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Deb-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 4506,
+      "output_tokens": 721,
+      "latency_ms": 10495
+    },
+    {
+      "timestamp": "2026-02-15T04:03:36.624576+00:00",
+      "experiment_id": "debate_hybrid_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Deb-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 4506,
+      "output_tokens": 721,
+      "latency_ms": 11277
+    },
+    {
+      "timestamp": "2026-02-15T04:03:40.209591+00:00",
+      "experiment_id": "debate_hybrid_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Deb-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 2542,
+      "output_tokens": 137,
+      "latency_ms": 3583
+    },
+    {
+      "timestamp": "2026-02-15T04:03:47.337714+00:00",
+      "experiment_id": "debate_hybrid_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Deb-H",
+      "agent_role": "Tester",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 1389,
+      "output_tokens": 346,
+      "latency_ms": 7127
+    },
+    {
+      "timestamp": "2026-02-15T04:04:24.021124+00:00",
+      "experiment_id": "debate_hybrid_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Deb-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 2,
+      "input_tokens": 1930,
+      "output_tokens": 164,
+      "latency_ms": 3929
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-15202",
+      "problem_statement": "URLField throws ValueError instead of ValidationError on clean\nDescription\n\t\nforms.URLField( ).clean('////]@N.AN')\nresults in:\n\tValueError: Invalid IPv6 URL\n\tTraceback (most recent call last):\n\t File \"basic_fuzzer.py\", line 22, in TestOneInput\n\t File \"fuzzers.py\", line 350, in test_forms_URLField\n\t File \"django/forms/fields.py\", line 151, in clean\n\t File \"django/forms/fields.py\", line 136, in run_validators\n\t File \"django/core/validators.py\", line 130, in __call__\n\t File \"urllib/parse.py\", line 440, in urlsplit\n",
+      "repo": "django/django",
+      "base_commit": "4fd3044ca0135da903a70dfb66992293f529ecf1",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The URLValidator in django/core/validators.py calls urllib.parse.urlsplit() which can raise a ValueError for malformed IPv6 URLs. This ValueError is not caught and converted to a ValidationError, causing an unexpected exception to propagate instead of a proper form validation error.",
+      "relevant_files": [
+        "django/core/validators.py",
+        "django/forms/fields.py"
+      ],
+      "relevant_functions": [
+        "django.core.validators.URLValidator.__call__",
+        "django.forms.fields.URLField.clean",
+        "django.forms.fields.Field.run_validators"
+      ],
+      "fix_strategy": "1. Locate the URLValidator.__call__ method in django/core/validators.py (around line 130 based on traceback)\n2. Identify where urlsplit() is called (from urllib.parse)\n3. Wrap the urlsplit() call in a try-except block to catch ValueError exceptions\n4. When a ValueError is caught (e.g., 'Invalid IPv6 URL'), convert it to a ValidationError with an appropriate error message\n5. Ensure the error message is consistent with other URL validation errors and is translatable\n6. Add test cases to verify that malformed URLs like '////]@N.AN' raise ValidationError instead of ValueError\n7. Test with other edge cases that might trigger ValueError in urlsplit()",
+      "confidence": 0.95,
+      "relevant_code": "## Source Code Context\n\n## File: django/core/validators.py\n```python\n# Mock content for django/core/validators.py\n# This is a placeholder.\n\n```\n\n## File: django/forms/fields.py\n```python\n# Mock content for django/forms/fields.py\n# This is a placeholder.\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder_A",
+        "diff": "--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -127,7 +127,11 @@\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n \n         # Then check full URL\n-        splitted_url = urlsplit(value)\n+        try:\n+            splitted_url = urlsplit(value)\n+        except ValueError:\n+            # urlsplit can raise ValueError for malformed URLs (e.g., invalid IPv6)\n+            raise ValidationError(self.message, code=self.code, params={'value': value})\n         if not splitted_url.scheme and self.schemes:\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n         if splitted_url.scheme not in self.schemes:\n",
+        "description": "Fix URLField to throw ValidationError instead of ValueError on malformed IPv6 URLs. Wraps urlsplit() call in URLValidator.__call__ with try-except block to catch ValueError and convert it to ValidationError.",
+        "timestamp": "2026-02-15T04:03:25.346664Z"
+      },
+      {
+        "version": 1,
+        "author": "Coder_B",
+        "diff": "--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -127,7 +127,11 @@\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n \n         # Then check full URL\n-        splitted_url = urlsplit(value)\n+        try:\n+            splitted_url = urlsplit(value)\n+        except ValueError:\n+            # urlsplit can raise ValueError for malformed URLs (e.g., invalid IPv6)\n+            raise ValidationError(self.message, code=self.code, params={'value': value})\n         if not splitted_url.scheme and self.schemes:\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n         if splitted_url.scheme not in self.schemes:\n",
+        "description": "Fix URLField to throw ValidationError instead of ValueError on malformed IPv6 URLs. Wraps urlsplit() call in URLValidator.__call__ with try-except block to catch ValueError and convert it to ValidationError.",
+        "timestamp": "2026-02-15T04:03:36.625117Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider adding test cases to verify the fix handles malformed URLs like '////]@N.AN' and other edge cases that trigger ValueError in urlsplit()",
+          "Both patches are identical - the implementation correctly addresses the root cause by catching ValueError and converting it to ValidationError",
+          "The error message reuses self.message which is appropriate for consistency with other URL validation errors in the URLValidator class"
+        ]
+      },
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider adding a more specific error message for ValueError cases to help users understand what went wrong (e.g., 'Enter a valid URL. The URL appears to be malformed.')",
+          "Add comprehensive test cases covering various malformed URLs that trigger ValueError in urlsplit(), including the specific case '////]@N.AN' mentioned in the issue",
+          "Consider catching other potential exceptions from urlsplit() if they exist, though ValueError appears to be the primary concern for malformed IPv6 URLs"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 1,
+        "passed": false,
+        "pass_count": 38,
+        "fail_count": 4,
+        "failing_tests": [
+          "test_ordered_result_set",
+          "test_union_query"
+        ],
+        "error_traces": [
+          "AssertionError: Expected ordered result set",
+          "ValueError: Column mismatch in UNION query"
+        ]
+      },
+      {
+        "patch_version": 2,
+        "passed": true,
+        "pass_count": 42,
+        "fail_count": 0,
+        "failing_tests": [],
+        "error_traces": []
+      }
+    ],
+    "metadata": {
+      "status": "resolved",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-15T04:03:05.244908Z",
+      "end_time": null
+    }
+  }
+}

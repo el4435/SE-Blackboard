@@ -1,0 +1,51 @@
+{
+  "experiment_id": "seq_message_passing_django__django-16379_c6191d51",
+  "issue_id": "django__django-16379",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 8026,
+  "total_output_tokens": 1396,
+  "total_latency_ms": 118408,
+  "final_patch": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -93,8 +93,10 @@\n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n+        except FileNotFoundError:\n+            pass\n         return False\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:27:12.618686+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 794,
+      "output_tokens": 615,
+      "latency_ms": 9693
+    },
+    {
+      "timestamp": "2026-02-16T17:27:22.501411+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 6544,
+      "output_tokens": 627,
+      "latency_ms": 8716
+    },
+    {
+      "timestamp": "2026-02-16T17:27:27.418287+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 688,
+      "output_tokens": 154,
+      "latency_ms": 4915
+    }
+  ],
+  "blackboard_final_state": null
+}

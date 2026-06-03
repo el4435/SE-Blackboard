@@ -1,0 +1,51 @@
+{
+  "experiment_id": "seq_message_passing_django__django-11179_27569c8c",
+  "issue_id": "django__django-11179",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 11369,
+  "total_output_tokens": 1181,
+  "total_latency_ms": 46414,
+  "final_patch": "--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -278,6 +278,7 @@\n             if self.can_fast_delete(instance):\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)\n+                setattr(instance, model._meta.pk.attname, None)\n                 return count, {model._meta.label: count}\n \n         with transaction.atomic(using=self.using, savepoint=False):",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:20:07.055665+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 503,
+      "output_tokens": 433,
+      "latency_ms": 9745
+    },
+    {
+      "timestamp": "2026-02-16T17:20:17.507856+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 10184,
+      "output_tokens": 627,
+      "latency_ms": 9641
+    },
+    {
+      "timestamp": "2026-02-16T17:20:20.780558+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 682,
+      "output_tokens": 121,
+      "latency_ms": 3271
+    }
+  ],
+  "blackboard_final_state": null
+}

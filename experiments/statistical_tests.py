@@ -1,4 +1,4 @@
-"""Statistical tests for SE-Blackboard paper.
+"""Day 6 — Statistical tests for SE-Blackboard paper.
 
 Performs:
   a) McNemar's Test (paired binary comparison of resolve rates)
@@ -25,7 +25,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 
-# helpers
+# ── helpers ──────────────────────────────────────────────────────────
 
 def load_results(config_dir: str) -> list[dict]:
     """Load all per-issue result JSONs from a config directory."""
@@ -77,7 +77,7 @@ def odds_ratio_ci(n_success_a: int, n_total_a: int,
             "se": round(se, 4)}
 
 
-# main
+# ── main ─────────────────────────────────────────────────────────────
 
 def main():
     data_root = PROJECT_ROOT / "data"
@@ -113,7 +113,7 @@ def main():
 
     output = {"n_issues": n, "resolved": {"MP": n_mp, "BB": n_bb, "Hybrid": n_hy}}
 
-    # a) McNemar's Test
+    # ── a) McNemar's Test ────────────────────────────────────────────
     print("=" * 70)
     print("McNemar's Test Results (Exact Binomial)")
     print("=" * 70)
@@ -132,7 +132,7 @@ def main():
 
     output["mcnemar"] = mcnemar_results
 
-    # b) Cohen's h
+    # ── b) Cohen's h ─────────────────────────────────────────────────
     print()
     print("=" * 70)
     print("Effect Size — Cohen's h")
@@ -163,7 +163,7 @@ def main():
     for name, data in cohens_results.items():
         print(f"  {name:15s}  h={data['h']:.4f}  ({data['interpretation']})")
 
-    # c) Wilcoxon Signed-Rank — Token & Latency
+    # ── c) Wilcoxon Signed-Rank — Token & Latency ────────────────────
     print()
     print("=" * 70)
     print("Wilcoxon Signed-Rank Test (Token Cost & Latency)")
@@ -196,7 +196,7 @@ def main():
 
     output["wilcoxon"] = wilcoxon_results
 
-    # d) IFS Comparison
+    # ── d) IFS Comparison ────────────────────────────────────────────
     print()
     print("=" * 70)
     print("IFS Comparison (Paired t-test & Wilcoxon)")
@@ -268,7 +268,7 @@ def main():
 
     output["ifs_comparison"] = ifs_results
 
-    # e) Odds Ratio
+    # ── e) Odds Ratio ────────────────────────────────────────────────
     print()
     print("=" * 70)
     print("Odds Ratio (BB vs MP)")
@@ -289,7 +289,7 @@ def main():
         print(f"  {name:15s}  OR={data['odds_ratio']:.4f}  "
               f"95%CI=[{data['ci_95_lower']:.4f}, {data['ci_95_upper']:.4f}]")
 
-    # Summary
+    # ── Summary ──────────────────────────────────────────────────────
     print()
     print("=" * 70)
     print("SUMMARY")
@@ -318,7 +318,7 @@ def main():
     print("  Latency (Wilcoxon MP vs BB): p={:.6f}".format(
         wilcoxon_results["MP_vs_BB_latency"]["p_value"]))
 
-    # Save
+    # ── Save ─────────────────────────────────────────────────────────
     out_path = data_root / "analysis" / "statistical_tests.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(output, indent=2, default=str), encoding="utf-8")

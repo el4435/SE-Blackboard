@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_astropy__astropy-14995_a9d89ddd",
+  "issue_id": "astropy__astropy-14995",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 9786,
+  "total_output_tokens": 3621,
+  "total_latency_ms": 67673,
+  "final_patch": "--- a/astropy/nddata/mixins/ndarithmetic.py\n+++ b/astropy/nddata/mixins/ndarithmetic.py\n@@ -525,9 +525,13 @@\n             return deepcopy(self.mask)\n \n         elif self.mask is None:\n-            # Make a copy so there is no reference in the result.\n-            return deepcopy(operand_mask)\n+            if callable(handle_mask):\n+                # Make a copy so there is no reference in the result.\n+                return deepcopy(operand_mask)\n         elif operand_mask is None:\n+            if callable(handle_mask):\n+                return deepcopy(self.mask)\n+            # Fall through to handle_mask logic below\n             return deepcopy(self.mask)\n         else:\n             # Now lets calculate the resulting mask (operation enforces copy)",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T04:07:29.613479+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1223,
+      "output_tokens": 521,
+      "latency_ms": 10590
+    },
+    {
+      "timestamp": "2026-02-14T04:07:43.322437+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3526,
+      "output_tokens": 952,
+      "latency_ms": 13707
+    },
+    {
+      "timestamp": "2026-02-14T04:07:53.443944+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 837,
+      "output_tokens": 441,
+      "latency_ms": 10120
+    },
+    {
+      "timestamp": "2026-02-14T04:08:01.474477+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1286,
+      "output_tokens": 419,
+      "latency_ms": 8029
+    },
+    {
+      "timestamp": "2026-02-14T04:08:10.871507+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 847,
+      "output_tokens": 448,
+      "latency_ms": 9396
+    },
+    {
+      "timestamp": "2026-02-14T04:08:17.602034+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1293,
+      "output_tokens": 346,
+      "latency_ms": 6729
+    },
+    {
+      "timestamp": "2026-02-14T04:08:26.694662+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 774,
+      "output_tokens": 494,
+      "latency_ms": 9091
+    }
+  ],
+  "blackboard_final_state": null
+}

@@ -1,0 +1,76 @@
+{
+  "experiment_id": "seq_message_passing_django__django-16379_52371390",
+  "issue_id": "django__django-16379",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 2,
+  "total_input_tokens": 14680,
+  "total_output_tokens": 2378,
+  "total_latency_ms": 133067,
+  "final_patch": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -103,9 +103,11 @@\n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n+        except (FileNotFoundError, OSError):\n+            pass\n         return False\n \n     def _cull(self):\n",
+  "apply_method": "patch_fuzz3",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T22:50:54.295945+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 794,
+      "output_tokens": 615,
+      "latency_ms": 8871
+    },
+    {
+      "timestamp": "2026-02-22T22:51:04.741559+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 6543,
+      "output_tokens": 626,
+      "latency_ms": 9156
+    },
+    {
+      "timestamp": "2026-02-22T22:51:11.258089+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 688,
+      "output_tokens": 273,
+      "latency_ms": 6515
+    },
+    {
+      "timestamp": "2026-02-22T22:51:21.332798+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 5928,
+      "output_tokens": 736,
+      "latency_ms": 10073
+    },
+    {
+      "timestamp": "2026-02-22T22:51:24.653241+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 727,
+      "output_tokens": 128,
+      "latency_ms": 3319
+    }
+  ],
+  "blackboard_final_state": null
+}

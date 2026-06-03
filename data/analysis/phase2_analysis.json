@@ -1,0 +1,904 @@
+{
+  "resolve_counts": {
+    "mp_diff_strict": 5,
+    "bb_diff_strict": 7,
+    "hybrid_diff_strict": 6,
+    "mp_diff_fallback": 5,
+    "bb_diff_fallback": 8,
+    "hybrid_diff_fallback": 6,
+    "mp_wholefile_fallback": 4,
+    "bb_wholefile_fallback": 3
+  },
+  "apply_counts": {
+    "mp_diff_strict": 0,
+    "bb_diff_strict": 0,
+    "hybrid_diff_strict": 0,
+    "mp_diff_fallback": 7,
+    "bb_diff_fallback": 5,
+    "hybrid_diff_fallback": 4,
+    "mp_wholefile_fallback": 7,
+    "bb_wholefile_fallback": 7
+  },
+  "apply_method_distribution": {
+    "mp_diff_strict": {
+      "unknown": 20
+    },
+    "bb_diff_strict": {
+      "unknown": 20
+    },
+    "hybrid_diff_strict": {
+      "unknown": 20
+    },
+    "mp_diff_fallback": {
+      "patch_fuzz3": 6,
+      "failed": 3,
+      "patch_strict": 1,
+      "none": 10
+    },
+    "bb_diff_fallback": {
+      "patch_fuzz3": 4,
+      "failed": 5,
+      "patch_strict": 1,
+      "none": 10
+    },
+    "hybrid_diff_fallback": {
+      "none": 11,
+      "failed": 5,
+      "patch_fuzz3": 3,
+      "patch_strict": 1
+    },
+    "mp_wholefile_fallback": {
+      "none": 12,
+      "patch_fuzz3": 6,
+      "failed": 1,
+      "patch_strict": 1
+    },
+    "bb_wholefile_fallback": {
+      "none": 13,
+      "patch_fuzz3": 5,
+      "patch_strict": 2
+    }
+  },
+  "per_issue": {
+    "django__django-13028": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 34042
+      },
+      "bb_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 30732
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 88425
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 51726
+      },
+      "bb_diff_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 41745
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 16986
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 71809
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 138743
+      }
+    },
+    "django__django-13230": {
+      "mp_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 36193
+      },
+      "bb_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 30452
+      },
+      "hybrid_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 21869
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 37400
+      },
+      "bb_diff_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 30361
+      },
+      "hybrid_diff_fallback": {
+        "resolved": true,
+        "apply_method": "failed",
+        "tokens": 30963
+      },
+      "mp_wholefile_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 11828
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 131534
+      }
+    },
+    "django__django-11179": {
+      "mp_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 12550
+      },
+      "bb_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 24336
+      },
+      "hybrid_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 71883
+      },
+      "mp_diff_fallback": {
+        "resolved": true,
+        "apply_method": "failed",
+        "tokens": 24455
+      },
+      "bb_diff_fallback": {
+        "resolved": true,
+        "apply_method": "failed",
+        "tokens": 84807
+      },
+      "hybrid_diff_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 72108
+      },
+      "mp_wholefile_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 28041
+      },
+      "bb_wholefile_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 22338
+      }
+    },
+    "django__django-12908": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 52922
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 101909
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 103462
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "failed",
+        "tokens": 58015
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "failed",
+        "tokens": 145447
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "failed",
+        "tokens": 107100
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 71524
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 300032
+      }
+    },
+    "django__django-15347": {
+      "mp_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 12148
+      },
+      "bb_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 25785
+      },
+      "hybrid_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 26219
+      },
+      "mp_diff_fallback": {
+        "resolved": true,
+        "apply_method": "patch_strict",
+        "tokens": 12214
+      },
+      "bb_diff_fallback": {
+        "resolved": true,
+        "apply_method": "patch_strict",
+        "tokens": 25749
+      },
+      "hybrid_diff_fallback": {
+        "resolved": true,
+        "apply_method": "patch_strict",
+        "tokens": 26031
+      },
+      "mp_wholefile_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 16544
+      },
+      "bb_wholefile_fallback": {
+        "resolved": true,
+        "apply_method": "patch_strict",
+        "tokens": 21317
+      }
+    },
+    "django__django-14238": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 36864
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 138364
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 105007
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "failed",
+        "tokens": 52661
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "failed",
+        "tokens": 134579
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "failed",
+        "tokens": 101875
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 83318
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 241313
+      }
+    },
+    "django__django-12700": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 50715
+      },
+      "bb_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 30820
+      },
+      "hybrid_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 27622
+      },
+      "mp_diff_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 48636
+      },
+      "bb_diff_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 30741
+      },
+      "hybrid_diff_fallback": {
+        "resolved": true,
+        "apply_method": "failed",
+        "tokens": 31428
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 41358
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "patch_strict",
+        "tokens": 181493
+      }
+    },
+    "django__django-16379": {
+      "mp_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 9422
+      },
+      "bb_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 16984
+      },
+      "hybrid_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 21833
+      },
+      "mp_diff_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 17058
+      },
+      "bb_diff_fallback": {
+        "resolved": true,
+        "apply_method": "failed",
+        "tokens": 20201
+      },
+      "hybrid_diff_fallback": {
+        "resolved": true,
+        "apply_method": "failed",
+        "tokens": 21280
+      },
+      "mp_wholefile_fallback": {
+        "resolved": true,
+        "apply_method": "failed",
+        "tokens": 18055
+      },
+      "bb_wholefile_fallback": {
+        "resolved": true,
+        "apply_method": "patch_fuzz3",
+        "tokens": 15803
+      }
+    },
+    "django__django-15388": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 53334
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 116119
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 74230
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 36030
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 117761
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 75062
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "patch_strict",
+        "tokens": 39562
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 156759
+      }
+    },
+    "django__django-11620": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 54510
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 117047
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 69241
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 54180
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "failed",
+        "tokens": 141492
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 107114
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 63598
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "patch_fuzz3",
+        "tokens": 137552
+      }
+    },
+    "sympy__sympy-15345": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 11104
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 16210
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 10311
+      },
+      "mp_diff_fallback": {
+        "resolved": true,
+        "apply_method": "none",
+        "tokens": 3654
+      },
+      "bb_diff_fallback": {
+        "resolved": true,
+        "apply_method": "none",
+        "tokens": 20255
+      },
+      "hybrid_diff_fallback": {
+        "resolved": true,
+        "apply_method": "none",
+        "tokens": 7675
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 7126
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 23828
+      }
+    },
+    "sympy__sympy-21171": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 11688
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 76803
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 29300
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 15381
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 57859
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 37249
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 24503
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 84700
+      }
+    },
+    "sympy__sympy-15346": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 6522
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 24385
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 10943
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 10174
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 47407
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 10990
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 17163
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 68842
+      }
+    },
+    "sympy__sympy-13971": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 9794
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 27884
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 7617
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 8802
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 18725
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 7618
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 22253
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 71278
+      }
+    },
+    "sympy__sympy-18057": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 11017
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 32371
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 15754
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 12590
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 24914
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 14605
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 22797
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 72970
+      }
+    },
+    "sympy__sympy-24213": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 10606
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 28113
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 11771
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 10586
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 22898
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 16371
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 8737
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 29141
+      }
+    },
+    "pytest-dev__pytest-11143": {
+      "mp_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 5836
+      },
+      "bb_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 16597
+      },
+      "hybrid_diff_strict": {
+        "resolved": true,
+        "apply_method": "unknown",
+        "tokens": 21228
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 14657
+      },
+      "bb_diff_fallback": {
+        "resolved": true,
+        "apply_method": "none",
+        "tokens": 16588
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 54554
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 19757
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 59895
+      }
+    },
+    "astropy__astropy-14995": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 8370
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 43287
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 17033
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 9375
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 23575
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 16727
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 13184
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 55253
+      }
+    },
+    "sphinx-doc__sphinx-7738": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 10552
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 13929
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 11702
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 10831
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 23346
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 12129
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 18833
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 57341
+      }
+    },
+    "pylint-dev__pylint-5859": {
+      "mp_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 10428
+      },
+      "bb_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 16195
+      },
+      "hybrid_diff_strict": {
+        "resolved": false,
+        "apply_method": "unknown",
+        "tokens": 11889
+      },
+      "mp_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 12324
+      },
+      "bb_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 23609
+      },
+      "hybrid_diff_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 8838
+      },
+      "mp_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 6606
+      },
+      "bb_wholefile_fallback": {
+        "resolved": false,
+        "apply_method": "none",
+        "tokens": 27251
+      }
+    }
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "experiment_id": "deb_message_passing_django__django-11564_b7c3b09c",
+  "issue_id": "django__django-11564",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 25954,
+  "total_output_tokens": 13206,
+  "total_latency_ms": 212145,
+  "final_patch": "--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -95,10 +95,28 @@\n         else:\n             return path\n \n+    def _is_absolute_url(self, url):\n+        \"\"\"Check if URL is absolute (has scheme or starts with //).\"\"\"\n+        if not url:\n+            return False\n+        return url.startswith(('http://', 'https://', '//', 'mailto:', 'tel:', 'data:'))\n+\n+    def _prepend_script_name(self, url, context):\n+        \"\"\"Prepend SCRIPT_NAME to relative URLs.\"\"\"\n+        if not url or self._is_absolute_url(url):\n+            return url\n+        \n+        # Try to get SCRIPT_NAME from request context first\n+        request = context.get('request')\n+        script_name = request.META.get('SCRIPT_NAME', '') if request else ''\n+        \n+        if script_name:\n+            return script_name.rstrip('/') + url\n+        return url\n+\n     def render(self, context):\n         url = self.url(context)\n+        url = self._prepend_script_name(url, context)\n         if context.autoescape:\n             url = conditional_escape(url)\n         if self.varname is None:\n--- a/django/contrib/staticfiles/templatetags/staticfiles.py\n+++ b/django/contrib/staticfiles/templatetags/staticfiles.py\n@@ -1,6 +1,7 @@\n from django import template\n from django.contrib.staticfiles.storage import staticfiles_storage\n from django.templatetags.static import StaticNode as BaseStaticNode\n+from django.utils.html import conditional_escape\n \n register = template.Library()\n \n@@ -10,6 +11,17 @@\n     def url(self, context):\n         path = self.path.resolve(context)\n         return staticfiles_storage.url(path)\n+\n+    def render(self, context):\n+        url = self.url(context)\n+        # Only apply SCRIPT_NAME if URL is relative (not from CDN/S3)\n+        if url and not self._is_absolute_url(url):\n+            url = self._prepend_script_name(url, context)\n+        if context.autoescape:\n+            url = conditional_escape(url)\n+        if self.varname is None:\n+            return url\n+        context[self.varname] = url\n+        return ''\n \n \n @register.tag('static')",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T00:32:36.884341+00:00",
+      "experiment_id": "debate_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 701,
+      "output_tokens": 950,
+      "latency_ms": 16183
+    },
+    {
+      "timestamp": "2026-02-15T00:32:57.499103+00:00",
+      "experiment_id": "debate_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1864,
+      "output_tokens": 1722,
+      "latency_ms": 20613
+    },
+    {
+      "timestamp": "2026-02-15T00:33:18.623487+00:00",
+      "experiment_id": "debate_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1864,
+      "output_tokens": 1711,
+      "latency_ms": 21123
+    },
+    {
+      "timestamp": "2026-02-15T00:33:32.353606+00:00",
+      "experiment_id": "debate_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3881,
+      "output_tokens": 531,
+      "latency_ms": 13728
+    },
+    {
+      "timestamp": "2026-02-15T00:34:07.447654+00:00",
+      "experiment_id": "debate_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 4646,
+      "output_tokens": 2836,
+      "latency_ms": 35093
+    },
+    {
+      "timestamp": "2026-02-15T00:34:35.421439+00:00",
+      "experiment_id": "debate_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 4512,
+      "output_tokens": 2441,
+      "latency_ms": 27972
+    },
+    {
+      "timestamp": "2026-02-15T00:34:51.087815+00:00",
+      "experiment_id": "debate_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2841,
+      "output_tokens": 642,
+      "latency_ms": 15665
+    },
+    {
+      "timestamp": "2026-02-15T00:35:12.939817+00:00",
+      "experiment_id": "debate_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 4353,
+      "output_tokens": 1822,
+      "latency_ms": 21851
+    },
+    {
+      "timestamp": "2026-02-15T00:35:52.843937+00:00",
+      "experiment_id": "debate_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1292,
+      "output_tokens": 551,
+      "latency_ms": 12352
+    }
+  ],
+  "blackboard_final_state": null
+}

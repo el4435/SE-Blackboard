@@ -1,0 +1,246 @@
+{
+  "experiment_id": "seq_blackboard_astropy__astropy-14182_f73d28f2",
+  "issue_id": "astropy__astropy-14182",
+  "topology": "sequential",
+  "communication": "blackboard",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 39606,
+  "total_output_tokens": 8040,
+  "total_latency_ms": 150249,
+  "final_patch": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -16,10 +16,18 @@\n class RST(FixedWidth):\n     \"\"\"reStructuredText simple format table.\n \n     See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#simple-tables\n \n     Example::\n \n+      ==== ===== ======\n+      Col1  Col2  Col3\n+      ==== ===== ======\n         1   2.3   Hello\n         2   4.5   Worlds\n+      ==== ===== ======\n+\n+    Parameters\n+    ----------\n+    header_rows : list of str, optional\n+        List of table rows to output as the header. Default is ['name'].\n \n     Currently there is no support for reading tables which utilize continuation lines,\n     or for ones which define column spans through the use of an additional\n@@ -28,8 +36,8 @@\n \n     data_class = SimpleRSTData\n     header_class = SimpleRSTHeader\n \n-    def __init__(self):\n-        super().__init__(delimiter_pad=None, bookend=False)\n+    def __init__(self, header_rows=None):\n+        super().__init__(delimiter_pad=None, bookend=False, header_rows=header_rows)\n@@ -53,7 +61,11 @@\n         else:\n             lines = super().write(lines)\n \n-        idx = 2 if self.header.start_line is not None else 1\n+        # Determine separator line index based on header rows\n+        if self.header.start_line is not None:\n+            idx = 1 + len(self.header_rows) if self.header_rows else 2\n+        else:\n+            idx = 1\n         lines[idx] = lines[0]\n \n         return lines\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:14:05.369757+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Seq-B",
+      "agent_role": "Planner",
+      "communication_mode": "blackboard",
+      "iteration": 0,
+      "input_tokens": 4161,
+      "output_tokens": 1847,
+      "latency_ms": 27858
+    },
+    {
+      "timestamp": "2026-02-16T17:14:19.757223+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Seq-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 5324,
+      "output_tokens": 947,
+      "latency_ms": 14372
+    },
+    {
+      "timestamp": "2026-02-16T17:14:30.032561+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Seq-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 2284,
+      "output_tokens": 443,
+      "latency_ms": 10274
+    },
+    {
+      "timestamp": "2026-02-16T17:14:46.022094+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Seq-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 2687,
+      "output_tokens": 1082,
+      "latency_ms": 15988
+    },
+    {
+      "timestamp": "2026-02-16T17:15:07.612793+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Seq-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 7875,
+      "output_tokens": 1219,
+      "latency_ms": 21589
+    },
+    {
+      "timestamp": "2026-02-16T17:15:28.075535+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Seq-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 6259,
+      "output_tokens": 1297,
+      "latency_ms": 20461
+    },
+    {
+      "timestamp": "2026-02-16T17:15:48.457456+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Seq-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 9122,
+      "output_tokens": 1091,
+      "latency_ms": 20380
+    },
+    {
+      "timestamp": "2026-02-16T17:16:07.757394+00:00",
+      "experiment_id": "sequential_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Seq-B",
+      "agent_role": "Tester",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 1894,
+      "output_tokens": 114,
+      "latency_ms": 3427
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "astropy__astropy-14182",
+      "problem_statement": "Please support header rows in RestructuredText output\n### Description\r\n\r\nIt would be great if the following would work:\r\n\r\n```Python\r\n>>> from astropy.table import QTable\r\n>>> import astropy.units as u\r\n>>> import sys\r\n>>> tbl = QTable({'wave': [350,950]*u.nm, 'response': [0.7, 1.2]*u.count})\r\n>>> tbl.write(sys.stdout,  format=\"ascii.rst\")\r\n===== ========\r\n wave response\r\n===== ========\r\n350.0      0.7\r\n950.0      1.2\r\n===== ========\r\n>>> tbl.write(sys.stdout,  format=\"ascii.fixed_width\", header_rows=[\"name\", \"unit\"])\r\n|  wave | response |\r\n|    nm |       ct |\r\n| 350.0 |      0.7 |\r\n| 950.0 |      1.2 |\r\n>>> tbl.write(sys.stdout,  format=\"ascii.rst\", header_rows=[\"name\", \"unit\"])\r\nTraceback (most recent call last):\r\n  File \"<stdin>\", line 1, in <module>\r\n  File \"/usr/lib/python3/dist-packages/astropy/table/connect.py\", line 129, in __call__\r\n    self.registry.write(instance, *args, **kwargs)\r\n  File \"/usr/lib/python3/dist-packages/astropy/io/registry/core.py\", line 369, in write\r\n    return writer(data, *args, **kwargs)\r\n  File \"/usr/lib/python3/dist-packages/astropy/io/ascii/connect.py\", line 26, in io_write\r\n    return write(table, filename, **kwargs)\r\n  File \"/usr/lib/python3/dist-packages/astropy/io/ascii/ui.py\", line 856, in write\r\n    writer = get_writer(Writer=Writer, fast_writer=fast_writer, **kwargs)\r\n  File \"/usr/lib/python3/dist-packages/astropy/io/ascii/ui.py\", line 800, in get_writer\r\n    writer = core._get_writer(Writer, fast_writer, **kwargs)\r\n  File \"/usr/lib/python3/dist-packages/astropy/io/ascii/core.py\", line 1719, in _get_writer\r\n    writer = Writer(**writer_kwargs)\r\nTypeError: RST.__init__() got an unexpected keyword argument 'header_rows'\r\n```\r\n\r\n\r\n### Additional context\r\n\r\nRestructuredText output is a great way to fill autogenerated documentation with content, so having this flexible makes the life easier `:-)`\r\n\r\n\n",
+      "repo": "astropy/astropy",
+      "base_commit": "a5917978be39d13cd90b517e1de4e7a539ffaa48",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The RST (RestructuredText) writer class in astropy.io.ascii.rst does not support the 'header_rows' parameter that is available in other ASCII table formats like FixedWidth. The RST.__init__() method doesn't accept this parameter, causing a TypeError when users try to specify header_rows for RST output.",
+      "relevant_files": [
+        "astropy/io/ascii/rst.py",
+        "astropy/io/ascii/fixedwidth.py",
+        "astropy/io/ascii/core.py"
+      ],
+      "relevant_functions": [
+        "astropy.io.ascii.rst.RST",
+        "astropy.io.ascii.rst.RST.__init__",
+        "astropy.io.ascii.rst.RST.write",
+        "astropy.io.ascii.fixedwidth.FixedWidth.__init__",
+        "astropy.io.ascii.core.BaseWriter"
+      ],
+      "fix_strategy": "1. Examine the FixedWidth class implementation in fixedwidth.py to understand how header_rows parameter is handled.\n\n2. Update the RST class __init__() method to accept the header_rows parameter and properly initialize it (likely passing it to the parent class or storing it as an instance variable).\n\n3. Modify the RST header generation logic to support multiple header rows:\n   - Identify where headers are currently written in the RST writer\n   - Update the logic to iterate through multiple header rows if specified\n   - Ensure proper RST table formatting with '=====' separators between header rows and data\n\n4. Ensure the RST table structure maintains valid RestructuredText syntax:\n   - Multiple header rows should be separated by a single '=====' line\n   - The final header row should be followed by '=====' before data rows\n   - Column widths should accommodate all header row content\n\n5. Add unit tests to verify:\n   - RST tables work with header_rows=['name', 'unit']\n   - Output is valid RestructuredText\n   - Backward compatibility (tables without header_rows still work)\n   - Edge cases (empty tables, single column, etc.)",
+      "confidence": 0.85,
+      "relevant_code": "The RST class needs to be updated similar to how FixedWidth handles header_rows. The key is to accept the parameter in __init__ and modify the header writing logic to output multiple rows with proper RST table separators."
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder",
+        "diff": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -30,9 +30,12 @@\n     data_class = RSTData\n     header_class = RSTHeader\n \n-    def __init__(self):\n-        super().__init__(delimiter_pad=None, bookend=False)\n+    def __init__(self, header_rows=None):\n+        super().__init__(delimiter_pad=None, bookend=False, header_rows=header_rows)\n \n     def write(self, lines):\n         lines = super().write(lines)\n-        lines = [lines[1]] + lines + [lines[1]]\n+        idx = 1 if self.header.start_line is not None else 0\n+        sep_line = lines[idx]\n+        lines = [sep_line] + lines + [sep_line]\n         return lines\n",
+        "description": "Add header_rows support to RestructuredText (RST) writer. This patch enables the RST writer to accept and properly handle the header_rows parameter, allowing users to specify multiple header rows (e.g., name and unit) in RST table output, similar to the FixedWidth format.",
+        "timestamp": "2026-02-16T17:14:19.757484Z"
+      },
+      {
+        "version": 2,
+        "author": "Coder",
+        "diff": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -18,10 +18,16 @@\n class RST(FixedWidth):\n     \"\"\"reStructuredText simple format table.\n \n+    This class can write tables with multiple header rows by specifying\n+    the ``header_rows`` parameter. For example, ``header_rows=['name', 'unit']``\n+    will write a table with both column names and units in the header.\n+\n     Example::\n \n       >>> from astropy.table import QTable\n       >>> import astropy.units as u\n+      >>> import sys\n+      >>> tbl = QTable({'wave': [350,950]*u.nm, 'response': [0.7, 1.2]*u.count})\n       >>> tbl = QTable({'wave': [350,950]*u.nm, 'response': [0.7, 1.2]*u.count})\n       >>> tbl.write(sys.stdout,  format=\"ascii.rst\")\n       ===== ========\n@@ -30,6 +36,13 @@\n       350.0      0.7\n       950.0      1.2\n       ===== ========\n+      >>> tbl.write(sys.stdout,  format=\"ascii.rst\", header_rows=['name', 'unit'])\n+      ===== ========\n+       wave response\n+         nm       ct\n+      ===== ========\n+      350.0      0.7\n+      950.0      1.2\n+      ===== ========\n \n     Like other fixed-width formats, this format can write a multi-line header::\n \n@@ -50,6 +63,15 @@\n \n     data_class = RSTData\n     header_class = RSTHeader\n+\n+    def __init__(self, header_rows=None):\n+        super().__init__()\n+        if header_rows is not None:\n+            if not isinstance(header_rows, list):\n+                raise TypeError(\"header_rows must be a list\")\n+            for row in header_rows:\n+                if row not in ['name', 'unit', 'dtype']:\n+                    raise ValueError(f\"header_rows must contain only 'name', 'unit', or 'dtype', got '{row}'\")\n+        self.header_rows = header_rows\n \n     def write(self, lines):\n         lines = super().write(lines)\n@@ -57,7 +79,14 @@\n         if idx is not None:\n             lines[idx] = re.sub(r\"\\s\", \"=\", lines[idx])\n         idx = None\n-        if self.header.start_line is not None:\n+        # Determine the separator line index based on header configuration\n+        if self.header_rows is not None:\n+            # With header_rows, we need to find the line after all header rows\n+            # The header rows come after the first separator line\n+            # Count: 1 (top separator) + len(header_rows) header lines\n+            idx = 1 + len(self.header_rows)\n+        elif self.header.start_line is not None:\n+            # Default behavior: separator after the header line\n             idx = self.header.start_line + len(self.header.names)\n         if idx is not None:\n             lines[idx] = re.sub(r\"\\s\", \"=\", lines[idx])\n",
+        "description": "Add support for header_rows parameter in RST writer class. This patch:\n1. Updates RST.__init__() to accept and validate the header_rows parameter\n2. Validates that header_rows is a list containing only valid values ('name', 'unit', 'dtype')\n3. Modifies the write() method to correctly place separator lines when header_rows is specified\n4. Adds documentation and examples showing how to use header_rows with RST format\n5. Maintains backward compatibility for tables without header_rows",
+        "timestamp": "2026-02-16T17:14:46.022426Z"
+      },
+      {
+        "version": 3,
+        "author": "Coder",
+        "diff": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -16,10 +16,18 @@\n class RST(FixedWidth):\n     \"\"\"reStructuredText simple format table.\n \n     See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#simple-tables\n \n     Example::\n \n+      ==== ===== ======\n+      Col1  Col2  Col3\n+      ==== ===== ======\n         1   2.3   Hello\n         2   4.5   Worlds\n+      ==== ===== ======\n+\n+    Parameters\n+    ----------\n+    header_rows : list of str, optional\n+        List of table rows to output as the header. Default is ['name'].\n \n     Currently there is no support for reading tables which utilize continuation lines,\n     or for ones which define column spans through the use of an additional\n@@ -28,8 +36,8 @@\n \n     data_class = SimpleRSTData\n     header_class = SimpleRSTHeader\n \n-    def __init__(self):\n-        super().__init__(delimiter_pad=None, bookend=False)\n+    def __init__(self, header_rows=None):\n+        super().__init__(delimiter_pad=None, bookend=False, header_rows=header_rows)\n@@ -53,7 +61,11 @@\n         else:\n             lines = super().write(lines)\n \n-        idx = 2 if self.header.start_line is not None else 1\n+        # Determine separator line index based on header rows\n+        if self.header.start_line is not None:\n+            idx = 1 + len(self.header_rows) if self.header_rows else 2\n+        else:\n+            idx = 1\n         lines[idx] = lines[0]\n \n         return lines\n",
+        "description": "Add header_rows support to RST writer by passing parameter to parent FixedWidth class and updating separator line logic to handle multiple header rows",
+        "timestamp": "2026-02-16T17:15:28.075882Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "The patch assumes that the parent class (FixedWidth) will handle the header_rows parameter, but RST inherits from FixedWidth which may not be the correct inheritance chain for all RST functionality",
+          "The write() method modification changes the separator line selection logic using 'self.header.start_line', but this attribute may not be properly set or may not exist in all cases",
+          "No validation is performed on the header_rows parameter - it should check if the values are valid (e.g., 'name', 'unit', 'dtype')",
+          "The patch doesn't verify that the RST table format remains valid with multiple header rows - RST tables have specific formatting requirements",
+          "Missing test cases to verify the fix works correctly and doesn't introduce regressions",
+          "The logic for determining the separator line index (idx) is fragile - it assumes start_line being None means no header, but this may not always be true"
+        ],
+        "suggestions": [
+          "Add explicit validation for the header_rows parameter to ensure only valid values are accepted",
+          "Add comprehensive unit tests that verify: (1) RST output with header_rows=['name', 'unit'] matches expected format, (2) backward compatibility without header_rows, (3) edge cases like empty tables",
+          "Consider adding a more robust way to identify the separator line rather than relying on start_line attribute",
+          "Verify that the parent class __init__ actually accepts and properly handles the header_rows parameter by checking the FixedWidth implementation",
+          "Add documentation or docstring updates to the RST class explaining the new header_rows parameter",
+          "Test the actual output format to ensure it produces valid RestructuredText that can be parsed correctly"
+        ]
+      },
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "Patch v1: The write() method logic for determining separator line index is incomplete and doesn't properly handle multiple header rows",
+          "Patch v1: No validation or documentation added",
+          "Patch v2: Contains a duplicated line in the docstring (line 31)",
+          "Patch v2: Validation is too restrictive - it hardcodes allowed values ['name', 'unit', 'dtype'] which may not match parent class capabilities",
+          "Patch v2: Does not pass header_rows to parent class __init__() - calls super().__init__() without arguments, so parent FixedWidth won't generate multiple header rows",
+          "Patch v2: The separator line calculation logic (idx = 1 + len(self.header_rows)) makes assumptions about output structure without verifying against actual FixedWidth behavior",
+          "Both patches: Need to verify that passing header_rows to FixedWidth parent class is sufficient, or if additional RST-specific formatting is needed"
+        ],
+        "suggestions": [
+          "Combine approaches: Pass header_rows to parent class like v1, but add documentation like v2",
+          "Remove the overly restrictive validation in v2 - let the parent class handle validation",
+          "Fix the duplicated docstring line in v2",
+          "Test the actual output structure from FixedWidth with header_rows to ensure separator line logic is correct",
+          "Consider if RST format needs special handling for multiple header rows beyond what FixedWidth provides",
+          "Add unit tests to verify the feature works correctly with various header_rows configurations"
+        ]
+      },
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "Missing parameter validation - should check if header_rows is a list and contains valid values",
+          "No documentation added to explain the new header_rows parameter",
+          "No docstring example showing usage with header_rows parameter",
+          "The separator line logic using 'idx = 1 if self.header.start_line is not None else 0' may not correctly handle all cases with multiple header rows"
+        ],
+        "suggestions": [
+          "Add validation for header_rows parameter (check it's a list, contains valid values like 'name', 'unit', 'dtype')",
+          "Add docstring documentation explaining the header_rows parameter with examples",
+          "Add a docstring example showing RST output with header_rows=['name', 'unit']",
+          "Consider more robust separator line calculation that accounts for the number of header rows when header_rows is specified",
+          "Add unit tests to verify the functionality works correctly with header_rows parameter"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 0,
+        "passed": false,
+        "pass_count": 0,
+        "fail_count": 1,
+        "failing_tests": [
+          "Evaluation did not complete"
+        ],
+        "error_traces": [
+          "Evaluation did not complete - the test execution failed to produce results, indicating a critical error such as syntax error, import failure, infinite loop, or system resource exhaustion during test execution"
+        ]
+      }
+    ],
+    "metadata": {
+      "status": "testing",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-16T17:13:37.509654Z",
+      "end_time": null
+    }
+  }
+}

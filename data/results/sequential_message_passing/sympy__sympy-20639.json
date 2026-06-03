@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-20639_df39acb3",
+  "issue_id": "sympy__sympy-20639",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 7226,
+  "total_output_tokens": 2639,
+  "total_latency_ms": 103154,
+  "final_patch": "--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -1367,7 +1367,7 @@\n             argvalues = [(val,) for val in argvalues]\n         if not isinstance(argvalues, (list, tuple)):\n-            fail(\n-                f\"In {function.__name__}: expected argvalues to be a list or tuple, \"\n-                f\"got {argvalues!r}\",\n-                pytrace=False,\n+            raise TypeError(\n+                f\"In {function.__name__}: expected argvalues to be a list or tuple of tuples, \"\n+                f\"got {type(argvalues).__name__}\"\n             )\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:27:50.431153+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 600,
+      "output_tokens": 665,
+      "latency_ms": 13282
+    },
+    {
+      "timestamp": "2026-02-16T18:28:21.107973+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 446,
+      "output_tokens": 206,
+      "latency_ms": 5787
+    },
+    {
+      "timestamp": "2026-02-16T18:28:28.310637+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2278,
+      "output_tokens": 348,
+      "latency_ms": 7201
+    },
+    {
+      "timestamp": "2026-02-16T18:28:33.490325+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 970,
+      "output_tokens": 239,
+      "latency_ms": 5179
+    },
+    {
+      "timestamp": "2026-02-16T18:28:44.247744+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 667,
+      "output_tokens": 410,
+      "latency_ms": 10756
+    },
+    {
+      "timestamp": "2026-02-16T18:28:52.144316+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1120,
+      "output_tokens": 309,
+      "latency_ms": 7895
+    },
+    {
+      "timestamp": "2026-02-16T18:29:00.861661+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 737,
+      "output_tokens": 341,
+      "latency_ms": 8716
+    },
+    {
+      "timestamp": "2026-02-16T18:29:20.301949+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3607
+    }
+  ],
+  "blackboard_final_state": null
+}

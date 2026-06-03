@@ -1,4 +1,4 @@
-"""Generate LaTeX tables for SE-Blackboard paper."""
+"""Day 6 — Generate LaTeX tables for SE-Blackboard paper."""
 
 from __future__ import annotations
 
@@ -19,14 +19,14 @@ def save(name: str, content: str):
     print(f"  {name}")
 
 
-# Load data
+# ── Load data ────────────────────────────────────────────────────────
 
 stats = json.loads((DATA_ROOT / "analysis" / "statistical_tests.json").read_text(encoding="utf-8"))
 ifs_summary = json.loads((DATA_ROOT / "ifs" / "ifs_summary_real.json").read_text(encoding="utf-8"))
 failure = json.loads((DATA_ROOT / "analysis" / "failure_analysis.json").read_text(encoding="utf-8"))
 
 
-# Table 1: Main Results
+# ── Table 1: Main Results ────────────────────────────────────────────
 
 table1 = r"""\begin{table}[t]
 \centering
@@ -46,7 +46,7 @@ Hybrid          & 6/50 & 12.0\% & 43,278 & 128s & 2.80 \\
 save("table1_main_results.tex", table1)
 
 
-# Table 2: Difficulty Breakdown
+# ── Table 2: Difficulty Breakdown ────────────────────────────────────
 
 table2 = r"""\begin{table}[t]
 \centering
@@ -68,7 +68,7 @@ Hybrid          & 5/22 & 22.7\% & 1/5 & 20.0\% & 0/23 & 0.0\% \\
 save("table2_difficulty.tex", table2)
 
 
-# Table 3: IFS by Stage
+# ── Table 3: IFS by Stage ───────────────────────────────────────────
 
 si = ifs_summary["stage_average_ifs"]
 
@@ -97,7 +97,7 @@ Hybrid          & """ + fmt_ifs(si["Seq-Hybrid"]["Planner"]) + " & " + fmt_ifs(s
 save("table3_ifs.tex", table3)
 
 
-# Table 4: Statistical Tests
+# ── Table 4: Statistical Tests ───────────────────────────────────────
 
 mc = stats["mcnemar"]
 ch = stats["cohens_h"]
@@ -137,7 +137,7 @@ table4 = r"""\begin{table}[t]
 save("table4_statistics.tex", table4)
 
 
-# Table 5: Failure Analysis
+# ── Table 5: Failure Analysis ────────────────────────────────────────
 
 fs = failure["summaries"]
 

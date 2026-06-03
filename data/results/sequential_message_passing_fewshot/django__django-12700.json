@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-12700_c39ee2c7",
+  "issue_id": "django__django-12700",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 47017,
+  "total_output_tokens": 4514,
+  "total_latency_ms": 106296,
+  "final_patch": "--- a/django/views/debug.py\n+++ b/django/views/debug.py\n@@ -95,6 +95,10 @@\n                 cleansed = self.cleansed_substitute\n             elif isinstance(value, dict):\n                 cleansed = {k: self.cleanse_setting(k, v) for k, v in value.items()}\n+            elif isinstance(value, (list, tuple)):\n+                cleansed = type(value)([\n+                    {k: self.cleanse_setting(k, v) for k, v in item.items()} if isinstance(item, dict) else self.cleanse_setting('', item)\n+                    for item in value\n+                ])\n             else:\n                 cleansed = value\n         except TypeError:",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-20T17:24:51.875530+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1026,
+      "output_tokens": 654,
+      "latency_ms": 12932
+    },
+    {
+      "timestamp": "2026-02-20T17:25:04.191332+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 14658,
+      "output_tokens": 717,
+      "latency_ms": 11782
+    },
+    {
+      "timestamp": "2026-02-20T17:25:13.009440+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 747,
+      "output_tokens": 335,
+      "latency_ms": 8816
+    },
+    {
+      "timestamp": "2026-02-20T17:25:31.173393+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 14431,
+      "output_tokens": 1151,
+      "latency_ms": 18162
+    },
+    {
+      "timestamp": "2026-02-20T17:25:39.676278+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 763,
+      "output_tokens": 438,
+      "latency_ms": 8501
+    },
+    {
+      "timestamp": "2026-02-20T17:25:52.595931+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 14229,
+      "output_tokens": 735,
+      "latency_ms": 12918
+    },
+    {
+      "timestamp": "2026-02-20T17:26:05.105033+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 755,
+      "output_tokens": 362,
+      "latency_ms": 12508
+    },
+    {
+      "timestamp": "2026-02-20T17:26:25.237950+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 122,
+      "latency_ms": 4111
+    }
+  ],
+  "blackboard_final_state": null
+}

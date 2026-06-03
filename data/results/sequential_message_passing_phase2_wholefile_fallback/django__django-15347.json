@@ -1,0 +1,76 @@
+{
+  "experiment_id": "seq_message_passing_django__django-15347_a62fa4a2",
+  "issue_id": "django__django-15347",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 2,
+  "total_input_tokens": 10077,
+  "total_output_tokens": 6467,
+  "total_latency_ms": 96596,
+  "final_patch": "--- a/django/contrib/messages/storage/cookie.py\n+++ b/django/contrib/messages/storage/cookie.py\n@@ -19,7 +19,7 @@\n             # Using 0/1 here instead of False/True to produce more compact json\n             is_safedata = 1 if isinstance(obj.message, SafeData) else 0\n             message = [self.message_key, is_safedata, obj.level, obj.message]\n-            if obj.extra_tags:\n+            if obj.extra_tags is not None:\n                 message.append(obj.extra_tags)\n             return message\n         return super().default(obj)\n@@ -35,7 +35,9 @@\n             if obj[0] == MessageEncoder.message_key:\n                 if obj[1]:\n                     obj[3] = mark_safe(obj[3])\n+                # Handle both old format (without extra_tags) and new format\n+                # obj[2:] will be [level, message] or [level, message, extra_tags]\n                 return Message(*obj[2:])\n             return [self.process_messages(item) for item in obj]\n         if isinstance(obj, dict):\n\n--- a/django/contrib/messages/storage/base.py\n+++ b/django/contrib/messages/storage/base.py\n@@ -22,8 +22,9 @@\n         and ``extra_tags`` to str in case they are lazy translations.\n         \"\"\"\n         self.message = str(self.message)\n-        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n+        if self.extra_tags is not None:\n+            self.extra_tags = str(self.extra_tags)\n \n     def __eq__(self, other):\n         if not isinstance(other, Message):\n",
+  "apply_method": "patch_fuzz3",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T23:53:15.507878+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 767,
+      "output_tokens": 539,
+      "latency_ms": 9036
+    },
+    {
+      "timestamp": "2026-02-22T23:53:32.903293+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3912,
+      "output_tokens": 1840,
+      "latency_ms": 16410
+    },
+    {
+      "timestamp": "2026-02-22T23:53:42.445961+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 670,
+      "output_tokens": 378,
+      "latency_ms": 9540
+    },
+    {
+      "timestamp": "2026-02-22T23:54:16.071439+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3750,
+      "output_tokens": 3604,
+      "latency_ms": 33625
+    },
+    {
+      "timestamp": "2026-02-22T23:54:20.329575+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 978,
+      "output_tokens": 106,
+      "latency_ms": 4256
+    }
+  ],
+  "blackboard_final_state": null
+}

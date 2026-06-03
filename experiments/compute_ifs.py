@@ -31,7 +31,10 @@ from src.evaluation.ifs import (
     extract_key_entities_rule_based,
     point_biserial_correlation,
 )
+
+# ======================================================================
 # Configuration
+# ======================================================================
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -70,7 +73,11 @@ COMM_MAP = {
     "debate_blackboard": "Blackboard",
     "debate_hybrid": "Hybrid",
 }
+
+
+# ======================================================================
 # Entity Extraction
+# ======================================================================
 
 
 async def extract_all_entities(
@@ -123,7 +130,11 @@ async def extract_all_entities(
     print(f"  Saved entities for {len(all_entities)} issues to {output_path}")
 
     return all_entities
+
+
+# ======================================================================
 # IFS Computation
+# ======================================================================
 
 
 def compute_ifs_all_configs(
@@ -199,7 +210,11 @@ def compute_ifs_all_configs(
         print(f"  {label}: computed IFS for {available_count} issues")
 
     return ifs_results
+
+
+# ======================================================================
 # Summary Statistics
+# ======================================================================
 
 
 def compute_summary(
@@ -331,7 +346,11 @@ def compute_summary(
     summary["blackboard_effect_on_ifs"] = bb_effect
 
     return summary
+
+
+# ======================================================================
 # Output Formatting
+# ======================================================================
 
 
 def print_summary(summary: dict[str, Any]) -> None:
@@ -423,7 +442,11 @@ def _print_stage_table(topology: str, summary: dict[str, Any]) -> None:
             else:
                 row += f" {str(val):>16}"
         print(row)
+
+
+# ======================================================================
 # Main
+# ======================================================================
 
 
 async def main() -> None:

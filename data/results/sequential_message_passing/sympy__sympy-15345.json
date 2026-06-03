@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-15345_6e7f9414",
+  "issue_id": "sympy__sympy-15345",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 7436,
+  "total_output_tokens": 3668,
+  "total_latency_ms": 90515,
+  "final_patch": "--- a/sympy/printing/codeprinter.py\n+++ b/sympy/printing/codeprinter.py\n@@ -90,6 +90,7 @@\n         'contract': True,\n         'error_on_reserved': None,\n         'reserved_word_suffix': '_',\n+        'user_function_names': {},\n     }\n \n     def __init__(self, settings=None):\n@@ -103,6 +104,13 @@\n         if not hasattr(self, 'reserved_words'):\n             self.reserved_words = set()\n \n+        # Validate user_function_names\n+        user_func_names = self._settings.get('user_function_names', {})\n+        if not isinstance(user_func_names, dict):\n+            raise TypeError(\"user_function_names must be a dictionary\")\n+        for key, value in user_func_names.items():\n+            if not isinstance(value, str):\n+                raise TypeError(f\"user_function_names values must be strings, got {type(value).__name__} for key {key}\")\n \n     def doprint(self, expr, assign_to=None):\n         \"\"\"\n@@ -226,6 +234,11 @@\n \n     def _print_Function(self, expr):\n         if expr.func.__name__ in self.known_functions:\n+            cond_func = self.known_functions[expr.func.__name__]\n+            func = None\n+            if isinstance(cond_func, str):\n+                func = cond_func\n+            else:\n             cond_func = self.known_functions[expr.func.__name__]\n             func = None\n             if isinstance(cond_func, str):\n@@ -239,6 +252,12 @@\n                     func = cond_func(*args)\n             if func is not None:\n                 return func\n+        \n+        # Check user_function_names for custom function name mappings\n+        user_func_names = self._settings.get('user_function_names', {})\n+        if expr.func in user_func_names:\n+            custom_name = user_func_names[expr.func]\n+            return \"%s(%s)\" % (custom_name, self.stringify(expr.args, \", \"))\n+        \n         return self._print_not_supported(expr)\n \n     def _print_Pow(self, expr):\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:33:58.248517+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 516,
+      "output_tokens": 501,
+      "latency_ms": 10320
+    },
+    {
+      "timestamp": "2026-02-16T17:34:06.837795+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1212,
+      "output_tokens": 479,
+      "latency_ms": 8572
+    },
+    {
+      "timestamp": "2026-02-16T17:34:17.832034+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 907,
+      "output_tokens": 438,
+      "latency_ms": 10992
+    },
+    {
+      "timestamp": "2026-02-16T17:34:26.643832+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1148,
+      "output_tokens": 518,
+      "latency_ms": 8811
+    },
+    {
+      "timestamp": "2026-02-16T17:34:35.829717+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 946,
+      "output_tokens": 408,
+      "latency_ms": 9185
+    },
+    {
+      "timestamp": "2026-02-16T17:34:48.264805+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1118,
+      "output_tokens": 753,
+      "latency_ms": 12434
+    },
+    {
+      "timestamp": "2026-02-16T17:34:59.208999+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1181,
+      "output_tokens": 459,
+      "latency_ms": 10943
+    },
+    {
+      "timestamp": "2026-02-16T17:35:18.441601+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 112,
+      "latency_ms": 3261
+    }
+  ],
+  "blackboard_final_state": null
+}

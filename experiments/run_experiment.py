@@ -46,7 +46,11 @@ console = Console()
 
 ALL_TOPOLOGIES = ["sequential", "debate"]
 ALL_COMMUNICATIONS = ["message_passing", "blackboard", "hybrid"]
+
+
+# ------------------------------------------------------------------
 # CLI
+# ------------------------------------------------------------------
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="SE-Blackboard experiment runner")
@@ -63,7 +67,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fallback-apply", action="store_true", default=True, help="Enable fallback patch apply: git apply -> patch -F0 -> patch -F3 (default: on)")
     parser.add_argument("--no-fallback-apply", dest="fallback_apply", action="store_false", help="Disable fallback, use strict git apply only")
     return parser.parse_args()
+
+
+# ------------------------------------------------------------------
 # Result persistence
+# ------------------------------------------------------------------
 
 _RESULT_SUFFIX: str = ""
 
@@ -95,7 +103,11 @@ def load_completed_ids(topology: str, communication: str) -> set[str]:
         except (json.JSONDecodeError, KeyError):
             pass
     return completed
+
+
+# ------------------------------------------------------------------
 # Factory helpers
+# ------------------------------------------------------------------
 
 def build_agents(
     llm_client: LLMClient,
@@ -158,7 +170,11 @@ def build_pipeline(
         patch_mode=patch_mode,
         fallback_apply=fallback_apply,
     )
+
+
+# ------------------------------------------------------------------
 # Issue loading
+# ------------------------------------------------------------------
 
 def load_issues(path: str, issue_id: str | None = None) -> list[dict[str, Any]]:
     """Load issues from JSON file, optionally filtering by a single ID."""
@@ -189,7 +205,11 @@ def _demo_issue(instance_id: str = "django__django-11099") -> dict[str, Any]:
         "repo": "django/django",
         "base_commit": "d5276b9e65fdd0473e8fa50fad1b6fdb5e9891be",
     }
+
+
+# ------------------------------------------------------------------
 # Single-issue runner
+# ------------------------------------------------------------------
 
 async def run_single_issue(
     topology: str,
@@ -236,7 +256,11 @@ async def run_single_issue(
     )
     result = await pipeline.run(issue)
     return result
+
+
+# ------------------------------------------------------------------
 # Batch runner
+# ------------------------------------------------------------------
 
 async def run_experiment_config(
     topology: str,
@@ -337,7 +361,11 @@ async def run_experiment_config(
                 )
 
     return results
+
+
+# ------------------------------------------------------------------
 # Main
+# ------------------------------------------------------------------
 
 async def main() -> None:
     global _RESULT_SUFFIX

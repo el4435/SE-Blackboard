@@ -1,0 +1,54 @@
+{
+  "MP": {
+    "n_runs": 50,
+    "n_resolved": 6,
+    "mean_iterations": 2.78,
+    "iteration_distribution": {
+      "1": 5,
+      "2": 1,
+      "3": 44
+    },
+    "verdict_data_available_runs": 0,
+    "n_explicit_accept_verdicts": 0,
+    "n_explicit_reject_verdicts": 0,
+    "first_accept_iteration_distribution": {},
+    "runs_no_accept_ever": 0
+  },
+  "BB": {
+    "n_runs": 50,
+    "n_resolved": 8,
+    "mean_iterations": 2.7,
+    "iteration_distribution": {
+      "1": 7,
+      "2": 1,
+      "3": 42
+    },
+    "verdict_data_available_runs": 50,
+    "n_explicit_accept_verdicts": 55,
+    "n_explicit_reject_verdicts": 80,
+    "first_accept_iteration_distribution": {
+      "1": 21,
+      "2": 4,
+      "3": 8
+    },
+    "runs_no_accept_ever": 17
+  },
+  "Hybrid": {
+    "n_runs": 50,
+    "n_resolved": 6,
+    "mean_iterations": 2.8,
+    "iteration_distribution": {
+      "1": 5,
+      "3": 45
+    },
+    "verdict_data_available_runs": 50,
+    "n_explicit_accept_verdicts": 37,
+    "n_explicit_reject_verdicts": 103,
+    "first_accept_iteration_distribution": {
+      "1": 13,
+      "2": 5,
+      "3": 3
+    },
+    "runs_no_accept_ever": 29
+  }
+}

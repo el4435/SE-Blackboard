@@ -84,7 +84,10 @@ class ExperimentLogger:
         total_in = sum(e["input_tokens"] for e in self._entries)
         total_out = sum(e["output_tokens"] for e in self._entries)
         return total_in, total_out
+
+    # ------------------------------------------------------------------
     # Internal
+    # ------------------------------------------------------------------
 
     def _append_to_file(self, entry: dict[str, Any]) -> None:
         """Append a JSON line to the log file."""

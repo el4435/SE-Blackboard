@@ -119,7 +119,7 @@ def _draw_panel(ax, title, bg_color, row_alt_color, stages, result, result_color
 def generate():
     fig, (ax_l, ax_r) = plt.subplots(1, 2, figsize=(16, 5.5))
 
-    # Left panel: Message-Passing (FAILED)
+    # ── Left panel: Message-Passing (FAILED) ─────────────────────────
     mp_stages = [
         ("Planner",  "[OK] Correct diagnosis", OK_GREEN,
          "Identifies check_filterable\nas root cause"),
@@ -135,7 +135,7 @@ def generate():
                 "FAILED", FAIL_RED,
                 "34,042 tokens \u00b7 3 iter \u00b7 131s")
 
-    # Right panel: Blackboard (RESOLVED)
+    # ── Right panel: Blackboard (RESOLVED) ───────────────────────────
     bb_stages = [
         ("Planner",  "[OK] Correct diagnosis", OK_GREEN,
          "Writes structured analysis\nto shared state"),
@@ -151,7 +151,7 @@ def generate():
                 "RESOLVED", OK_GREEN,
                 "30,732 tokens \u00b7 1 iter \u00b7 67s")
 
-    # Bottom caption
+    # ── Bottom caption ───────────────────────────────────────────────
     fig.text(0.5, 0.02,
              "Key: BB preserves exact traceback (line 1131, check_filterable) "
              "\u2013 Coder targets correct method",

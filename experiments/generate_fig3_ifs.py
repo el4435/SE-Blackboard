@@ -21,7 +21,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 FIGURES_DIR = PROJECT_ROOT / "figures"
 FIGURES_DIR.mkdir(exist_ok=True)
 
-# Style
+# ── Style ────────────────────────────────────────────────────────────
 matplotlib.rcParams["font.family"] = "serif"
 matplotlib.rcParams["font.size"] = 11
 matplotlib.rcParams["axes.labelsize"] = 12
@@ -32,7 +32,7 @@ sns.set_style("whitegrid")
 COLORS = {"mp": "#E74C3C", "bb": "#2ECC71", "hybrid": "#3498DB"}
 LABELS = {"mp": "MP", "bb": "BB", "hybrid": "Hybrid"}
 
-# Data
+# ── Data ─────────────────────────────────────────────────────────────
 data_root = PROJECT_ROOT / "data"
 ifs_summary = json.loads(
     (data_root / "ifs" / "ifs_summary_real.json").read_text(encoding="utf-8")
@@ -47,7 +47,7 @@ def generate():
     configs = ["mp", "bb", "hybrid"]
     labels_map = {"mp": "Seq-MP", "bb": "Seq-BB", "hybrid": "Seq-Hybrid"}
 
-    # Panel (a): Coder Stage IFS
+    # ── Panel (a): Coder Stage IFS ───────────────────────────────────
     coder_vals = [stage_ifs[labels_map[c]]["Coder"] for c in configs]
 
     bars = ax1.bar(range(3), coder_vals,
@@ -64,7 +64,7 @@ def generate():
     ax1.set_title("(a)  Coder Stage IFS", fontweight="bold")
     ax1.set_ylim(0, 0.75)
 
-    # Panel (b): IFS Decay Across Pipeline
+    # ── Panel (b): IFS Decay Across Pipeline ─────────────────────────
     stages = ["Planner", "Coder", "Reviewer", "Tester"]
     x_stages = np.arange(len(stages))
 
@@ -107,7 +107,7 @@ def generate():
     ax2.set_ylim(0, 0.90)
     ax2.legend(loc="upper right", fontsize=9, framealpha=0.9)
 
-    # Save
+    # ── Save ─────────────────────────────────────────────────────────
     plt.tight_layout()
     fig.savefig(FIGURES_DIR / "fig3_ifs_analysis.pdf", bbox_inches="tight")
     fig.savefig(FIGURES_DIR / "fig3_ifs_analysis.png", bbox_inches="tight", dpi=300)

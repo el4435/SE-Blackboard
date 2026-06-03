@@ -1,0 +1,50 @@
+{
+  "MP": {
+    "n_runs": 50,
+    "n_resolved": 6,
+    "total_tokens_all_runs": 1265838,
+    "tokens_per_run_mean": 25316.8,
+    "tokens_per_resolved": 210973.0,
+    "latency_per_run_mean_sec": 106.5,
+    "per_stage_tokens_mean": {
+      "Planner": 1512.8,
+      "Coder": 19746.4,
+      "Reviewer": 3456.1,
+      "Tester": 601.4
+    },
+    "tokens_in_resolved_runs_mean": 13374,
+    "tokens_in_unresolved_runs_mean": 26945.3
+  },
+  "BB": {
+    "n_runs": 50,
+    "n_resolved": 8,
+    "total_tokens_all_runs": 2742456,
+    "tokens_per_run_mean": 54849.1,
+    "tokens_per_resolved": 342807.0,
+    "latency_per_run_mean_sec": 170.6,
+    "per_stage_tokens_mean": {
+      "Planner": 4427.5,
+      "Coder": 18894.8,
+      "Reviewer": 28168.2,
+      "Tester": 3358.6
+    },
+    "tokens_in_resolved_runs_mean": 29168.8,
+    "tokens_in_unresolved_runs_mean": 59740.6
+  },
+  "Hybrid": {
+    "n_runs": 50,
+    "n_resolved": 6,
+    "total_tokens_all_runs": 2163905,
+    "tokens_per_run_mean": 43278.1,
+    "tokens_per_resolved": 360650.8,
+    "latency_per_run_mean_sec": 128.2,
+    "per_stage_tokens_mean": {
+      "Planner": 3944.0,
+      "Coder": 17151.1,
+      "Reviewer": 19306.0,
+      "Tester": 2877.0
+    },
+    "tokens_in_resolved_runs_mean": 31775.7,
+    "tokens_in_unresolved_runs_mean": 44846.6
+  }
+}

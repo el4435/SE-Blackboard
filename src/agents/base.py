@@ -30,7 +30,10 @@ class BaseAgent(ABC):
         self.config_label: str = ""
         self.communication_mode: str = ""
         self.current_iteration: int = 0
+
+    # ------------------------------------------------------------------
     # Abstract interface
+    # ------------------------------------------------------------------
 
     @abstractmethod
     async def execute(self, context: str) -> dict[str, Any]:
@@ -46,7 +49,10 @@ class BaseAgent(ABC):
             Structured output whose shape depends on the concrete role.
         """
         ...
+
+    # ------------------------------------------------------------------
     # LLM helpers
+    # ------------------------------------------------------------------
 
     async def _call_llm(
         self, system_prompt: str, user_message: str, *, max_tokens: int | None = None,
@@ -101,7 +107,10 @@ class BaseAgent(ABC):
             latency_ms=latency_ms,
         )
         return parsed, in_tok, out_tok
+
+    # ------------------------------------------------------------------
     # Prompt template helpers
+    # ------------------------------------------------------------------
 
     def _load_prompt_template(self) -> str:
         """Load the raw prompt template from ``config/prompts/{role}.txt``."""

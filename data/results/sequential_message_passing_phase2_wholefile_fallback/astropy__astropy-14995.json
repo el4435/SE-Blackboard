@@ -1,0 +1,112 @@
+{
+  "experiment_id": "seq_message_passing_astropy__astropy-14995_f8f5cbec",
+  "issue_id": "astropy__astropy-14995",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 4790,
+  "total_output_tokens": 8394,
+  "total_latency_ms": 166129,
+  "final_patch": "",
+  "apply_method": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-23T00:50:16.132407+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1258,
+      "output_tokens": 662,
+      "latency_ms": 12526
+    },
+    {
+      "timestamp": "2026-02-23T00:52:06.615617+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 842,
+      "output_tokens": 6540,
+      "latency_ms": 110465
+    },
+    {
+      "timestamp": "2026-02-23T00:52:10.633831+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 498,
+      "output_tokens": 188,
+      "latency_ms": 4015
+    },
+    {
+      "timestamp": "2026-02-23T00:52:14.563252+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 367,
+      "output_tokens": 161,
+      "latency_ms": 3928
+    },
+    {
+      "timestamp": "2026-02-23T00:52:19.868260+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 498,
+      "output_tokens": 242,
+      "latency_ms": 5303
+    },
+    {
+      "timestamp": "2026-02-23T00:52:25.915576+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 421,
+      "output_tokens": 249,
+      "latency_ms": 6046
+    },
+    {
+      "timestamp": "2026-02-23T00:52:31.418004+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 498,
+      "output_tokens": 236,
+      "latency_ms": 5501
+    },
+    {
+      "timestamp": "2026-02-23T00:52:49.732683+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 116,
+      "latency_ms": 2341
+    }
+  ],
+  "blackboard_final_state": null
+}

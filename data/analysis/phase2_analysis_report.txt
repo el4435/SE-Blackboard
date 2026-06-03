@@ -1,0 +1,254 @@
+================================================================================
+Phase 2 Analysis Report: Easy Issues (N=20)
+================================================================================
+
+4a. Resolve Rate Comparison (Core Metric)
+------------------------------------------------------------
+
+Config       diff+strict      diff+fallback    wholefile+fb    
+------------------------------------------------------------
+MP           5/20 (25%)      5/20 (25%)      4/20 (20%)
+BB           7/20 (35%)      8/20 (40%)      3/20 (15%)
+Hybrid       6/20 (30%)      6/20 (30%)      —
+
+Improvement (pp):
+  BB diff+fallback vs BB diff+strict:           +5pp (35% -> 40%)
+  BB wholefile+fb vs BB diff+strict:            -20pp (35% -> 15%)
+  MP diff+fallback vs MP diff+strict:           +0pp (25% -> 25%)
+  MP wholefile+fb vs MP diff+strict:            -5pp (25% -> 20%)
+  Hybrid diff+fallback vs Hybrid diff+strict:   +0pp (30% -> 30%)
+
+
+4b. Apply Success Rate
+------------------------------------------------------------
+
+Config       diff+strict      diff+fallback    wholefile+fb    
+------------------------------------------------------------
+MP           0/20           7/20           7/20
+BB           0/20           5/20           7/20
+Hybrid       0/20           4/20           —
+
+Fallback Apply Method Distribution (diff+fallback groups, N=60):
+  patch_strict     3/60 (5%)
+  patch_fuzz3      13/60 (22%)
+  none             31/60 (52%)
+  failed           13/60 (22%)
+
+Whole-file Apply Method Distribution:
+  MP+wholefile:
+    failed           1/20 (5%)
+    none             12/20 (60%)
+    patch_fuzz3      6/20 (30%)
+    patch_strict     1/20 (5%)
+  BB+wholefile:
+    none             13/20 (65%)
+    patch_fuzz3      5/20 (25%)
+    patch_strict     2/20 (10%)
+
+
+4c. Conditional Resolve Rate: P(resolved | apply_success)
+------------------------------------------------------------
+
+Config       diff+strict          diff+fallback        wholefile+fb        
+------------------------------------------------------------------------
+MP           0/0 (N/A)            3/7 (43%)            3/7 (43%)           
+BB           0/0 (N/A)            4/5 (80%)            3/7 (43%)           
+Hybrid       0/0 (N/A)            2/4 (50%)            —                   
+
+Interpretation:
+  - If cond. resolve rate stays constant: improvement is purely from better apply
+  - If cond. resolve rate changes: patch quality itself is affected
+
+
+4d. Average Tokens per Issue
+------------------------------------------------------------
+
+Config       diff+strict      diff+fallback    wholefile+fb     WF/diff ratio   
+----------------------------------------------------------------------------
+MP           22,431           25,037           30,330           1.2x            
+BB           46,416           52,603           94,869           1.8x            
+Hybrid       37,867           38,835           —                —               
+
+
+4e. Issue-by-Issue Results
+------------------------------------------------------------------------------------------------------------------------
+
+BB Config Breakdown:
+issue_id                       diff+strict    diff+fb        wholefile+fb   notes
+------------------------------------------------------------------------------------------------------------------------
+django__django-13028           RESOLVED       RESOLVED       FAILED         REGRESSION(wf); wf worse than diff; wf_apply=FAIL
+django__django-13230           RESOLVED       RESOLVED       FAILED         REGRESSION(wf); wf worse than diff
+django__django-11179           RESOLVED       RESOLVED       RESOLVED       
+django__django-12908           FAILED         FAILED         FAILED         wf_apply=FAIL
+django__django-15347           RESOLVED       RESOLVED       RESOLVED       
+django__django-14238           FAILED         FAILED         FAILED         wf_apply=FAIL
+django__django-12700           RESOLVED       RESOLVED       FAILED         REGRESSION(wf); wf worse than diff
+django__django-16379           RESOLVED       RESOLVED       RESOLVED       
+django__django-15388           FAILED         FAILED         FAILED         
+django__django-11620           FAILED         FAILED         FAILED         
+sympy__sympy-15345             FAILED         RESOLVED       FAILED         fallback rescued; wf worse than diff; wf_apply=FAIL
+sympy__sympy-21171             FAILED         FAILED         FAILED         wf_apply=FAIL
+sympy__sympy-15346             FAILED         FAILED         FAILED         wf_apply=FAIL
+sympy__sympy-13971             FAILED         FAILED         FAILED         wf_apply=FAIL
+sympy__sympy-18057             FAILED         FAILED         FAILED         wf_apply=FAIL
+sympy__sympy-24213             FAILED         FAILED         FAILED         wf_apply=FAIL
+pytest-dev__pytest-11143       RESOLVED       RESOLVED       FAILED         REGRESSION(wf); wf worse than diff; wf_apply=FAIL
+astropy__astropy-14995         FAILED         FAILED         FAILED         wf_apply=FAIL
+sphinx-doc__sphinx-7738        FAILED         FAILED         FAILED         wf_apply=FAIL
+pylint-dev__pylint-5859        FAILED         FAILED         FAILED         wf_apply=FAIL
+
+MP Config Breakdown:
+issue_id                       diff+strict    diff+fb        wholefile+fb   notes
+------------------------------------------------------------------------------------------------------------------------
+django__django-13028           FAILED         FAILED         FAILED         wf_apply=FAIL
+django__django-13230           RESOLVED       FAILED         RESOLVED       REGRESSION(fb)
+django__django-11179           RESOLVED       RESOLVED       RESOLVED       
+django__django-12908           FAILED         FAILED         FAILED         wf_apply=FAIL
+django__django-15347           RESOLVED       RESOLVED       RESOLVED       
+django__django-14238           FAILED         FAILED         FAILED         
+django__django-12700           FAILED         RESOLVED       FAILED         fallback rescued
+django__django-16379           RESOLVED       RESOLVED       RESOLVED       
+django__django-15388           FAILED         FAILED         FAILED         
+django__django-11620           FAILED         FAILED         FAILED         
+sympy__sympy-15345             FAILED         RESOLVED       FAILED         fallback rescued; wf_apply=FAIL
+sympy__sympy-21171             FAILED         FAILED         FAILED         wf_apply=FAIL
+sympy__sympy-15346             FAILED         FAILED         FAILED         wf_apply=FAIL
+sympy__sympy-13971             FAILED         FAILED         FAILED         wf_apply=FAIL
+sympy__sympy-18057             FAILED         FAILED         FAILED         wf_apply=FAIL
+sympy__sympy-24213             FAILED         FAILED         FAILED         wf_apply=FAIL
+pytest-dev__pytest-11143       RESOLVED       FAILED         FAILED         REGRESSION(fb); REGRESSION(wf); wf_apply=FAIL
+astropy__astropy-14995         FAILED         FAILED         FAILED         wf_apply=FAIL
+sphinx-doc__sphinx-7738        FAILED         FAILED         FAILED         wf_apply=FAIL
+pylint-dev__pylint-5859        FAILED         FAILED         FAILED         wf_apply=FAIL
+
+Hybrid Config Breakdown:
+issue_id                       diff+strict    diff+fb       
+------------------------------------------------------------
+django__django-13028           FAILED         FAILED         
+django__django-13230           RESOLVED       RESOLVED       
+django__django-11179           RESOLVED       RESOLVED       
+django__django-12908           FAILED         FAILED         
+django__django-15347           RESOLVED       RESOLVED       
+django__django-14238           FAILED         FAILED         
+django__django-12700           RESOLVED       RESOLVED       
+django__django-16379           RESOLVED       RESOLVED       
+django__django-15388           FAILED         FAILED         
+django__django-11620           FAILED         FAILED         
+sympy__sympy-15345             FAILED         RESOLVED       fallback rescued
+sympy__sympy-21171             FAILED         FAILED         
+sympy__sympy-15346             FAILED         FAILED         
+sympy__sympy-13971             FAILED         FAILED         
+sympy__sympy-18057             FAILED         FAILED         
+sympy__sympy-24213             FAILED         FAILED         
+pytest-dev__pytest-11143       RESOLVED       FAILED         REGRESSION(fb)
+astropy__astropy-14995         FAILED         FAILED         
+sphinx-doc__sphinx-7738        FAILED         FAILED         
+pylint-dev__pylint-5859        FAILED         FAILED         
+
+
+4f. McNemar's Test (Statistical Significance)
+------------------------------------------------------------
+
+  BB(diff+fb) vs BB(diff+strict):
+    Both resolved:   7
+    Neither resolved: 12
+    Only BB(diff+fb): 1
+    Only BB(diff+strict): 0
+    Discordant pairs: 1
+    p-value (exact binomial): 1.0000
+    Result: NOT significant (alpha=0.05)
+
+  BB(wf+fb) vs BB(diff+strict):
+    Both resolved:   3
+    Neither resolved: 13
+    Only BB(wf+fb): 0
+    Only BB(diff+strict): 4
+    Discordant pairs: 4
+    p-value (exact binomial): 0.1250
+    Result: NOT significant (alpha=0.05)
+
+  BB(wf+fb) vs MP(wf+fb):
+    Both resolved:   3
+    Neither resolved: 16
+    Only BB(wf+fb): 0
+    Only MP(wf+fb): 1
+    Discordant pairs: 1
+    p-value (exact binomial): 1.0000
+    Result: NOT significant (alpha=0.05)
+
+  BB(diff+fb) vs MP(diff+fb):
+    Both resolved:   5
+    Neither resolved: 12
+    Only BB(diff+fb): 3
+    Only MP(diff+fb): 0
+    Discordant pairs: 3
+    p-value (exact binomial): 0.2500
+    Result: NOT significant (alpha=0.05)
+
+  BB(diff+fb) vs BB(wf+fb):
+    Both resolved:   3
+    Neither resolved: 12
+    Only BB(diff+fb): 5
+    Only BB(wf+fb): 0
+    Discordant pairs: 5
+    p-value (exact binomial): 0.0625
+    Result: NOT significant (alpha=0.05)
+
+
+Whole-file Mode Failure Analysis
+------------------------------------------------------------
+
+Repo                           N     WF apply     WF resolved    Diff+fb resolved
+-----------------------------------------------------------------------------
+astropy/astropy                1     0/1          0/1            0/1
+django/django                  10    7/10         3/10           6/10
+pylint-dev/pylint              1     0/1          0/1            0/1
+pytest-dev/pytest              1     0/1          0/1            1/1
+sphinx-doc/sphinx              1     0/1          0/1            0/1
+sympy/sympy                    6     0/6          0/6            1/6
+
+Key finding: Whole-file mode COMPLETELY fails for non-Django repos
+  - extract_file_blocks() cannot parse LLM output for sympy/pytest/astropy/sphinx/pylint
+  - All non-Django issues produce 'Only garbage was found in the patch input'
+  - Even for Django, whole-file generates multi-hunk diffs causing 'Reversed patch detected'
+
+
+============================================================
+Phase 3 Decision
+============================================================
+
+BB wholefile+fallback resolve rate: 3/20 (15%)
+
+Decision: STOP
+  <= 31%, no substantial improvement
+
+Best performing config: bb_diff_fallback (8/20, 40%)
+
+BB-MP gap (diff+fallback): +15pp (25% vs 40%)
+BB-MP gap (wholefile+fb):  -5pp (20% vs 15%)
+
+============================================================
+EXECUTIVE SUMMARY
+============================================================
+
+1. Fallback apply (diff mode):
+   - BB: 7/20 -> 8/20 (+5pp)
+   - MP: 5/20 -> 5/20 (+0pp)
+   - Hybrid: 6/20 -> 6/20 (+0pp)
+   -> Fallback apply provides marginal improvement for BB
+
+2. Whole-file mode:
+   - BB: 7/20 -> 3/20 (-20pp)
+   - MP: 5/20 -> 4/20 (-5pp)
+   -> Whole-file mode HURTS performance (WORSE than baseline)
+   -> Root cause: extract_file_blocks() fails for all non-Django repos
+
+3. Best overall config: BB + diff + fallback
+   - 8/20 (40%) Easy issues resolved
+   - vs baseline BB + diff + strict: 7/20 (35%)
+   - Improvement: +5pp
+
+4. Phase 3 recommendation: STOP whole-file experiments
+   - Whole-file mode is counterproductive
+   - Fallback apply is the only beneficial change
+   - BB effect (+15pp with fallback) remains the strongest signal

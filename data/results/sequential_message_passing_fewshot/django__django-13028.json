@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-13028_27a03631",
+  "issue_id": "django__django-13028",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 47363,
+  "total_output_tokens": 4882,
+  "total_latency_ms": 123786,
+  "final_patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -25,6 +25,7 @@\n from django.db.models.constants import LOOKUP_SEP\n from django.db.models.expressions import BaseExpression, Col, F, OuterRef, Ref\n from django.db.models.fields import Field\n+from django.db.models import Model\n from django.db.models.fields.related_lookups import MultiColSource\n from django.db.models.lookups import Lookup\n from django.db.models.query_utils import (\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-20T17:19:43.611165+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1388,
+      "output_tokens": 674,
+      "latency_ms": 14982
+    },
+    {
+      "timestamp": "2026-02-20T17:20:03.899039+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 14862,
+      "output_tokens": 1144,
+      "latency_ms": 20193
+    },
+    {
+      "timestamp": "2026-02-20T17:20:15.772248+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 845,
+      "output_tokens": 470,
+      "latency_ms": 11872
+    },
+    {
+      "timestamp": "2026-02-20T17:20:35.348453+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 14473,
+      "output_tokens": 1051,
+      "latency_ms": 19575
+    },
+    {
+      "timestamp": "2026-02-20T17:20:41.976831+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 731,
+      "output_tokens": 284,
+      "latency_ms": 6627
+    },
+    {
+      "timestamp": "2026-02-20T17:20:59.125647+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 13955,
+      "output_tokens": 871,
+      "latency_ms": 17148
+    },
+    {
+      "timestamp": "2026-02-20T17:21:05.636220+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 697,
+      "output_tokens": 298,
+      "latency_ms": 6509
+    },
+    {
+      "timestamp": "2026-02-20T17:21:32.411912+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 412,
+      "output_tokens": 90,
+      "latency_ms": 1657
+    }
+  ],
+  "blackboard_final_state": null
+}

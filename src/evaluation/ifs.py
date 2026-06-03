@@ -16,7 +16,11 @@ from __future__ import annotations
 import json
 import re
 from typing import Any
+
+
+# ======================================================================
 # Constants
+# ======================================================================
 
 STAGES = ["Planner", "Coder", "Reviewer", "Tester"]
 
@@ -30,7 +34,11 @@ _EXCLUDE_SNAKE = {
     "assert_false", "assert_raises", "assert_is_none", "line_number",
     "file_name", "class_name", "last_error", "most_recent",
 }
+
+
+# ======================================================================
 # Entity Extraction
+# ======================================================================
 
 async def extract_key_entities_llm(
     problem_statement: str,
@@ -147,7 +155,11 @@ def extract_key_entities_rule_based(problem_statement: str) -> list[str]:
             entities.add(word)
 
     return sorted(entities - {""})
+
+
+# ======================================================================
 # Entity Detection (Fuzzy Matching)
+# ======================================================================
 
 
 def detect_entities(
@@ -203,7 +215,11 @@ def detect_entities(
         result[entity] = False
 
     return result
+
+
+# ======================================================================
 # IFS Computation
+# ======================================================================
 
 
 def compute_ifs(entities: list[str], entity_presence: dict[str, bool]) -> float:
@@ -227,7 +243,11 @@ def compute_ifs_for_text(entities: list[str], output_text: str) -> float:
     """Convenience: detect entities and compute IFS in one call."""
     presence = detect_entities(entities, output_text)
     return compute_ifs(entities, presence)
+
+
+# ======================================================================
 # Agent Output Extraction from Results
+# ======================================================================
 
 
 def extract_agent_outputs(result: dict[str, Any]) -> dict[str, str]:
@@ -315,7 +335,11 @@ def _extract_from_mp(result: dict[str, Any]) -> dict[str, str]:
         "Reviewer": "",  # Not stored in MP mode
         "Tester": "",    # Not stored in MP mode
     }
+
+
+# ======================================================================
 # Statistical Helpers
+# ======================================================================
 
 
 def point_biserial_correlation(
@@ -376,7 +400,11 @@ def point_biserial_correlation(
         sig = "n.s."
 
     return round(r, 4), sig
+
+
+# ======================================================================
 # Text Normalization Helpers
+# ======================================================================
 
 
 def _normalize_text(text: str) -> str:

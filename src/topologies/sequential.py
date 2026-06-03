@@ -54,7 +54,10 @@ class SequentialPipeline:
         self.tool_use = tool_use  # Enable tool-use mode for Coder
         self.patch_mode = patch_mode
         self.fallback_apply = fallback_apply
+
+    # ------------------------------------------------------------------
     # Public API
+    # ------------------------------------------------------------------
 
     async def run(self, issue: IssueInfo) -> ExperimentResult:
         """Execute the full sequential pipeline for a single issue."""
@@ -234,7 +237,10 @@ class SequentialPipeline:
             agent_traces=entries,
             blackboard_final_state=bb_state,
         )
+
+    # ------------------------------------------------------------------
     # Code context retrieval
+    # ------------------------------------------------------------------
 
     async def _fetch_code_context(
         self,
@@ -511,7 +517,10 @@ class SequentialPipeline:
                 seen.add(kw)
                 result.append(kw)
         return result
+
+    # ------------------------------------------------------------------
     # Internal helpers
+    # ------------------------------------------------------------------
 
     async def _run_agent(
         self,

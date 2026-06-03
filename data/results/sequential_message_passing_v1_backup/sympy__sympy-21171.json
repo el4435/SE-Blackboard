@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-21171_ba19c441",
+  "issue_id": "sympy__sympy-21171",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 12841,
+  "total_output_tokens": 3869,
+  "total_latency_ms": 75090,
+  "final_patch": "--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -24,6 +24,7 @@\n from sympy.printing.precedence import precedence_traditional\n from sympy.printing.conventions import split_super_sub, requires_partial\n from sympy.tensor.array import NDimArray\n+from sympy.functions.special.singularity_functions import SingularityFunction\n \n import mpmath.libmp as mlib\n from mpmath.libmp import prec_to_dps\n@@ -549,6 +550,11 @@\n \n     def _print_Pow(self, expr):\n         # Treat x**Rational(1,n) as special case\n+        # Special handling for SingularityFunction to ensure proper parenthesization\n+        if isinstance(expr.base, SingularityFunction):\n+            base_str = r\"\\left(%s\\right)\" % self._print(expr.base)\n+            return r\"%s^{%s}\" % (base_str, self._print(expr.exp))\n+        \n         if expr.exp.is_Rational and abs(expr.exp.p) == 1 and expr.exp.q != 1 \\\n                 and self._settings['root_notation']:\n             base = self._print(expr.base)\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T03:58:49.218284+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 2967,
+      "output_tokens": 443,
+      "latency_ms": 8400
+    },
+    {
+      "timestamp": "2026-02-14T03:59:01.985367+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3120,
+      "output_tokens": 793,
+      "latency_ms": 12766
+    },
+    {
+      "timestamp": "2026-02-14T03:59:12.547134+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 728,
+      "output_tokens": 415,
+      "latency_ms": 10560
+    },
+    {
+      "timestamp": "2026-02-14T03:59:26.260470+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3096,
+      "output_tokens": 943,
+      "latency_ms": 13712
+    },
+    {
+      "timestamp": "2026-02-14T03:59:37.546311+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 844,
+      "output_tokens": 432,
+      "latency_ms": 11284
+    },
+    {
+      "timestamp": "2026-02-14T03:59:46.866360+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1177,
+      "output_tokens": 481,
+      "latency_ms": 9319
+    },
+    {
+      "timestamp": "2026-02-14T03:59:55.907083+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 909,
+      "output_tokens": 362,
+      "latency_ms": 9039
+    }
+  ],
+  "blackboard_final_state": null
+}

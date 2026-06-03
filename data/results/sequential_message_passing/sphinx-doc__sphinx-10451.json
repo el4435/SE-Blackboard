@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_sphinx-doc__sphinx-10451_ba8f8c08",
+  "issue_id": "sphinx-doc__sphinx-10451",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 9975,
+  "total_output_tokens": 4411,
+  "total_latency_ms": 98573,
+  "final_patch": "--- a/sphinx/ext/napoleon/docstring.py\n+++ b/sphinx/ext/napoleon/docstring.py\n@@ -745,10 +745,14 @@\n             _name, _type, _desc = self._consume_field(prefer_type=True)\n             _name = self._qualify_name(_name, self._obj)\n+            # Strip asterisks from parameter names for annotation lookup\n+            bare_name = _name.lstrip('*')\n             if self._config.napoleon_preprocess_types:\n                 _type = _convert_type_spec(_type, self._config.napoleon_type_aliases or {})\n-            if _type and self._config.napoleon_use_param:\n-                _name = _format_field(_name, '', _type)\n+            if _type:\n+                has_type.add(bare_name)\n+                if self._config.napoleon_use_param:\n+                    _name = _format_field(bare_name, '', _type)\n             fields.append((_name, _type, _desc))\n         if self._config.napoleon_use_param:\n             return self._format_docutils_params(fields)\n@@ -757,6 +761,7 @@\n         else:\n             for _name, _type, _desc in fields:\n                 _name = self._qualify_name(_name, self._obj)\n+                bare_name = _name.lstrip('*')\n                 if self._config.napoleon_use_param:\n                     # If there's a non-None annotation for this parameter, don't add a type\n                     # from the docstring (it will be added from the annotation in the signature\n@@ -764,7 +769,7 @@\n                     # If the docstring has a type for this parameter but the signature does not,\n                     # add the type from the docstring.\n                     if _type:\n-                        if _name not in has_type:\n+                        if bare_name not in has_type:\n                             field = self._format_field(_name, '', _type)\n                         else:\n                             field = _name\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:42:19.227561+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 897,
+      "output_tokens": 646,
+      "latency_ms": 13721
+    },
+    {
+      "timestamp": "2026-02-16T18:42:29.930253+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1357,
+      "output_tokens": 656,
+      "latency_ms": 10684
+    },
+    {
+      "timestamp": "2026-02-16T18:42:39.520241+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1084,
+      "output_tokens": 416,
+      "latency_ms": 9589
+    },
+    {
+      "timestamp": "2026-02-16T18:42:46.214376+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1126,
+      "output_tokens": 390,
+      "latency_ms": 6693
+    },
+    {
+      "timestamp": "2026-02-16T18:42:57.088436+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 818,
+      "output_tokens": 411,
+      "latency_ms": 10873
+    },
+    {
+      "timestamp": "2026-02-16T18:43:15.777685+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 3219,
+      "output_tokens": 1366,
+      "latency_ms": 18688
+    },
+    {
+      "timestamp": "2026-02-16T18:43:25.058770+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1066,
+      "output_tokens": 405,
+      "latency_ms": 9280
+    },
+    {
+      "timestamp": "2026-02-16T18:43:44.079166+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3046
+    }
+  ],
+  "blackboard_final_state": null
+}

@@ -1,0 +1,100 @@
+{
+  "experiment_id": "seq_message_passing_django__django-11179_54b2cf38",
+  "issue_id": "django__django-11179",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 3,
+  "total_input_tokens": 15242,
+  "total_output_tokens": 12799,
+  "total_latency_ms": 153217,
+  "final_patch": "--- a/django/db/models/deletion.py\n+++ b/django/db/models/deletion.py\n@@ -277,6 +277,8 @@\n             if self.can_fast_delete(instance):\n                 with transaction.mark_for_rollback_on_error():\n                     count = sql.DeleteQuery(model).delete_batch([instance.pk], self.using)\n+                # Set pk to None to indicate the instance no longer exists in the database\n+                setattr(instance, model._meta.pk.attname, None)\n                 return count, {model._meta.label: count}\n \n         with transaction.atomic(using=self.using, savepoint=False):\n@@ -323,6 +325,7 @@\n                     setattr(obj, field.attname, value)\n         for model, instances in self.data.items():\n             for instance in instances:\n+                # Set pk to None to indicate the instance no longer exists in the database\n                 setattr(instance, model._meta.pk.attname, None)\n         return sum(deleted_counter.values()), dict(deleted_counter)\n",
+  "apply_method": "patch_fuzz3",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T23:41:14.291740+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 503,
+      "output_tokens": 433,
+      "latency_ms": 9867
+    },
+    {
+      "timestamp": "2026-02-22T23:41:47.346255+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 4267,
+      "output_tokens": 3831,
+      "latency_ms": 31989
+    },
+    {
+      "timestamp": "2026-02-22T23:41:55.521747+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 655,
+      "output_tokens": 342,
+      "latency_ms": 8173
+    },
+    {
+      "timestamp": "2026-02-22T23:42:28.432162+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 4175,
+      "output_tokens": 3862,
+      "latency_ms": 32909
+    },
+    {
+      "timestamp": "2026-02-22T23:42:37.918824+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 655,
+      "output_tokens": 372,
+      "latency_ms": 9484
+    },
+    {
+      "timestamp": "2026-02-22T23:43:09.700898+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 4205,
+      "output_tokens": 3826,
+      "latency_ms": 31781
+    },
+    {
+      "timestamp": "2026-02-22T23:43:12.512933+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11179",
+      "issue_id": "django__django-11179",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 782,
+      "output_tokens": 133,
+      "latency_ms": 2810
+    }
+  ],
+  "blackboard_final_state": null
+}

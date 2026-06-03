@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_pytest-dev__pytest-5221_0cfc3ecf",
+  "issue_id": "pytest-dev__pytest-5221",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 7317,
+  "total_output_tokens": 3579,
+  "total_latency_ms": 90234,
+  "final_patch": "--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -1397,10 +1397,11 @@\n \n     def _showfixtures_main(self, config: Config, session: Session) -> None:\n         import _pytest.config\n \n         session.perform_collect()\n         curdir = Path.cwd()\n         tw = _pytest.config.create_terminal_writer(config)\n         verbose = config.getvalue(\"verbose\")\n \n         fm = session._fixturemanager\n@@ -1398,8 +1399,10 @@\n         import _pytest.config\n \n         session.perform_collect()\n         curdir = Path.cwd()\n         tw = _pytest.config.create_terminal_writer(config)\n         verbose = config.getvalue(\"verbose\")\n \n         fm = session._fixturemanager\n+        # Display fixture name with scope for non-function scopes\n+        def get_fixture_display_name(fixture_def):\n+            return f\"{fixture_def.argname} [{fixture_def.scope}]\" if fixture_def.scope != \"function\" else fixture_def.argname\n \n         available = []\n         seen: Set[Tuple[str, str]] = set()\n@@ -1396,12 +1399,8 @@\n             fixturedefs = fm.getfixturedefs(argname, nodeid)\n             assert fixturedefs is not None\n             if not fixturedefs:\n                 continue\n             for fixturedef in fixturedefs:\n                 loc = getlocation(fixturedef.func, curdir)\n                 if (fixturedef.argname, loc) in seen:\n                     continue\n-                seen.add((fixturedef.argname, loc))\n-                available.append(\n-                    (\n-                        len(fixturedef.baseid),\n-                        fixturedef.func.__module__,\n-                        curdir,\n-                        fixturedef.argname,\n-                        fixturedef,\n-                    )\n-                )\n+                seen.add((fixturedef.argname, loc))\n+                available.append(\n+                    (\n+                        len(fixturedef.baseid),\n+                        fixturedef.func.__module__,\n+                        curdir,\n+                        get_fixture_display_name(fixturedef),\n+                        fixturedef,\n+                    )\n+                )\n \n         available.sort()\n         currentmodule = None\n@@ -1397,5 +1406,4 @@\n         for baseid, module, curdir, argname, fixturedef in available:\n             if currentmodule != module:\n                 if not first:\n                     tw.line()\n                 tw.sep(\"-\", f\"fixtures defined from {module}\")\n                 currentmodule = module\n             if verbose <= 0 and argname.startswith(\"_\"):\n                 continue\n             tw.write(f\"{argname}\", green=True)\n-            if fixturedef.scope != \"function\":\n-                tw.write(f\" [{fixturedef.scope} scope]\", cyan=True)\n             tw.write(\" -- %s\" % loc, yellow=True)\n             tw.line()\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:21:14.257927+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 486,
+      "output_tokens": 564,
+      "latency_ms": 12729
+    },
+    {
+      "timestamp": "2026-02-16T18:21:20.958747+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1275,
+      "output_tokens": 299,
+      "latency_ms": 6683
+    },
+    {
+      "timestamp": "2026-02-16T18:21:30.181014+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 727,
+      "output_tokens": 402,
+      "latency_ms": 9221
+    },
+    {
+      "timestamp": "2026-02-16T18:21:36.317850+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1112,
+      "output_tokens": 348,
+      "latency_ms": 6136
+    },
+    {
+      "timestamp": "2026-02-16T18:21:44.390526+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 776,
+      "output_tokens": 355,
+      "latency_ms": 8071
+    },
+    {
+      "timestamp": "2026-02-16T18:22:00.653028+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1065,
+      "output_tokens": 1040,
+      "latency_ms": 16261
+    },
+    {
+      "timestamp": "2026-02-16T18:22:12.508142+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1468,
+      "output_tokens": 450,
+      "latency_ms": 11854
+    },
+    {
+      "timestamp": "2026-02-16T18:22:31.761590+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3203
+    }
+  ],
+  "blackboard_final_state": null
+}

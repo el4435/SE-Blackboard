@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-14667_2978fd2b",
+  "issue_id": "django__django-14667",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 49884,
+  "total_output_tokens": 6302,
+  "total_latency_ms": 135995,
+  "final_patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1245,6 +1245,28 @@\n         if fields == (None,):\n             clone.query.clear_deferred_loading()\n         else:\n+            # Handle defer() after only(): convert only() fields to deferred set\n+            existing, defer_existing = clone.query.deferred_loading\n+            if existing and not defer_existing:\n+                # We're in only() mode (defer_existing=False means \"load only these\")\n+                # Convert to defer mode by computing which fields to defer\n+                field_names = set()\n+                for field_name in fields:\n+                    # Expand any related field references\n+                    if LOOKUP_SEP in field_name:\n+                        field_names.add(field_name)\n+                    else:\n+                        field = clone.model._meta.get_field(field_name)\n+                        if field.is_relation and field.many_to_many:\n+                            field_names.add(field_name)\n+                        else:\n+                            field_names.add(field.attname)\n+                # Only defer fields that are in the only() set\n+                # Fields not in only() are already deferred\n+                to_defer = existing.intersection(field_names)\n+                # Switch to defer mode with the remaining fields from only()\n+                remaining = existing - to_defer\n+                clone.query.set_deferred_loading(remaining, defer=True)\n+                return clone\n             clone.query.add_deferred_loading(fields)\n         return clone\n \n--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -2166,6 +2166,13 @@\n         \"\"\"\n         Add the given list of model field names to the set of fields to\n         exclude from loading from the database.\n+\n+        If we're currently in only() mode (defer=False), this is a no-op\n+        because the caller should handle the transition from only() to defer()\n+        mode at the QuerySet level.\n         \"\"\"\n         existing, defer = self.deferred_loading\n+        # If we're in only() mode, don't modify here - let QuerySet.defer() handle it\n+        if existing and not defer:\n+            return\n         if defer:\n             # Add to existing deferred names.\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:49:11.320817+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 710,
+      "output_tokens": 765,
+      "latency_ms": 15773
+    },
+    {
+      "timestamp": "2026-02-16T17:49:28.940737+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 15043,
+      "output_tokens": 928,
+      "latency_ms": 16612
+    },
+    {
+      "timestamp": "2026-02-16T17:49:38.691906+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 880,
+      "output_tokens": 442,
+      "latency_ms": 9750
+    },
+    {
+      "timestamp": "2026-02-16T17:49:57.123360+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 15208,
+      "output_tokens": 1115,
+      "latency_ms": 18430
+    },
+    {
+      "timestamp": "2026-02-16T17:50:10.262561+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 868,
+      "output_tokens": 528,
+      "latency_ms": 13138
+    },
+    {
+      "timestamp": "2026-02-16T17:50:36.268103+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 15538,
+      "output_tokens": 1776,
+      "latency_ms": 26004
+    },
+    {
+      "timestamp": "2026-02-16T17:50:52.429112+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1229,
+      "output_tokens": 636,
+      "latency_ms": 16160
+    },
+    {
+      "timestamp": "2026-02-16T17:51:11.541038+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 112,
+      "latency_ms": 3158
+    }
+  ],
+  "blackboard_final_state": null
+}

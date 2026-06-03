@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-13895_18bc894d",
+  "issue_id": "sympy__sympy-13895",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 5522,
+  "total_output_tokens": 2762,
+  "total_latency_ms": 98755,
+  "final_patch": "--- a/src/_pytest/assertion/rewrite.py\n+++ b/src/_pytest/assertion/rewrite.py\n@@ -1,6 +1,7 @@\n \"\"\"Rewrite assertion AST to produce nice error messages.\"\"\"\n \n import ast\n+import copy\n import errno\n import functools\n import importlib.abc\n@@ -883,8 +884,10 @@\n         if isinstance(assert_.test, ast.Tuple) and len(assert_.test.elts) >= 1:\n             from _pytest.warning_types import PytestAssertRewriteWarning\n \n+            # Store original test before visit() potentially modifies it\n+            original_test = copy.deepcopy(assert_.test)\n             self.statements: list[ast.stmt] = []\n-            self.variables: list[str] = []\n+            self.variables: list[str] = []\n             self.variable_counter = itertools.count()\n \n             self.stack: list[dict[str, ast.expr]] = [{}]\n@@ -893,7 +896,6 @@\n \n             # Rewrite assert into a bunch of statements.\n             top_condition, explanation = self.visit(assert_.test)\n-            original_test = assert_.test\n \n             negation = ast.UnaryOp(ast.Not(), top_condition)\n             if self.enable_assertion_pass_hook:  # Experimental pytest_assertion_pass hook\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:13:29.318387+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13895",
+      "issue_id": "sympy__sympy-13895",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 701,
+      "output_tokens": 801,
+      "latency_ms": 16388
+    },
+    {
+      "timestamp": "2026-02-16T18:13:58.109971+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13895",
+      "issue_id": "sympy__sympy-13895",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 446,
+      "output_tokens": 202,
+      "latency_ms": 5766
+    },
+    {
+      "timestamp": "2026-02-16T18:14:10.716948+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13895",
+      "issue_id": "sympy__sympy-13895",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 912,
+      "output_tokens": 647,
+      "latency_ms": 12606
+    },
+    {
+      "timestamp": "2026-02-16T18:14:19.210647+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13895",
+      "issue_id": "sympy__sympy-13895",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1075,
+      "output_tokens": 327,
+      "latency_ms": 8492
+    },
+    {
+      "timestamp": "2026-02-16T18:14:28.989582+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13895",
+      "issue_id": "sympy__sympy-13895",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1037,
+      "output_tokens": 515,
+      "latency_ms": 9778
+    },
+    {
+      "timestamp": "2026-02-16T18:14:32.630584+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13895",
+      "issue_id": "sympy__sympy-13895",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 943,
+      "output_tokens": 149,
+      "latency_ms": 3640
+    },
+    {
+      "timestamp": "2026-02-16T18:14:51.683446+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-13895",
+      "issue_id": "sympy__sympy-13895",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3156
+    }
+  ],
+  "blackboard_final_state": null
+}

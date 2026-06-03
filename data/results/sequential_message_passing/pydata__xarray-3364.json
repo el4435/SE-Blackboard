@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_pydata__xarray-3364_6e29e1cf",
+  "issue_id": "pydata__xarray-3364",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 9200,
+  "total_output_tokens": 5448,
+  "total_latency_ms": 121944,
+  "final_patch": "--- a/xarray/core/concat.py\n+++ b/xarray/core/concat.py\n@@ -1,5 +1,6 @@\n import pandas as pd\n \n+import numpy as np\n from . import dtypes, utils\n from .alignment import align\n from .variable import IndexVariable, Variable, as_variable\n@@ -330,11 +331,28 @@\n     # create the new dataset and add constant variables\n     result_vars = OrderedDict()\n     result_vars.update(dim_coords)\n-    result_vars.update(concat_vars(\n-        [ds.variables for ds in datasets], dim, positions,\n-        combine_attrs=combine_attrs))\n+    \n+    # For outer join, we need to handle variables that may not exist in all datasets\n+    if join == 'outer':\n+        # Get all variables across all datasets (both data_vars and coords)\n+        all_vars = set().union(*[set(ds.variables) for ds in datasets])\n+        # Filter to only variables that should be concatenated\n+        concat_over_vars = [k for k in concat_over if k in all_vars]\n+        \n+        vars_to_concat = []\n+        for k in concat_over_vars:\n+            # For each variable, collect it from each dataset or create NaN-filled placeholder\n+            vars_for_concat = []\n+            for ds in datasets:\n+                if k in ds.variables:\n+                    vars_for_concat.append(ds.variables[k])\n+                else:\n+                    # Create a NaN-filled variable with the same shape as the first occurrence\n+                    template_var = next(d.variables[k] for d in datasets if k in d.variables)\n+                    nan_var = template_var.copy(data=np.full_like(template_var.data, np.nan))\n+                    vars_for_concat.append(nan_var)\n+            vars_to_concat.append(vars_for_concat)\n+        \n+        result_vars.update(concat_vars(vars_to_concat, dim, positions, combine_attrs=combine_attrs))\n+    else:\n+        result_vars.update(concat_vars([ds.variables for ds in datasets], dim, positions, combine_attrs=combine_attrs))\n     result = Dataset(result_vars, attrs=result_attrs)\n-\n-    absent_coord_names = coord_names - set(result.variables)\n-    if absent_coord_names:\n-        raise ValueError(\n-            'Variables %r are coordinates in some datasets but not others.' %\n-            absent_coord_names)\n     result = result.set_coords(coord_names)\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:24:13.835811+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 575,
+      "output_tokens": 652,
+      "latency_ms": 14655
+    },
+    {
+      "timestamp": "2026-02-16T18:24:37.927044+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1363,
+      "output_tokens": 1552,
+      "latency_ms": 24075
+    },
+    {
+      "timestamp": "2026-02-16T18:24:49.777974+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1980,
+      "output_tokens": 480,
+      "latency_ms": 11850
+    },
+    {
+      "timestamp": "2026-02-16T18:25:02.745969+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1190,
+      "output_tokens": 781,
+      "latency_ms": 12967
+    },
+    {
+      "timestamp": "2026-02-16T18:25:13.639826+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1209,
+      "output_tokens": 478,
+      "latency_ms": 10893
+    },
+    {
+      "timestamp": "2026-02-16T18:25:29.040911+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1188,
+      "output_tokens": 859,
+      "latency_ms": 15400
+    },
+    {
+      "timestamp": "2026-02-16T18:25:42.072697+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1287,
+      "output_tokens": 525,
+      "latency_ms": 13030
+    },
+    {
+      "timestamp": "2026-02-16T18:26:01.123312+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3196
+    }
+  ],
+  "blackboard_final_state": null
+}

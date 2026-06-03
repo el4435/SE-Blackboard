@@ -1,0 +1,115 @@
+{
+  "experiment_id": "seq_hybrid_django__django-15347_95daf7ee",
+  "issue_id": "django__django-15347",
+  "topology": "sequential",
+  "communication": "hybrid",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 24053,
+  "total_output_tokens": 1978,
+  "total_latency_ms": 52576,
+  "final_patch": "--- a/django/contrib/messages/storage/cookie.py\n+++ b/django/contrib/messages/storage/cookie.py\n@@ -19,7 +19,7 @@\n             is_safedata = 1 if isinstance(obj.message, SafeData) else 0\n             message = [self.message_key, is_safedata, obj.level, obj.message]\n-            if obj.extra_tags:\n+            if obj.extra_tags is not None:\n                 message.append(obj.extra_tags)\n             return message\n         return super().default(obj)\n",
+  "apply_method": "patch_strict",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T22:47:41.728377+00:00",
+      "experiment_id": "sequential_hybrid_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-H",
+      "agent_role": "Planner",
+      "communication_mode": "hybrid",
+      "iteration": 0,
+      "input_tokens": 3352,
+      "output_tokens": 1119,
+      "latency_ms": 15145
+    },
+    {
+      "timestamp": "2026-02-22T22:47:53.716117+00:00",
+      "experiment_id": "sequential_hybrid_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 15259,
+      "output_tokens": 711,
+      "latency_ms": 11894
+    },
+    {
+      "timestamp": "2026-02-22T22:47:58.590648+00:00",
+      "experiment_id": "sequential_hybrid_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 5442,
+      "output_tokens": 148,
+      "latency_ms": 4873
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-15347",
+      "problem_statement": "Messages framework incorrectly serializes/deserializes extra_tags when it's an empty string\nDescription\n\t\nWhen a message is serialised and then deserialised with any of the built in storage backends, then extra_tags==\"\" is converted to extra_tags==None. This is because MessageEncoder checks for the truthyness of extra_tags rather than checking it is not None.\nTo replicate this bug\n>>> from django.conf import settings\n>>> settings.configure() # Just to allow the following import\n>>> from django.contrib.messages.storage.base import Message\n>>> from django.contrib.messages.storage.cookie import MessageEncoder, MessageDecoder\n>>> original_message = Message(10, \"Here is a message\", extra_tags=\"\")\n>>> encoded_message = MessageEncoder().encode(original_message)\n>>> decoded_message = MessageDecoder().decode(encoded_message)\n>>> original_message.extra_tags == \"\"\nTrue\n>>> decoded_message.extra_tags is None\nTrue\nEffect of the bug in application behaviour\nThis error occurred in the wild with a template tag similar to the following:\n{% if x not in message.extra_tags %}\nWhen the message was displayed as part of a redirect, it had been serialised and deserialized which meant that extra_tags was None instead of the empty string. This caused an error.\nIt's important to note that this bug affects all of the standard API (messages.debug, messages.info etc. all have a default value of extra_tags equal to \"\").\n",
+      "repo": "django/django",
+      "base_commit": "7c4f3965098baad2396e24501e09237425a7bd6f",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The MessageEncoder class checks for the truthiness of extra_tags (using `if extra_tags:`) rather than explicitly checking if it's not None (using `if extra_tags is not None:`). Since an empty string is falsy in Python, it gets treated the same as None during encoding, and when decoded, it becomes None instead of preserving the empty string value.",
+      "relevant_files": [
+        "django/contrib/messages/storage/cookie.py",
+        "django/contrib/messages/storage/base.py"
+      ],
+      "relevant_functions": [
+        "django.contrib.messages.storage.cookie.MessageEncoder.default",
+        "django.contrib.messages.storage.cookie.MessageDecoder.process_messages"
+      ],
+      "fix_strategy": "1. Locate the MessageEncoder class in django/contrib/messages/storage/cookie.py\n2. Find the method that serializes Message objects (likely the `default` method)\n3. Change the condition that checks `if extra_tags:` to `if extra_tags is not None:`\n4. This will ensure that empty strings are preserved during serialization\n5. Verify that the MessageDecoder properly handles the serialized empty string (it likely already does, since the issue is in encoding)\n6. Add or update tests to verify that:\n   - Messages with extra_tags=\"\" serialize and deserialize correctly\n   - Messages with extra_tags=None still work as expected\n   - Messages with extra_tags=\"some-tag\" continue to work\n7. Test with all built-in storage backends (cookie, session, etc.) to ensure consistency",
+      "confidence": 0.95,
+      "relevant_code": "## Source Code Context\n\n## File: django/contrib/messages/storage/cookie.py\n```python\nimport binascii\nimport json\n\nfrom django.conf import settings\nfrom django.contrib.messages.storage.base import BaseStorage, Message\nfrom django.core import signing\nfrom django.http import SimpleCookie\nfrom django.utils.safestring import SafeData, mark_safe\n\n\nclass MessageEncoder(json.JSONEncoder):\n    \"\"\"\n    Compactly serialize instances of the ``Message`` class as JSON.\n    \"\"\"\n    message_key = '__json_message'\n\n    def default(self, obj):\n        if isinstance(obj, Message):\n            # Using 0/1 here instead of False/True to produce more compact json\n            is_safedata = 1 if isinstance(obj.message, SafeData) else 0\n            message = [self.message_key, is_safedata, obj.level, obj.message]\n            if obj.extra_tags:\n                message.append(obj.extra_tags)\n            return message\n        return super().default(obj)\n\n\nclass MessageDecoder(json.JSONDecoder):\n    \"\"\"\n    Decode JSON that includes serialized ``Message`` instances.\n    \"\"\"\n\n    def process_messages(self, obj):\n        if isinstance(obj, list) and obj:\n            if obj[0] == MessageEncoder.message_key:\n                if obj[1]:\n                    obj[3] = mark_safe(obj[3])\n                return Message(*obj[2:])\n            return [self.process_messages(item) for item in obj]\n        if isinstance(obj, dict):\n            return {key: self.process_messages(value)\n                    for key, value in obj.items()}\n        return obj\n\n    def decode(self, s, **kwargs):\n        decoded = super().decode(s, **kwargs)\n        return self.process_messages(decoded)\n\n\nclass MessageSerializer:\n    def dumps(self, obj):\n        return json.dumps(\n            obj,\n            separators=(',', ':'),\n            cls=MessageEncoder,\n        ).encode('latin-1')\n\n    def loads(self, data):\n        return json.loads(data.decode('latin-1'), cls=MessageDecoder)\n\n\nclass CookieStorage(BaseStorage):\n    \"\"\"\n    Store messages in a cookie.\n    \"\"\"\n    cookie_name = 'messages'\n    # uwsgi's default configuration enforces a maximum size of 4kb for all the\n    # HTTP headers. In order to leave some room for other cookies and headers,\n    # restrict the session cookie to 1/2 of 4kb. See #18781.\n    max_cookie_size = 2048\n    not_finished = '__messagesnotfinished__'\n    key_salt = 'django.contrib.messages'\n\n    def __init__(self, *args, **kwargs):\n        super().__init__(*args, **kwargs)\n        self.signer = signing.get_cookie_signer(salt=self.key_salt)\n\n    def _get(self, *args, **kwargs):\n        \"\"\"\n        Retrieve a list of messages from the messages cookie. If the\n        not_finished sentinel value is found at the end of the message list,\n        remove it and return a result indicating that not all messages were\n        retrieved by this storage.\n        \"\"\"\n        data = self.request.COOKIES.get(self.cookie_name)\n        messages = self._decode(data)\n        all_retrieved = not (messages and messages[-1] == self.not_finished)\n        if messages and not all_retrieved:\n            # remove the sentinel value\n            messages.pop()\n        return messages, all_retrieved\n\n    def _update_cookie(self, encoded_data, response):\n        \"\"\"\n        Either set the cookie with the encoded data if there is any data to\n        store, or delete the cookie.\n        \"\"\"\n        if encoded_data:\n            response.set_cookie(\n                self.cookie_name, encoded_data,\n                domain=settings.SESSION_COOKIE_DOMAIN,\n                secure=settings.SESSION_COOKIE_SECURE or None,\n                httponly=settings.SESSION_COOKIE_HTTPONLY or None,\n                samesite=settings.SESSION_COOKIE_SAMESITE,\n            )\n        else:\n            response.delete_cookie(\n                self.cookie_name,\n                domain=settings.SESSION_COOKIE_DOMAIN,\n                samesite=settings.SESSION_COOKIE_SAMESITE,\n            )\n\n    def _store(self, messages, response, remove_oldest=True, *args, **kwargs):\n        \"\"\"\n        Store the messages to a cookie and return a list of any messages which\n        could not be stored.\n\n        If the encoded data is larger than ``max_cookie_size``, remove\n        messages until the data fits (these are the messages which are\n        returned), and add the not_finished sentinel value to indicate as much.\n        \"\"\"\n        unstored_messages = []\n        encoded_data = self._encode(messages)\n        if self.max_cookie_size:\n            # data is going to be stored eventually by SimpleCookie, which\n            # adds its own overhead, which we must account for.\n            cookie = SimpleCookie()  # create outside the loop\n\n            def stored_length(val):\n                return len(cookie.value_encode(val)[1])\n\n            while encoded_data and stored_length(encoded_data) > self.max_cookie_size:\n                if remove_oldest:\n                    unstored_messages.append(messages.pop(0))\n                else:\n                    unstored_messages.insert(0, messages.pop())\n                encoded_data = self._encode(messages + [self.not_finished],\n                                            encode_empty=unstored_messages)\n        self._update_cookie(encoded_data, response)\n        return unstored_messages\n\n    def _encode(self, messages, encode_empty=False):\n        \"\"\"\n        Return an encoded version of the messages list which can be stored as\n        plain text.\n\n        Since the data will be retrieved from the client-side, the encoded data\n        also contains a hash to ensure that the data was not tampered with.\n        \"\"\"\n        if messages or encode_empty:\n            return self.signer.sign_object(messages, serializer=MessageSerializer, compress=True)\n\n    def _decode(self, data):\n        \"\"\"\n        Safely decode an encoded text stream back into a list of messages.\n\n        If the encoded text stream contained an invalid hash or was in an\n        invalid format, return None.\n        \"\"\"\n        if not data:\n            return None\n        try:\n            return self.signer.unsign_object(data, serializer=MessageSerializer)\n        except (signing.BadSignature, binascii.Error, json.JSONDecodeError):\n            pass\n        # Mark the data as used (so it gets removed) since something was wrong\n        # with the data.\n        self.used = True\n        return None\n\n```\n\n## File: django/contrib/messages/storage/base.py\n```python\nfrom django.conf import settings\nfrom django.contrib.messages import constants, utils\n\nLEVEL_TAGS = utils.get_level_tags()\n\n\nclass Message:\n    \"\"\"\n    Represent an actual message that can be stored in any of the supported\n    storage classes (typically session- or cookie-based) and rendered in a view\n    or template.\n    \"\"\"\n\n    def __init__(self, level, message, extra_tags=None):\n        self.level = int(level)\n        self.message = message\n        self.extra_tags = extra_tags\n\n    def _prepare(self):\n        \"\"\"\n        Prepare the message for serialization by forcing the ``message``\n        and ``extra_tags`` to str in case they are lazy translations.\n        \"\"\"\n        self.message = str(self.message)\n        self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None\n\n    def __eq__(self, other):\n        if not isinstance(other, Message):\n            return NotImplemented\n        return self.level == other.level and self.message == other.message\n\n    def __str__(self):\n        return str(self.message)\n\n    @property\n    def tags(self):\n        return ' '.join(tag for tag in [self.extra_tags, self.level_tag] if tag)\n\n    @property\n    def level_tag(self):\n        return LEVEL_TAGS.get(self.level, '')\n\n\nclass BaseStorage:\n    \"\"\"\n    This is the base backend for temporary message storage.\n\n    This is not a complete class; to be a usable storage backend, it must be\n    subclassed and the two methods ``_get`` and ``_store`` overridden.\n    \"\"\"\n\n    def __init__(self, request, *args, **kwargs):\n        self.request = request\n        self._queued_messages = []\n        self.used = False\n        self.added_new = False\n        super().__init__(*args, **kwargs)\n\n    def __len__(self):\n        return len(self._loaded_messages) + len(self._queued_messages)\n\n    def __iter__(self):\n        self.used = True\n        if self._queued_messages:\n            self._loaded_messages.extend(self._queued_messages)\n            self._queued_messages = []\n        return iter(self._loaded_messages)\n\n    def __contains__(self, item):\n        return item in self._loaded_messages or item in self._queued_messages\n\n    def __repr__(self):\n        return f'<{self.__class__.__qualname__}: request={self.request!r}>'\n\n    @property\n    def _loaded_messages(self):\n        \"\"\"\n        Return a list of loaded messages, retrieving them first if they have\n        not been loaded yet.\n        \"\"\"\n        if not hasattr(self, '_loaded_data'):\n            messages, all_retrieved = self._get()\n            self._loaded_data = messages or []\n        return self._loaded_data\n\n    def _get(self, *args, **kwargs):\n        \"\"\"\n        Retrieve a list of stored messages. Return a tuple of the messages\n        and a flag indicating whether or not all the messages originally\n        intended to be stored in this storage were, in fact, stored and\n        retrieved; e.g., ``(messages, all_retrieved)``.\n\n        **This method must be implemented by a subclass.**\n\n        If it is possible to tell if the backend was not used (as opposed to\n        just containing no messages) then ``None`` should be returned in\n        place of ``messages``.\n        \"\"\"\n        raise NotImplementedError('subclasses of BaseStorage must provide a _get() method')\n\n    def _store(self, messages, response, *args, **kwargs):\n        \"\"\"\n        Store a list of messages and return a list of any messages which could\n        not be stored.\n\n        One type of object must be able to be stored, ``Message``.\n\n        **This method must be implemented by a subclass.**\n        \"\"\"\n        raise NotImplementedError('subclasses of BaseStorage must provide a _store() method')\n\n    def _prepare_messages(self, messages):\n        \"\"\"\n        Prepare a list of messages for storage.\n        \"\"\"\n        for message in messages:\n            message._prepare()\n\n    def update(self, response):\n        \"\"\"\n        Store all unread messages.\n\n        If the backend has yet to be iterated, store previously stored messages\n        again. Otherwise, only store messages added after the last iteration.\n        \"\"\"\n        self._prepare_messages(self._queued_messages)\n        if self.used:\n            return self._store(self._queued_messages, response)\n        elif self.added_new:\n            messages = self._loaded_messages + self._queued_messages\n            return self._store(messages, response)\n\n    def add(self, level, message, extra_tags=''):\n        \"\"\"\n        Queue a message to be stored.\n\n        The message is only queued if it contained something and its level is\n        not less than the recording level (``self.level``).\n        \"\"\"\n        if not message:\n            return\n        # Check that the message level is not less than the recording level.\n        level = int(level)\n        if level < self.level:\n            return\n        # Add the message.\n        self.added_new = True\n        message = Message(level, message, extra_tags=extra_tags)\n        self._queued_messages.append(message)\n\n    def _get_level(self):\n        \"\"\"\n        Return the minimum recorded level.\n\n        The default level is the ``MESSAGE_LEVEL`` setting. If this is\n        not found, the ``INFO`` level is used.\n        \"\"\"\n        if not hasattr(self, '_level'):\n            self._level = getattr(settings, 'MESSAGE_LEVEL', constants.INFO)\n        return self._level\n\n    def _set_level(self, value=None):\n        \"\"\"\n        Set a custom minimum recorded level.\n\n        If set to ``None``, the default level will be used (see the\n        ``_get_level`` method).\n        \"\"\"\n        if value is None and hasattr(self, '_level'):\n            del self._level\n        else:\n            self._level = int(value)\n\n    level = property(_get_level, _set_level, _set_level)\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder",
+        "diff": "--- a/django/contrib/messages/storage/cookie.py\n+++ b/django/contrib/messages/storage/cookie.py\n@@ -19,7 +19,7 @@\n             is_safedata = 1 if isinstance(obj.message, SafeData) else 0\n             message = [self.message_key, is_safedata, obj.level, obj.message]\n-            if obj.extra_tags:\n+            if obj.extra_tags is not None:\n                 message.append(obj.extra_tags)\n             return message\n         return super().default(obj)\n",
+        "description": "Fix MessageEncoder to preserve empty string extra_tags during serialization. Changed the condition from 'if obj.extra_tags:' to 'if obj.extra_tags is not None:' to explicitly check for None rather than relying on truthiness, which treats empty strings as falsy.",
+        "timestamp": "2026-02-22T22:47:53.716472Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider adding test cases to verify the fix handles all scenarios: extra_tags=\"\" (empty string), extra_tags=None, and extra_tags=\"some-tag\"",
+          "Verify that this change is consistent with how other storage backends (session, fallback) handle extra_tags serialization",
+          "Consider documenting this behavior change in release notes as it fixes a bug that may have been worked around in existing code"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 0,
+        "passed": true,
+        "pass_count": 1,
+        "fail_count": 0,
+        "failing_tests": [],
+        "error_traces": []
+      }
+    ],
+    "metadata": {
+      "status": "resolved",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-22T22:47:26.581848Z",
+      "end_time": null
+    }
+  }
+}

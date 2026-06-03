@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_astropy__astropy-14995_438f3c3f",
+  "issue_id": "astropy__astropy-14995",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 5914,
+  "total_output_tokens": 2456,
+  "total_latency_ms": 90398,
+  "final_patch": "--- a/src/_pytest/assertion/rewrite.py\n+++ b/src/_pytest/assertion/rewrite.py\n@@ -1,6 +1,7 @@\n \"\"\"Rewrite assertion AST to produce nice error messages.\"\"\"\n import ast\n import errno\n+import copy\n import importlib.abc\n import importlib.machinery\n import importlib.util\n@@ -835,6 +836,7 @@\n         self.statements: List[ast.stmt] = []\n         self.variables: List[str] = []\n         self.variable_counter = itertools.count()\n+        original_test = copy.deepcopy(assert_.test)\n \n         if self.enable_assertion_pass_hook:\n             self.statements.append(\n@@ -847,7 +849,6 @@\n         # Rewrite assert into a bunch of statements.\n         top_condition, explanation = self.visit(assert_.test)\n \n-        original_test = assert_.test\n         negation = ast.UnaryOp(ast.Not(), top_condition)\n \n         if self.enable_assertion_pass_hook:",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:44:22.423069+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1258,
+      "output_tokens": 662,
+      "latency_ms": 12581
+    },
+    {
+      "timestamp": "2026-02-16T17:44:48.089408+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 446,
+      "output_tokens": 202,
+      "latency_ms": 5623
+    },
+    {
+      "timestamp": "2026-02-16T17:45:00.562862+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 912,
+      "output_tokens": 583,
+      "latency_ms": 12472
+    },
+    {
+      "timestamp": "2026-02-16T17:45:08.302414+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1011,
+      "output_tokens": 317,
+      "latency_ms": 7738
+    },
+    {
+      "timestamp": "2026-02-16T17:45:16.712900+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1027,
+      "output_tokens": 424,
+      "latency_ms": 8409
+    },
+    {
+      "timestamp": "2026-02-16T17:45:20.358534+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 852,
+      "output_tokens": 147,
+      "latency_ms": 3644
+    },
+    {
+      "timestamp": "2026-02-16T17:45:40.237622+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3914
+    }
+  ],
+  "blackboard_final_state": null
+}

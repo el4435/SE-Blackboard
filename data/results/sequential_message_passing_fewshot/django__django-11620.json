@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-11620_51f58b83",
+  "issue_id": "django__django-11620",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 42212,
+  "total_output_tokens": 4990,
+  "total_latency_ms": 112952,
+  "final_patch": "--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -17,6 +17,7 @@\n from django.core.checks import Error, Warning\n from django.core.checks.urls import check_resolver\n from django.core.exceptions import ImproperlyConfigured, ViewDoesNotExist\n+from django.http import Http404\n from django.utils.datastructures import MultiValueDict\n from django.utils.functional import cached_property\n from django.utils.http import RFC3986_SUBDELIMS, escape_leading_slashes\n@@ -159,9 +160,22 @@\n     def match(self, path):\n         match = self.regex.search(path)\n         if match:\n-            # If there are any named groups, use those as kwargs, ignoring\n-            # non-named groups. Otherwise, pass all non-named arguments as\n-            # positional arguments.\n             kwargs = {k: v for k, v in match.groupdict().items() if v is not None}\n             args = () if kwargs else match.groups()\n+            if self.converters:\n+                if kwargs:\n+                    for key, value in kwargs.items():\n+                        if key in self.converters:\n+                            converter = self.converters[key]\n+                            try:\n+                                kwargs[key] = converter.to_python(value)\n+                            except (ValueError, Http404):\n+                                return None\n+                else:\n+                    for idx, (key, converter) in enumerate(self.converters.items()):\n+                        try:\n+                            args = args[:idx] + (converter.to_python(args[idx]),) + args[idx + 1:]\n+                        except (ValueError, Http404):\n+                            return None\n             return path[match.end():], args, kwargs\n         return None\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-20T17:26:40.361679+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 628,
+      "output_tokens": 697,
+      "latency_ms": 14984
+    },
+    {
+      "timestamp": "2026-02-20T17:26:48.980884+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 7283,
+      "output_tokens": 410,
+      "latency_ms": 7866
+    },
+    {
+      "timestamp": "2026-02-20T17:26:59.132542+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 838,
+      "output_tokens": 395,
+      "latency_ms": 10150
+    },
+    {
+      "timestamp": "2026-02-20T17:27:20.389515+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 15386,
+      "output_tokens": 1370,
+      "latency_ms": 21255
+    },
+    {
+      "timestamp": "2026-02-20T17:27:28.520770+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1155,
+      "output_tokens": 333,
+      "latency_ms": 8130
+    },
+    {
+      "timestamp": "2026-02-20T17:27:47.173321+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 15463,
+      "output_tokens": 1261,
+      "latency_ms": 18651
+    },
+    {
+      "timestamp": "2026-02-20T17:27:57.921065+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1051,
+      "output_tokens": 403,
+      "latency_ms": 10746
+    },
+    {
+      "timestamp": "2026-02-20T17:28:18.327813+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 4602
+    }
+  ],
+  "blackboard_final_state": null
+}

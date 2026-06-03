@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-14396_e9e9c8b9",
+  "issue_id": "sympy__sympy-14396",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 9647,
+  "total_output_tokens": 5318,
+  "total_latency_ms": 120712,
+  "final_patch": "--- a/sympy/polys/domains/old_polynomialring.py\n+++ b/sympy/polys/domains/old_polynomialring.py\n@@ -127,6 +127,60 @@\n         return self.dtype.from_dict(d, self.gens, self.dom)\n \n     @classmethod\n+    def _preprocess_domain_string(cls, domain):\n+        \"\"\"\n+        Preprocess domain string to extract base domain and generators.\n+        Returns (base_domain_str, generators_list) or (domain, None) if not a polynomial ring.\n+        \"\"\"\n+        if not isinstance(domain, str):\n+            return domain, None\n+        \n+        # Check for unsupported complex domains\n+        if domain in ('ZZ_I', 'QQ_I') or domain.startswith('GF('):\n+            raise ValueError(f\"Domain '{domain}' is not supported in from_sympy\")\n+        \n+        # Find the opening bracket for generators\n+        bracket_idx = domain.find('[')\n+        if bracket_idx == -1:\n+            # No generators, not a polynomial ring\n+            return domain, None\n+        \n+        # Extract base domain and generators\n+        base_domain = domain[:bracket_idx]\n+        gens_part = domain[bracket_idx:]\n+        \n+        # Check for nested brackets (nested polynomial rings)\n+        if gens_part.count('[') > 1:\n+            # Find the innermost polynomial ring\n+            inner_start = gens_part.rfind('[', 0, gens_part.rfind('['))\n+            if inner_start > 0:\n+                # Extract the nested domain\n+                nested_domain = base_domain + gens_part[:inner_start]\n+                # Recursively preprocess\n+                return cls._preprocess_domain_string(nested_domain)\n+        \n+        # Parse generators from the bracket notation\n+        if not gens_part.endswith(']'):\n+            return domain, None\n+        \n+        gens_str = gens_part[1:-1]  # Remove [ and ]\n+        if not gens_str:\n+            return domain, None\n+        \n+        # Split generators by comma\n+        generators = [g.strip() for g in gens_str.split(',')]\n+        \n+        return base_domain, generators\n+    \n+    @classmethod\n     def from_sympy(cls, expr):\n         \"\"\"\n         Construct a polynomial ring from a SymPy expression.\n@@ -139,7 +193,32 @@\n         from sympy.polys.constructor import construct_domain\n         from sympy.core.symbol import Symbol\n \n-        domain, gens = construct_domain(expr)\n+        # Handle string domain specifications\n+        if isinstance(expr, str):\n+            base_domain_str, generators = cls._preprocess_domain_string(expr)\n+            \n+            if generators is None:\n+                # Not a polynomial ring, use construct_domain\n+                domain, gens = construct_domain(expr)\n+            else:\n+                # Map base domain string to domain object\n+                if base_domain_str == 'ZZ':\n+                    from sympy.polys.domains import ZZ\n+                    base_domain = ZZ\n+                elif base_domain_str == 'QQ':\n+                    from sympy.polys.domains import QQ\n+                    base_domain = QQ\n+                else:\n+                    # For other domains, use construct_domain on base only\n+                    base_domain, _ = construct_domain(base_domain_str)\n+                \n+                # Convert generator strings to symbols\n+                gens = tuple(Symbol(g) for g in generators)\n+                domain = cls(base_domain, *gens)\n+        else:\n+            # For non-string expressions, use construct_domain\n+            domain, gens = construct_domain(expr)\n+        \n         return domain\n \n     def __eq__(self, other):\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:15:04.478628+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14396",
+      "issue_id": "sympy__sympy-14396",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1141,
+      "output_tokens": 629,
+      "latency_ms": 12662
+    },
+    {
+      "timestamp": "2026-02-16T18:15:14.590228+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14396",
+      "issue_id": "sympy__sympy-14396",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1340,
+      "output_tokens": 576,
+      "latency_ms": 10095
+    },
+    {
+      "timestamp": "2026-02-16T18:15:25.099030+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14396",
+      "issue_id": "sympy__sympy-14396",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1004,
+      "output_tokens": 445,
+      "latency_ms": 10507
+    },
+    {
+      "timestamp": "2026-02-16T18:15:46.570245+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14396",
+      "issue_id": "sympy__sympy-14396",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1155,
+      "output_tokens": 1305,
+      "latency_ms": 21470
+    },
+    {
+      "timestamp": "2026-02-16T18:15:59.625698+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14396",
+      "issue_id": "sympy__sympy-14396",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1733,
+      "output_tokens": 513,
+      "latency_ms": 13054
+    },
+    {
+      "timestamp": "2026-02-16T18:16:18.589048+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14396",
+      "issue_id": "sympy__sympy-14396",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1223,
+      "output_tokens": 1215,
+      "latency_ms": 18962
+    },
+    {
+      "timestamp": "2026-02-16T18:16:32.855938+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14396",
+      "issue_id": "sympy__sympy-14396",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1643,
+      "output_tokens": 513,
+      "latency_ms": 14266
+    },
+    {
+      "timestamp": "2026-02-16T18:16:52.526619+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14396",
+      "issue_id": "sympy__sympy-14396",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 122,
+      "latency_ms": 3781
+    }
+  ],
+  "blackboard_final_state": null
+}

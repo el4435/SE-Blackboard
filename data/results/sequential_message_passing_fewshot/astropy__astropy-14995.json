@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_astropy__astropy-14995_678f0e66",
+  "issue_id": "astropy__astropy-14995",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 6349,
+  "total_output_tokens": 2269,
+  "total_latency_ms": 98881,
+  "final_patch": "--- a/sympy/core/relational.py\n+++ b/sympy/core/relational.py\n@@ -393,7 +393,10 @@\n                 return False\n \n         if self.lhs in _eval_is_eq.known_types:\n-            _eval_is_eq.known_types[self.lhs].add(self.rhs)\n+            # Also check the left operand is hashable before caching\n+            try:\n+                _eval_is_eq.known_types[self.lhs].add(self.rhs)\n+            except TypeError:\n+                pass\n         else:\n             _eval_is_eq.known_types[self.lhs] = {self.rhs}\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-20T17:28:31.102575+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1258,
+      "output_tokens": 662,
+      "latency_ms": 12635
+    },
+    {
+      "timestamp": "2026-02-20T17:28:54.582029+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 446,
+      "output_tokens": 202,
+      "latency_ms": 6085
+    },
+    {
+      "timestamp": "2026-02-20T17:29:01.738972+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1107,
+      "output_tokens": 340,
+      "latency_ms": 7156
+    },
+    {
+      "timestamp": "2026-02-20T17:29:05.804470+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 768,
+      "output_tokens": 156,
+      "latency_ms": 4064
+    },
+    {
+      "timestamp": "2026-02-20T17:29:25.009676+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3331
+    },
+    {
+      "timestamp": "2026-02-20T17:29:30.687729+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1191,
+      "output_tokens": 335,
+      "latency_ms": 5677
+    },
+    {
+      "timestamp": "2026-02-20T17:29:38.120320+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 763,
+      "output_tokens": 341,
+      "latency_ms": 7431
+    },
+    {
+      "timestamp": "2026-02-20T17:29:57.346588+00:00",
+      "experiment_id": "sequential_message_passing_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 112,
+      "latency_ms": 3333
+    }
+  ],
+  "blackboard_final_state": null
+}

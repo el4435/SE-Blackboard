@@ -1,0 +1,62 @@
+{
+  "experiment": "Day 8 Prompt 2: Few-shot Prompt Validation",
+  "date": "2026-02-20",
+  "description": "10-issue x 3-config validation of few-shot coder prompt improvements",
+  "prompt_changes": [
+    "Replaced 8-rule format section with 7 consolidated CRITICAL RULES",
+    "Added 1 format-only example with placeholder paths (was: 3 concrete examples)",
+    "Added anti-copy warning: Do NOT copy file paths from examples",
+    "Added anti-empty-patch: MUST generate diff, imperfect > empty",
+    "Fixed ## header bug that truncated prompt section (## EXAMPLE -> **EXAMPLE**)"
+  ],
+  "bugs_found_and_fixed": [
+    "## section headers in coder.txt caused _get_prompt_section() to split the template early, cutting off {context} placeholder - Coder received NO code context",
+    "Concrete file paths in few-shot examples caused LLM to anchor on example paths (src/_pytest/assertion/rewrite.py) instead of actual issue files"
+  ],
+  "issues_tested": {
+    "success_group": ["django__django-11179", "django__django-12700", "django__django-12915", "django__django-13028"],
+    "apply_error_group": ["django__django-11564", "django__django-11620", "django__django-12908"],
+    "empty_patch_group": ["astropy__astropy-14182", "astropy__astropy-14995", "pylint-dev__pylint-5859"]
+  },
+  "results": {
+    "message_passing": {
+      "v3_resolved": ["django__django-11179"],
+      "fewshot_resolved": ["django__django-11179"],
+      "v3_count": 1,
+      "fewshot_count": 1,
+      "gains": [],
+      "regressions": []
+    },
+    "blackboard": {
+      "v3_resolved": ["django__django-11179", "django__django-12700", "django__django-12915", "django__django-13028"],
+      "fewshot_resolved": ["django__django-11179", "django__django-12700", "django__django-12915"],
+      "v3_count": 4,
+      "fewshot_count": 3,
+      "gains": [],
+      "regressions": ["django__django-13028"]
+    },
+    "hybrid": {
+      "v3_resolved": ["django__django-11179", "django__django-12700"],
+      "fewshot_resolved": ["django__django-11179", "django__django-12700", "django__django-12915"],
+      "v3_count": 2,
+      "fewshot_count": 3,
+      "gains": ["django__django-12915"],
+      "regressions": []
+    }
+  },
+  "summary": {
+    "total_v3": "7/30",
+    "total_fewshot": "7/30",
+    "challenge_flips": 0,
+    "cross_config_gains": 1,
+    "regressions": 1,
+    "net_change": 0
+  },
+  "decision_criteria": {
+    "challenge_flips_ge_2": false,
+    "bb_gt_mp_by_2": true,
+    "bb_minus_mp": 2
+  },
+  "decision": "效果一般 - Few-shot prompting did not unlock new issue resolution. Zero challenge flips. Net zero change (7/30 both v3 and fewshot). One regression (BB lost django-13028), one cross-config gain (Hybrid gained django-12915).",
+  "recommendation": "Rollback to v3 prompt. The few-shot approach is neutral at best, with the regression risk on django-13028. The real bottleneck is context line matching accuracy, not diff format understanding."
+}

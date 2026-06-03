@@ -4,7 +4,7 @@ from pathlib import Path
 from collections import defaultdict
 from datetime import datetime
 
-BASE = Path(__file__).resolve().parent.parent / 'data'
+BASE = Path('E:/SE-Blackboard/data')
 V3_DIRS = {
     'A-Seq MP':     BASE / 'results' / 'sequential_message_passing',
     'B-Seq BB':     BASE / 'results' / 'sequential_blackboard',

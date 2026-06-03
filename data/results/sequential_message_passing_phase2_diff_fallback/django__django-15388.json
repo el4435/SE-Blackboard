@@ -1,0 +1,100 @@
+{
+  "experiment_id": "seq_message_passing_django__django-15388_9522fccf",
+  "issue_id": "django__django-15388",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 32723,
+  "total_output_tokens": 3307,
+  "total_latency_ms": 102939,
+  "final_patch": "--- a/django/template/utils.py\n+++ b/django/template/utils.py\n@@ -93,11 +93,14 @@\n \n     dirname is the name of the subdirectory containing templates inside\n     installed applications.\n     \"\"\"\n+    # app_config.path can be None (e.g., for namespace packages).\n     template_dirs = [\n-        Path(app_config.path) / dirname\n+        app_path / dirname\n         for app_config in apps.get_app_configs()\n-        if app_config.path and (Path(app_config.path) / dirname).is_dir()\n+        if app_config.path is not None\n+        and (app_path := Path(app_config.path))\n+        and (app_path / dirname).is_dir()\n     ]\n     # Immutable return value because it will be cached and shared by callers.\n     return tuple(template_dirs)",
+  "apply_method": "patch_fuzz3",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T22:53:13.531686+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 642,
+      "output_tokens": 739,
+      "latency_ms": 14911
+    },
+    {
+      "timestamp": "2026-02-22T22:53:38.366231+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 446,
+      "output_tokens": 199,
+      "latency_ms": 5486
+    },
+    {
+      "timestamp": "2026-02-22T22:53:47.208554+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 14865,
+      "output_tokens": 623,
+      "latency_ms": 8841
+    },
+    {
+      "timestamp": "2026-02-22T22:53:54.968361+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 683,
+      "output_tokens": 358,
+      "latency_ms": 7759
+    },
+    {
+      "timestamp": "2026-02-22T22:54:08.304650+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 14889,
+      "output_tokens": 812,
+      "latency_ms": 13335
+    },
+    {
+      "timestamp": "2026-02-22T22:54:16.392366+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 786,
+      "output_tokens": 384,
+      "latency_ms": 8086
+    },
+    {
+      "timestamp": "2026-02-22T22:54:41.266608+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15388",
+      "issue_id": "django__django-15388",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 412,
+      "output_tokens": 192,
+      "latency_ms": 3869
+    }
+  ],
+  "blackboard_final_state": null
+}

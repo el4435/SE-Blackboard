@@ -1,0 +1,63 @@
+{
+  "experiment_id": "deb_message_passing_sympy__sympy-15346_518986a8",
+  "issue_id": "sympy__sympy-15346",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 11264,
+  "total_output_tokens": 4207,
+  "total_latency_ms": 73297,
+  "final_patch": "--- a/sympy/simplify/fu.py\n+++ b/sympy/simplify/fu.py\n@@ -1,1 +1,1 @@\n # Mock content for sympy/simplify/fu.py\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T23:11:00.319152+00:00",
+      "experiment_id": "debate_message_passing_sympy__sympy-15346",
+      "issue_id": "sympy__sympy-15346",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 961,
+      "output_tokens": 733,
+      "latency_ms": 13992
+    },
+    {
+      "timestamp": "2026-02-14T23:11:23.904408+00:00",
+      "experiment_id": "debate_message_passing_sympy__sympy-15346",
+      "issue_id": "sympy__sympy-15346",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 4566,
+      "output_tokens": 1345,
+      "latency_ms": 23583
+    },
+    {
+      "timestamp": "2026-02-14T23:11:47.393524+00:00",
+      "experiment_id": "debate_message_passing_sympy__sympy-15346",
+      "issue_id": "sympy__sympy-15346",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 4580,
+      "output_tokens": 1620,
+      "latency_ms": 23487
+    },
+    {
+      "timestamp": "2026-02-14T23:11:59.621905+00:00",
+      "experiment_id": "debate_message_passing_sympy__sympy-15346",
+      "issue_id": "sympy__sympy-15346",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1157,
+      "output_tokens": 509,
+      "latency_ms": 12227
+    }
+  ],
+  "blackboard_final_state": null
+}

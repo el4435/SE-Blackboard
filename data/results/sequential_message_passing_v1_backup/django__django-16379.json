@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-16379_7b2380e5",
+  "issue_id": "django__django-16379",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 8967,
+  "total_output_tokens": 3426,
+  "total_latency_ms": 66103,
+  "final_patch": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -148,10 +148,8 @@\n     def _delete(self, fname):\n-        if not fname.startswith(self._dir) or not os.path.exists(fname):\n-            return\n+        # Use EAFP (Easier to Ask for Forgiveness than Permission) pattern\n         try:\n             os.remove(fname)\n-        except FileNotFoundError:\n-            # The file may have been removed by another process.\n+        except OSError:\n+            # The file may not exist or cannot be deleted (e.g., permission error)\n             pass\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T03:51:30.834440+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 759,
+      "output_tokens": 547,
+      "latency_ms": 9823
+    },
+    {
+      "timestamp": "2026-02-14T03:51:36.631791+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1303,
+      "output_tokens": 339,
+      "latency_ms": 5796
+    },
+    {
+      "timestamp": "2026-02-14T03:51:40.002295+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 767,
+      "output_tokens": 142,
+      "latency_ms": 3369
+    },
+    {
+      "timestamp": "2026-02-14T03:51:45.623776+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 422,
+      "output_tokens": 283,
+      "latency_ms": 5620
+    },
+    {
+      "timestamp": "2026-02-14T03:52:04.108398+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2974,
+      "output_tokens": 1096,
+      "latency_ms": 18483
+    },
+    {
+      "timestamp": "2026-02-14T03:52:12.717057+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 845,
+      "output_tokens": 378,
+      "latency_ms": 8607
+    },
+    {
+      "timestamp": "2026-02-14T03:52:19.445525+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1133,
+      "output_tokens": 336,
+      "latency_ms": 6727
+    },
+    {
+      "timestamp": "2026-02-14T03:52:27.112824+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 764,
+      "output_tokens": 305,
+      "latency_ms": 7666
+    }
+  ],
+  "blackboard_final_state": null
+}

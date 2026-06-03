@@ -1,0 +1,14 @@
+\begin{table}[t]
+\centering
+\caption{Main experimental results on SWE-bench Lite (N=50 issues, Sequential pipeline).}
+\label{tab:main-results}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Communication} & \textbf{Resolved} & \textbf{Rate} & \textbf{Avg Tokens} & \textbf{Avg Latency} & \textbf{Avg Iter.} \\
+\midrule
+Message Passing & 6/50 & 12.0\% & 25,316 & 106s & 2.78 \\
+Blackboard      & 8/50 & \textbf{16.0\%} & 54,849 & 171s & 2.70 \\
+Hybrid          & 6/50 & 12.0\% & 43,278 & 128s & 2.80 \\
+\bottomrule
+\end{tabular}
+\end{table}

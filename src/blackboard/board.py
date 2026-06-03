@@ -34,7 +34,10 @@ class Blackboard:
         self._state = SEBlackboardState(issue=issue)
         self._history: list[dict[str, Any]] = []
         self._record("init", {"issue_id": issue.instance_id})
+
+    # ------------------------------------------------------------------
     # Read operations
+    # ------------------------------------------------------------------
 
     def get_state(self) -> SEBlackboardState:
         """Return a deep copy of the full state (prevents accidental mutation)."""
@@ -91,7 +94,10 @@ class Blackboard:
             raise ValueError(f"Unknown agent role: {role}")
 
         return "\n\n".join(sections)
+
+    # ------------------------------------------------------------------
     # Write operations
+    # ------------------------------------------------------------------
 
     def update_analysis(self, analysis: Analysis) -> None:
         """Replace the current analysis with a new one."""
@@ -137,7 +143,10 @@ class Blackboard:
             self._state.metadata.current_iteration = iteration
         if status is not None:
             self._state.metadata.status = status  # type: ignore[assignment]
+
+    # ------------------------------------------------------------------
     # Serialization & history
+    # ------------------------------------------------------------------
 
     def get_history(self) -> list[dict[str, Any]]:
         """Return the full operation timeline (deep copy)."""
@@ -146,7 +155,10 @@ class Blackboard:
     def to_json(self) -> str:
         """Serialize the current state to a JSON string."""
         return self._state.model_dump_json(indent=2)
+
+    # ------------------------------------------------------------------
     # Internal helpers
+    # ------------------------------------------------------------------
 
     def _record(self, action: str, details: dict[str, Any]) -> None:
         """Append an entry to the history log."""

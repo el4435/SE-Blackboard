@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_django__django-16229_cb627d45",
+  "issue_id": "django__django-16229",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 13843,
+  "total_output_tokens": 4880,
+  "total_latency_ms": 89222,
+  "final_patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -1,6 +1,7 @@\n import collections.abc\n import copy\n import datetime\n+import collections\n import decimal\n import operator\n import uuid\n@@ -175,7 +176,16 @@\n         if self.remote_field is None:\n             defaults = {**kwargs, **defaults}\n         if self.null and not self.many_to_many:\n-            defaults['empty_value'] = None\n+            # Only set empty_value to None if default is not a mutable factory\n+            # Mutable factories (list, dict, set, etc.) should not have empty_value=None\n+            # as they provide their own empty values when called\n+            is_mutable_factory = callable(self.default) and (\n+                self.default in (list, dict, set, frozenset, bytearray, collections.deque) or\n+                (hasattr(self.default, '__self__') and \n+                 isinstance(self.default.__self__, (list, dict, set, frozenset, bytearray, collections.deque)))\n+            )\n+            if not is_mutable_factory:\n+                defaults['empty_value'] = None\n         return form_class(**defaults)\n \n     def value_from_object(self, obj):",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T04:11:10.679322+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 766,
+      "output_tokens": 637,
+      "latency_ms": 13715
+    },
+    {
+      "timestamp": "2026-02-14T04:11:21.533920+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3669,
+      "output_tokens": 719,
+      "latency_ms": 10853
+    },
+    {
+      "timestamp": "2026-02-14T04:11:30.635883+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 715,
+      "output_tokens": 380,
+      "latency_ms": 9100
+    },
+    {
+      "timestamp": "2026-02-14T04:11:49.121808+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3440,
+      "output_tokens": 1193,
+      "latency_ms": 18484
+    },
+    {
+      "timestamp": "2026-02-14T04:11:59.951937+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 902,
+      "output_tokens": 401,
+      "latency_ms": 10829
+    },
+    {
+      "timestamp": "2026-02-14T04:12:16.735672+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 3390,
+      "output_tokens": 1160,
+      "latency_ms": 16783
+    },
+    {
+      "timestamp": "2026-02-14T04:12:26.185019+00:00",
+      "experiment_id": "sequential_message_passing_django__django-16229",
+      "issue_id": "django__django-16229",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 961,
+      "output_tokens": 390,
+      "latency_ms": 9448
+    }
+  ],
+  "blackboard_final_state": null
+}

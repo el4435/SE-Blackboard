@@ -24,7 +24,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 FIGURES_DIR = PROJECT_ROOT / "figures"
 FIGURES_DIR.mkdir(exist_ok=True)
 
-# Style
+# ── Style ────────────────────────────────────────────────────────────
 matplotlib.rcParams["font.family"] = "serif"
 matplotlib.rcParams["font.size"] = 11
 matplotlib.rcParams["axes.labelsize"] = 12
@@ -40,7 +40,7 @@ COLORS = {
 LABELS = {"mp": "MP", "bb": "BB", "hybrid": "Hybrid"}
 
 
-# Data Loading
+# ── Data Loading ─────────────────────────────────────────────────────
 
 def load_results(config_dir: str) -> list[dict]:
     results = []
@@ -89,14 +89,14 @@ for iid in all_issues:
 by_id_map = {"mp": mp_by_id, "bb": bb_by_id, "hybrid": hy_by_id}
 
 
-# Figure Generation
+# ── Figure Generation ────────────────────────────────────────────────
 
 def generate():
     fig, (ax_a, ax_b, ax_c) = plt.subplots(1, 3, figsize=(14, 4.5))
 
     configs = ["mp", "bb", "hybrid"]
 
-    # Panel (a): Resolve Rate
+    # ── Panel (a): Resolve Rate ──────────────────────────────────────
     counts = [n_mp, n_bb, n_hy]
     rates = [c / N for c in counts]
 
@@ -119,7 +119,7 @@ def generate():
     ax_a.set_ylim(0, 35)
     ax_a.yaxis.set_major_locator(plt.MultipleLocator(5))
 
-    # Panel (b): By Difficulty
+    # ── Panel (b): By Difficulty ─────────────────────────────────────
     levels = ["Easy", "Medium", "Hard"]
     hatches = ["", "//", ".."]
     level_counts = {lv: sum(1 for i in all_issues if difficulty_map[i] == lv)
@@ -159,7 +159,7 @@ def generate():
     ax_b.set_title("(b)  By Difficulty", fontweight="bold")
     ax_b.set_ylim(0, 40)
 
-    # Panel (c): File Targeting
+    # ── Panel (c): File Targeting ────────────────────────────────────
     targeting_rates = [55.1, 82.6, 78.1]
 
     bars_c = ax_c.bar(range(3), targeting_rates,
@@ -184,7 +184,7 @@ def generate():
     ax_c.set_title("(c)  File Targeting", fontweight="bold")
     ax_c.set_ylim(0, 100)
 
-    # Save
+    # ── Save ─────────────────────────────────────────────────────────
     plt.tight_layout()
     fig.savefig(FIGURES_DIR / "fig2_main_results_panel.pdf", bbox_inches="tight")
     fig.savefig(FIGURES_DIR / "fig2_main_results_panel.png", bbox_inches="tight", dpi=300)

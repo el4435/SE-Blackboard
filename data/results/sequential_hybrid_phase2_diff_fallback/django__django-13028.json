@@ -1,0 +1,175 @@
+{
+  "experiment_id": "seq_hybrid_django__django-13028_c659fe6c",
+  "issue_id": "django__django-13028",
+  "topology": "sequential",
+  "communication": "hybrid",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 14631,
+  "total_output_tokens": 2355,
+  "total_latency_ms": 105721,
+  "final_patch": "",
+  "apply_method": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T22:40:24.581587+00:00",
+      "experiment_id": "sequential_hybrid_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-H",
+      "agent_role": "Planner",
+      "communication_mode": "hybrid",
+      "iteration": 0,
+      "input_tokens": 6234,
+      "output_tokens": 1420,
+      "latency_ms": 22964
+    },
+    {
+      "timestamp": "2026-02-22T22:40:49.230299+00:00",
+      "experiment_id": "sequential_hybrid_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 2261,
+      "output_tokens": 303,
+      "latency_ms": 6088
+    },
+    {
+      "timestamp": "2026-02-22T22:41:09.283268+00:00",
+      "experiment_id": "sequential_hybrid_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 2,
+      "input_tokens": 2261,
+      "output_tokens": 269,
+      "latency_ms": 4848
+    },
+    {
+      "timestamp": "2026-02-22T22:41:25.829658+00:00",
+      "experiment_id": "sequential_hybrid_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 3,
+      "input_tokens": 2261,
+      "output_tokens": 269,
+      "latency_ms": 4830
+    },
+    {
+      "timestamp": "2026-02-22T22:41:47.335256+00:00",
+      "experiment_id": "sequential_hybrid_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-H",
+      "agent_role": "Tester",
+      "communication_mode": "hybrid",
+      "iteration": 3,
+      "input_tokens": 1614,
+      "output_tokens": 94,
+      "latency_ms": 2719
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-13028",
+      "problem_statement": "Queryset raises NotSupportedError when RHS has filterable=False attribute.\nDescription\n\t \n\t\t(last modified by Nicolas Baccelli)\n\t \nI'm migrating my app to django 3.0.7 and I hit a strange behavior using a model class with a field labeled filterable\nclass ProductMetaDataType(models.Model):\n\tlabel = models.CharField(max_length=255, unique=True, blank=False, null=False)\n\tfilterable = models.BooleanField(default=False, verbose_name=_(\"filterable\"))\n\tclass Meta:\n\t\tapp_label = \"adminpricing\"\n\t\tverbose_name = _(\"product meta data type\")\n\t\tverbose_name_plural = _(\"product meta data types\")\n\tdef __str__(self):\n\t\treturn self.label\nclass ProductMetaData(models.Model):\n\tid = models.BigAutoField(primary_key=True)\n\tproduct = models.ForeignKey(\n\t\tProduit, null=False, blank=False, on_delete=models.CASCADE\n\t)\n\tvalue = models.TextField(null=False, blank=False)\n\tmarketplace = models.ForeignKey(\n\t\tPlateforme, null=False, blank=False, on_delete=models.CASCADE\n\t)\n\tdate_created = models.DateTimeField(null=True, default=timezone.now)\n\tmetadata_type = models.ForeignKey(\n\t\tProductMetaDataType, null=False, blank=False, on_delete=models.CASCADE\n\t)\n\tclass Meta:\n\t\tapp_label = \"adminpricing\"\n\t\tverbose_name = _(\"product meta data\")\n\t\tverbose_name_plural = _(\"product meta datas\")\nError happened when filtering ProductMetaData with a metadata_type :\nProductMetaData.objects.filter(value=\"Dark Vador\", metadata_type=self.brand_metadata)\nError traceback :\nTraceback (most recent call last):\n File \"/backoffice/backoffice/adminpricing/tests/test_pw.py\", line 481, in test_checkpolicywarning_by_fields\n\tfor p in ProductMetaData.objects.filter(\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/manager.py\", line 82, in manager_method\n\treturn getattr(self.get_queryset(), name)(*args, **kwargs)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/query.py\", line 904, in filter\n\treturn self._filter_or_exclude(False, *args, **kwargs)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/query.py\", line 923, in _filter_or_exclude\n\tclone.query.add_q(Q(*args, **kwargs))\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1351, in add_q\n\tclause, _ = self._add_q(q_object, self.used_aliases)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1378, in _add_q\n\tchild_clause, needed_inner = self.build_filter(\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1264, in build_filter\n\tself.check_filterable(value)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1131, in check_filterable\n\traise NotSupportedError(\ndjango.db.utils.NotSupportedError: ProductMetaDataType is disallowed in the filter clause.\nI changed label to filterable_test and it fixed this issue\nThis should be documented or fix.\n",
+      "repo": "django/django",
+      "base_commit": "78ad4b4b0201003792bfdbf1a7781cbc9ee03539",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The `check_filterable` method in `django/db/models/sql/query.py` checks if a value has a `filterable` attribute set to False to determine if it can be used in filter clauses. However, this check incorrectly triggers when a model instance has a field named `filterable` with a value of False, even though the intent is to check for a class-level attribute that marks certain query expressions as non-filterable. The method doesn't distinguish between a model field named `filterable` and an actual filterability marker attribute.",
+      "relevant_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "relevant_functions": [
+        "django.db.models.sql.query.Query.check_filterable",
+        "django.db.models.sql.query.Query.build_filter"
+      ],
+      "fix_strategy": "1. Modify the `check_filterable` method to be more specific about what constitutes a non-filterable object.\n2. The check should distinguish between:\n   - Model instances (which should generally be allowed in filters)\n   - Query expressions or other objects that have an explicit `filterable` class attribute (not instance attribute from a model field)\n3. Add a check to exclude model instances from the filterable check, or verify that `filterable` is a class-level attribute rather than an instance attribute from a model field.\n4. Recommended approach: Check if the value is a Model instance using `isinstance(value, Model)` and skip the filterable check for model instances, since model instances should always be allowed in filters.\n5. Alternative approach: Check if `filterable` is defined on the class itself using `'filterable' in type(value).__dict__` to ensure it's a class attribute and not a field value.\n6. Add test cases to ensure model instances with a `filterable` field can be used in filters, while actual non-filterable expressions (like certain query expressions) are still properly rejected.",
+      "confidence": 0.95,
+      "relevant_code": "The issue is in the `check_filterable` method which currently checks:\n```python\nif hasattr(value, 'filterable') and not value.filterable:\n    raise NotSupportedError(...)\n```\nThis needs to be modified to exclude model instances or check for class-level attributes only. The fix should add a condition like:\n```python\nfrom django.db.models import Model\nif hasattr(value, 'filterable') and not value.filterable and not isinstance(value, Model):\n    raise NotSupportedError(...)\n```"
+    },
+    "patches": [],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "No patch was provided by the Coder agent - the output indicates a parsing error occurred",
+          "Cannot review a non-existent patch",
+          "The Coder agent failed to generate valid output that could be parsed into a Patch object"
+        ],
+        "suggestions": [
+          "The Coder should implement the fix as outlined in the analysis: modify the check_filterable method in django/db/models/sql/query.py",
+          "Add an isinstance check to exclude Model instances from the filterable attribute check: 'if hasattr(value, 'filterable') and not value.filterable and not isinstance(value, Model):'",
+          "Import the Model class at the top of the file: 'from django.db.models import Model'",
+          "Ensure the patch follows the proper JSON schema format with file_path, original_code, and patched_code fields",
+          "Add appropriate test cases to verify that model instances with a 'filterable' field can be used in filter clauses",
+          "Verify that legitimate non-filterable query expressions are still properly rejected after the fix"
+        ]
+      },
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "No patch was provided by the Coder agent - the output failed to parse",
+          "Cannot review a non-existent patch"
+        ],
+        "suggestions": [
+          "The Coder should provide a patch that modifies the `check_filterable` method in `django/db/models/sql/query.py`",
+          "The patch should add a check to exclude Model instances from the filterable validation using `isinstance(value, Model)`",
+          "The fix should be: `if hasattr(value, 'filterable') and not value.filterable and not isinstance(value, Model):`",
+          "Import statement `from django.db.models import Model` should be added at the top of the file if not already present",
+          "A test case should be included to verify that model instances with a `filterable` field can be used in filter clauses",
+          "The patch should maintain backward compatibility by still rejecting actual non-filterable query expressions"
+        ]
+      },
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "No patch was provided by the Coder agent - the output failed to parse",
+          "Cannot review a non-existent patch"
+        ],
+        "suggestions": [
+          "The Coder should provide a patch that modifies the `check_filterable` method in `django/db/models/sql/query.py`",
+          "The patch should add a check to exclude Model instances from the filterable validation using `isinstance(value, Model)`",
+          "The fix should be: `if hasattr(value, 'filterable') and not value.filterable and not isinstance(value, Model):`",
+          "Import statement `from django.db.models import Model` should be added at the top of the file if not already present",
+          "A test case should be included to verify that model instances with a `filterable` field can be used in filter clauses",
+          "The patch should maintain backward compatibility by still rejecting actual non-filterable query expressions"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 0,
+        "passed": false,
+        "pass_count": 0,
+        "fail_count": 1,
+        "failing_tests": [
+          "Patch Generation"
+        ],
+        "error_traces": [
+          "Failed to parse LLM output into Patch after correction retry. Evaluation did not complete."
+        ]
+      }
+    ],
+    "metadata": {
+      "status": "testing",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-22T22:40:01.615195Z",
+      "end_time": null
+    }
+  }
+}

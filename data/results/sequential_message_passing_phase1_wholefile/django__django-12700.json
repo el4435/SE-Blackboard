@@ -1,0 +1,112 @@
+{
+  "experiment_id": "seq_message_passing_django__django-12700_63b6cbc0",
+  "issue_id": "django__django-12700",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 21808,
+  "total_output_tokens": 19382,
+  "total_latency_ms": 284584,
+  "final_patch": "--- a/django/views/debug.py\n+++ b/django/views/debug.py\n@@ -430,8 +430,8 @@\n                 post_context = []\n             frames.append({\n                 'exc_cause': explicit_or_implicit_cause(exc_value),\n-                'exc_cause_explicit': getattr(exc_value, '__cause__', True),\n+                'exc_cause_explicit': getattr(exc_value, '__cause__', None) is not None,\n                 'tb': tb,\n                 'type': 'django' if module_name.startswith('django.') else 'user',\n                 'filename': filename,\n",
+  "apply_method": "patch_fuzz3",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T21:18:04.428812+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1026,
+      "output_tokens": 654,
+      "latency_ms": 11883
+    },
+    {
+      "timestamp": "2026-02-22T21:19:06.888136+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 6531,
+      "output_tokens": 5729,
+      "latency_ms": 61598
+    },
+    {
+      "timestamp": "2026-02-22T21:19:10.948077+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 498,
+      "output_tokens": 185,
+      "latency_ms": 4058
+    },
+    {
+      "timestamp": "2026-02-22T21:20:23.913868+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 6061,
+      "output_tokens": 6161,
+      "latency_ms": 72965
+    },
+    {
+      "timestamp": "2026-02-22T21:20:29.025505+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 498,
+      "output_tokens": 232,
+      "latency_ms": 5110
+    },
+    {
+      "timestamp": "2026-02-22T21:22:04.374959+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 6108,
+      "output_tokens": 6097,
+      "latency_ms": 95348
+    },
+    {
+      "timestamp": "2026-02-22T21:22:07.783257+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 674,
+      "output_tokens": 132,
+      "latency_ms": 3406
+    },
+    {
+      "timestamp": "2026-02-22T21:22:36.724824+00:00",
+      "experiment_id": "sequential_message_passing_django__django-12700",
+      "issue_id": "django__django-12700",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 412,
+      "output_tokens": 192,
+      "latency_ms": 4106
+    }
+  ],
+  "blackboard_final_state": null
+}

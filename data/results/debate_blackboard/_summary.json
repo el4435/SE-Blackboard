@@ -1,0 +1,552 @@
+{
+  "config": "debate_blackboard",
+  "total_issues": 50,
+  "resolved": 25,
+  "resolve_rate": 50.0,
+  "avg_tokens": 48977,
+  "avg_latency_s": 152.2,
+  "avg_iterations": 2.4,
+  "total_input_tokens": 2014997,
+  "total_output_tokens": 433839,
+  "by_difficulty": {
+    "hard": {
+      "count": 10,
+      "resolved": 1,
+      "resolve_rate": 10.0,
+      "avg_tokens": 72157
+    },
+    "easy": {
+      "count": 20,
+      "resolved": 12,
+      "resolve_rate": 60.0,
+      "avg_tokens": 44133
+    },
+    "medium": {
+      "count": 20,
+      "resolved": 12,
+      "resolve_rate": 60.0,
+      "avg_tokens": 42230
+    }
+  },
+  "by_repo": {
+    "astropy/astropy": {
+      "count": 2,
+      "resolved": 0,
+      "resolve_rate": 0.0
+    },
+    "django/django": {
+      "count": 22,
+      "resolved": 12,
+      "resolve_rate": 54.5
+    },
+    "pallets/flask": {
+      "count": 1,
+      "resolved": 1,
+      "resolve_rate": 100.0
+    },
+    "pydata/xarray": {
+      "count": 1,
+      "resolved": 0,
+      "resolve_rate": 0.0
+    },
+    "pylint-dev/pylint": {
+      "count": 1,
+      "resolved": 1,
+      "resolve_rate": 100.0
+    },
+    "pytest-dev/pytest": {
+      "count": 3,
+      "resolved": 3,
+      "resolve_rate": 100.0
+    },
+    "sphinx-doc/sphinx": {
+      "count": 4,
+      "resolved": 2,
+      "resolve_rate": 50.0
+    },
+    "sympy/sympy": {
+      "count": 16,
+      "resolved": 6,
+      "resolve_rate": 37.5
+    }
+  },
+  "failures": [
+    {
+      "issue_id": "astropy__astropy-14182",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "astropy__astropy-14995",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "django__django-11564",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "django__django-12700",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "django__django-13220",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "django__django-13230",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "django__django-14238",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "django__django-14667",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "django__django-15388",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "django__django-16408",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "django__django-16820",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "django__django-17051",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "pydata__xarray-3364",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sympy__sympy-12481",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sympy__sympy-13895",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sympy__sympy-13971",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sympy__sympy-14024",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sympy__sympy-14396",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sympy__sympy-18835",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sympy__sympy-19254",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sympy__sympy-20049",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sympy__sympy-20639",
+      "category": "patch_logic_error",
+      "iterations": 3
+    },
+    {
+      "issue_id": "sympy__sympy-24213",
+      "category": "patch_logic_error",
+      "iterations": 3
+    }
+  ],
+  "per_issue": [
+    {
+      "issue_id": "astropy__astropy-14182",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 86979,
+      "latency_ms": 232279
+    },
+    {
+      "issue_id": "astropy__astropy-14995",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 63910,
+      "latency_ms": 209174
+    },
+    {
+      "issue_id": "django__django-11179",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 12489,
+      "latency_ms": 43176
+    },
+    {
+      "issue_id": "django__django-11564",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 76851,
+      "latency_ms": 250048
+    },
+    {
+      "issue_id": "django__django-11620",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 19852,
+      "latency_ms": 66552
+    },
+    {
+      "issue_id": "django__django-12700",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 56008,
+      "latency_ms": 149794
+    },
+    {
+      "issue_id": "django__django-12908",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 11238,
+      "latency_ms": 38457
+    },
+    {
+      "issue_id": "django__django-12915",
+      "resolved": true,
+      "iterations": 2,
+      "tokens": 28961,
+      "latency_ms": 86388
+    },
+    {
+      "issue_id": "django__django-13028",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 15380,
+      "latency_ms": 59065
+    },
+    {
+      "issue_id": "django__django-13220",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 110518,
+      "latency_ms": 286596
+    },
+    {
+      "issue_id": "django__django-13230",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 45444,
+      "latency_ms": 135820
+    },
+    {
+      "issue_id": "django__django-13321",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 30073,
+      "latency_ms": 73771
+    },
+    {
+      "issue_id": "django__django-14155",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 18682,
+      "latency_ms": 70000
+    },
+    {
+      "issue_id": "django__django-14238",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 61133,
+      "latency_ms": 140513
+    },
+    {
+      "issue_id": "django__django-14667",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 56320,
+      "latency_ms": 178958
+    },
+    {
+      "issue_id": "django__django-15202",
+      "resolved": true,
+      "iterations": 2,
+      "tokens": 28543,
+      "latency_ms": 87403
+    },
+    {
+      "issue_id": "django__django-15213",
+      "resolved": true,
+      "iterations": 2,
+      "tokens": 21439,
+      "latency_ms": 119811
+    },
+    {
+      "issue_id": "django__django-15347",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 16366,
+      "latency_ms": 49581
+    },
+    {
+      "issue_id": "django__django-15388",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 59105,
+      "latency_ms": 188699
+    },
+    {
+      "issue_id": "django__django-16229",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 16517,
+      "latency_ms": 59910
+    },
+    {
+      "issue_id": "django__django-16379",
+      "resolved": true,
+      "iterations": 2,
+      "tokens": 32954,
+      "latency_ms": 95607
+    },
+    {
+      "issue_id": "django__django-16408",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 46599,
+      "latency_ms": 207674
+    },
+    {
+      "issue_id": "django__django-16820",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 78666,
+      "latency_ms": 237811
+    },
+    {
+      "issue_id": "django__django-17051",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 59314,
+      "latency_ms": 162589
+    },
+    {
+      "issue_id": "pallets__flask-4045",
+      "resolved": true,
+      "iterations": 3,
+      "tokens": 47235,
+      "latency_ms": 137874
+    },
+    {
+      "issue_id": "pydata__xarray-3364",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 82049,
+      "latency_ms": 395711
+    },
+    {
+      "issue_id": "pylint-dev__pylint-5859",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 21289,
+      "latency_ms": 76309
+    },
+    {
+      "issue_id": "pytest-dev__pytest-11143",
+      "resolved": true,
+      "iterations": 3,
+      "tokens": 98043,
+      "latency_ms": 143144
+    },
+    {
+      "issue_id": "pytest-dev__pytest-5221",
+      "resolved": true,
+      "iterations": 3,
+      "tokens": 34580,
+      "latency_ms": 106708
+    },
+    {
+      "issue_id": "pytest-dev__pytest-5495",
+      "resolved": true,
+      "iterations": 2,
+      "tokens": 34980,
+      "latency_ms": 122996
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-10325",
+      "resolved": true,
+      "iterations": 2,
+      "tokens": 59792,
+      "latency_ms": 199227
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 94083,
+      "latency_ms": 275878
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 17380,
+      "latency_ms": 153436
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-8713",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 21003,
+      "latency_ms": 51559
+    },
+    {
+      "issue_id": "sympy__sympy-12481",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 63365,
+      "latency_ms": 218716
+    },
+    {
+      "issue_id": "sympy__sympy-13895",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 73380,
+      "latency_ms": 220897
+    },
+    {
+      "issue_id": "sympy__sympy-13971",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 50925,
+      "latency_ms": 143786
+    },
+    {
+      "issue_id": "sympy__sympy-14024",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 46955,
+      "latency_ms": 249485
+    },
+    {
+      "issue_id": "sympy__sympy-14396",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 69468,
+      "latency_ms": 193018
+    },
+    {
+      "issue_id": "sympy__sympy-15345",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 21476,
+      "latency_ms": 81784
+    },
+    {
+      "issue_id": "sympy__sympy-15346",
+      "resolved": true,
+      "iterations": 3,
+      "tokens": 81938,
+      "latency_ms": 240753
+    },
+    {
+      "issue_id": "sympy__sympy-18057",
+      "resolved": true,
+      "iterations": 2,
+      "tokens": 45510,
+      "latency_ms": 138002
+    },
+    {
+      "issue_id": "sympy__sympy-18698",
+      "resolved": true,
+      "iterations": 2,
+      "tokens": 29449,
+      "latency_ms": 139235
+    },
+    {
+      "issue_id": "sympy__sympy-18835",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 36135,
+      "latency_ms": 141510
+    },
+    {
+      "issue_id": "sympy__sympy-19254",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 71330,
+      "latency_ms": 207076
+    },
+    {
+      "issue_id": "sympy__sympy-20049",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 80079,
+      "latency_ms": 237279
+    },
+    {
+      "issue_id": "sympy__sympy-20639",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 51948,
+      "latency_ms": 152376
+    },
+    {
+      "issue_id": "sympy__sympy-21171",
+      "resolved": true,
+      "iterations": 3,
+      "tokens": 99106,
+      "latency_ms": 144107
+    },
+    {
+      "issue_id": "sympy__sympy-24213",
+      "resolved": false,
+      "iterations": 3,
+      "tokens": 53123,
+      "latency_ms": 155353
+    },
+    {
+      "issue_id": "sympy__sympy-24909",
+      "resolved": true,
+      "iterations": 1,
+      "tokens": 10874,
+      "latency_ms": 53043
+    }
+  ]
+}

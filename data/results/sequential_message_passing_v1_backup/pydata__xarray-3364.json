@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_pydata__xarray-3364_107351ac",
+  "issue_id": "pydata__xarray-3364",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 22131,
+  "total_output_tokens": 15270,
+  "total_latency_ms": 205634,
+  "final_patch": "--- a/xray/core/combine.py\n+++ b/xray/core/combine.py\n@@ -1,3 +1,148 @@\n-# Mock content for xray/core/combine.py\n-# This is a placeholder.\n+import pandas as pd\n+from collections import OrderedDict\n+from . import ops\n+from .pycompat import iteritems, basestring\n+from .variable import Variable, Coordinate, as_variable\n+from .dataset import Dataset\n+from .dataarray import DataArray\n \n+\n+def concat(datasets, dim='concat_dim', data_vars='all', coords='different',\n+           compat='equals', positions=None, join='outer'):\n+    \"\"\"\n+    Concatenate datasets along a new or existing dimension.\n+    \n+    Parameters\n+    ----------\n+    datasets : sequence of Dataset\n+        Datasets to concatenate.\n+    dim : str or DataArray or Variable, optional\n+        Name of the dimension to concatenate along. If a DataArray or Variable,\n+        its name is used as the dimension name.\n+    data_vars : {'minimal', 'different', 'all'} or list of str, optional\n+        Which data variables to include in the output.\n+    coords : {'minimal', 'different', 'all'} or list of str, optional\n+        Which coordinate variables to include in the output.\n+    compat : {'equals', 'identical'}, optional\n+        String indicating how to compare non-concatenated variables.\n+    positions : None or list of integer arrays, optional\n+        List of integer arrays which specifies the integer positions to which\n+        to assign each dataset along the concatenated dimension.\n+    join : {'outer', 'inner', 'left', 'right', 'exact'}, optional\n+        Method for joining the indexes of the passed objects along other dimensions.\n+    \n+    Returns\n+    -------\n+    concatenated : Dataset\n+        Concatenated dataset.\n+    \"\"\"\n+    # Convert datasets to list\n+    datasets = list(datasets)\n+    \n+    if not datasets:\n+        raise ValueError('datasets must be a non-empty sequence')\n+    \n+    # Handle dim parameter\n+    if isinstance(dim, (DataArray, Variable)):\n+        dim_var = dim\n+        dim = dim.name\n+    else:\n+        dim_var = None\n+    \n+    # Determine the size of the concatenated dimension\n+    if positions is not None:\n+        concat_dim_size = max(max(pos) for pos in positions) + 1\n+    else:\n+        concat_dim_size = len(datasets)\n+    \n+    # Get all variable names across all datasets\n+    all_data_vars = set()\n+    all_coords = set()\n+    for ds in datasets:\n+        all_data_vars.update(ds.data_vars)\n+        all_coords.update(ds.coords)\n+    \n+    # Determine which variables to include\n+    if data_vars == 'all':\n+        data_vars_to_concat = all_data_vars\n+    elif data_vars == 'minimal':\n+        data_vars_to_concat = set.intersection(*[set(ds.data_vars) for ds in datasets])\n+    elif data_vars == 'different':\n+        data_vars_to_concat = all_data_vars\n+    elif isinstance(data_vars, list):\n+        data_vars_to_concat = set(data_vars)\n+    else:\n+        data_vars_to_concat = all_data_vars\n+    \n+    if coords == 'all':\n+        coords_to_concat = all_coords\n+    elif coords == 'minimal':\n+        coords_to_concat = set.intersection(*[set(ds.coords) for ds in datasets])\n+    elif coords == 'different':\n+        coords_to_concat = all_coords\n+    elif isinstance(coords, list):\n+        coords_to_concat = set(coords)\n+    else:\n+        coords_to_concat = all_coords\n+    \n+    # Build the concatenated dataset\n+    result_vars = OrderedDict()\n+    \n+    # Process all variables\n+    all_vars = data_vars_to_concat | coords_to_concat\n+    \n+    for var_name in all_vars:\n+        # Collect variables from each dataset\n+        vars_to_concat = []\n+        for i, ds in enumerate(datasets):\n+            if var_name in ds:\n+                var = ds[var_name]\n+                # Check if variable has the concat dimension\n+                if dim in var.dims:\n+                    vars_to_concat.append(var)\n+                else:\n+                    # Variable doesn't have concat dim, need to broadcast\n+                    # For now, just take the first occurrence\n+                    if not vars_to_concat:\n+                        vars_to_concat.append(var)\n+            else:\n+                # Variable not in this dataset, will need to fill with NaN\n+                pass\n+        \n+        if vars_to_concat:\n+            # Check compatibility if compat is specified\n+            if compat in ['equals', 'identical']:\n+                first_var = vars_to_concat[0]\n+                for var in vars_to_concat[1:]:\n+                    if dim not in var.dims:\n+                        # For variables without concat dim, check they're equal\n+                        if compat == 'identical' and not first_var.identical(var):\n+                            raise ValueError(f'Variable {var_name} is not identical across datasets')\n+                        elif compat == 'equals' and not first_var.equals(var):\n+                            raise ValueError(f'Variable {var_name} is not equal across datasets')\n+            \n+            # Concatenate the variable\n+            if dim in vars_to_concat[0].dims:\n+                # Variable has the concat dimension\n+                concatenated = Variable.concat(vars_to_concat, dim=dim, positions=positions)\n+            else:\n+                # Variable doesn't have concat dimension, just use first occurrence\n+                concatenated = vars_to_concat[0]\n+            \n+            result_vars[var_name] = concatenated\n+    \n+    # Add the dimension coordinate if provided\n+    if dim_var is not None:\n+        result_vars[dim] = dim_var\n+    elif dim not in result_vars:\n+        # Create a default dimension coordinate\n+        result_vars[dim] = Variable(dim, pd.RangeIndex(concat_dim_size))\n+    \n+    # Create the result dataset\n+    # Separate coords from data_vars\n+    result_coords = OrderedDict((k, v) for k, v in result_vars.items() if k in coords_to_concat or k == dim)\n+    result_data_vars = OrderedDict((k, v) for k, v in result_vars.items() if k in data_vars_to_concat)\n+    \n+    result = Dataset(result_data_vars, coords=result_coords)\n+    \n+    return result\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T04:41:47.963410+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 540,
+      "output_tokens": 515,
+      "latency_ms": 11375
+    },
+    {
+      "timestamp": "2026-02-14T04:42:37.667947+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 5181,
+      "output_tokens": 4451,
+      "latency_ms": 49703
+    },
+    {
+      "timestamp": "2026-02-14T04:42:48.367000+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 2609,
+      "output_tokens": 449,
+      "latency_ms": 10697
+    },
+    {
+      "timestamp": "2026-02-14T04:44:05.518478+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 6224,
+      "output_tokens": 6723,
+      "latency_ms": 77150
+    },
+    {
+      "timestamp": "2026-02-14T04:44:19.898293+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3704,
+      "output_tokens": 581,
+      "latency_ms": 14379
+    },
+    {
+      "timestamp": "2026-02-14T04:44:48.940470+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1396,
+      "output_tokens": 2049,
+      "latency_ms": 29041
+    },
+    {
+      "timestamp": "2026-02-14T04:45:02.220748+00:00",
+      "experiment_id": "sequential_message_passing_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 2477,
+      "output_tokens": 502,
+      "latency_ms": 13279
+    }
+  ],
+  "blackboard_final_state": null
+}

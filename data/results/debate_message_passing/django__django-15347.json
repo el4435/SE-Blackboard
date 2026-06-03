@@ -1,0 +1,63 @@
+{
+  "experiment_id": "deb_message_passing_django__django-15347_0f009f23",
+  "issue_id": "django__django-15347",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 8017,
+  "total_output_tokens": 1733,
+  "total_latency_ms": 30976,
+  "final_patch": "--- a/django/contrib/messages/storage/cookie.py\n+++ b/django/contrib/messages/storage/cookie.py\n@@ -15,7 +15,7 @@\n             obj.level,\n             obj.message,\n         ]\n-        if obj.extra_tags:\n+        if obj.extra_tags is not None:\n             message.append(obj.extra_tags)\n         return message\n     return super().default(obj)",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T22:51:04.089906+00:00",
+      "experiment_id": "debate_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 767,
+      "output_tokens": 499,
+      "latency_ms": 9636
+    },
+    {
+      "timestamp": "2026-02-14T22:51:12.687311+00:00",
+      "experiment_id": "debate_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3180,
+      "output_tokens": 564,
+      "latency_ms": 8596
+    },
+    {
+      "timestamp": "2026-02-14T22:51:22.201967+00:00",
+      "experiment_id": "debate_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3180,
+      "output_tokens": 564,
+      "latency_ms": 9513
+    },
+    {
+      "timestamp": "2026-02-14T22:51:25.427259+00:00",
+      "experiment_id": "debate_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 890,
+      "output_tokens": 106,
+      "latency_ms": 3224
+    }
+  ],
+  "blackboard_final_state": null
+}

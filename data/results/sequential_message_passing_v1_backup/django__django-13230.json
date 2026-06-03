@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_django__django-13230_bd25da96",
+  "issue_id": "django__django-13230",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 12440,
+  "total_output_tokens": 5774,
+  "total_latency_ms": 92456,
+  "final_patch": "--- a/django/utils/feedgenerator.py\n+++ b/django/utils/feedgenerator.py\n@@ -85,7 +85,7 @@\n \n     def add_item(self, title, link, description, author_email=None,\n         author_name=None, author_link=None, pubdate=None, comments=None,\n-        unique_id=None, unique_id_is_permalink=None, enclosure=None, categories=(), item_copyright=None, ttl=None, updateddate=None, comments=None, **kwargs):\n+        unique_id=None, unique_id_is_permalink=None, enclosure=None, categories=(), item_copyright=None, ttl=None, updateddate=None, **kwargs):\n         \"\"\"\n         Adds an item to the feed. All args are expected to be Python Unicode\n         objects except pubdate and updateddate, which are datetime.datetime\n@@ -100,6 +100,7 @@\n             'author_link': author_link,\n             'pubdate': pubdate,\n             'updateddate': updateddate,\n+            'comments': comments,\n             'unique_id': unique_id,\n             'unique_id_is_permalink': unique_id_is_permalink,\n             'enclosure': enclosure,\n@@ -288,6 +289,8 @@\n             handler.addQuickElement(\"guid\", item['unique_id'], attrs)\n         if item['ttl'] is not None:\n             handler.addQuickElement(\"ttl\", item['ttl'])\n+        if item['comments'] is not None:\n+            handler.addQuickElement(\"comments\", item['comments'])\n \n         # Enclosure.\n         if item['enclosure'] is not None:\n@@ -385,6 +388,8 @@\n             handler.addQuickElement(\"updated\", rfc3339_date(item['updateddate']))\n \n         # Author information.\n+        if item['comments'] is not None:\n+            handler.addQuickElement(\"link\", \"\", {\"rel\": \"replies\", \"type\": \"text/html\", \"href\": item['comments']})\n         if item['author_name'] is not None:\n             handler.startElement(\"author\", {})\n             handler.addQuickElement(\"name\", item['author_name'])",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T03:28:53.412362+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 470,
+      "output_tokens": 483,
+      "latency_ms": 10610
+    },
+    {
+      "timestamp": "2026-02-14T03:29:07.466279+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3346,
+      "output_tokens": 974,
+      "latency_ms": 14052
+    },
+    {
+      "timestamp": "2026-02-14T03:29:15.952210+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 853,
+      "output_tokens": 385,
+      "latency_ms": 8485
+    },
+    {
+      "timestamp": "2026-02-14T03:29:44.513268+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3856,
+      "output_tokens": 2439,
+      "latency_ms": 28559
+    },
+    {
+      "timestamp": "2026-02-14T03:29:52.523312+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1610,
+      "output_tokens": 332,
+      "latency_ms": 8009
+    },
+    {
+      "timestamp": "2026-02-14T03:30:04.129808+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1122,
+      "output_tokens": 755,
+      "latency_ms": 11605
+    },
+    {
+      "timestamp": "2026-02-14T03:30:15.255557+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1183,
+      "output_tokens": 406,
+      "latency_ms": 11125
+    }
+  ],
+  "blackboard_final_state": null
+}

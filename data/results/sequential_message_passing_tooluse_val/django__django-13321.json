@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-13321_859e1a0f",
+  "issue_id": "django__django-13321",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 99172,
+  "total_output_tokens": 7182,
+  "total_latency_ms": 153693,
+  "final_patch": "--- a/django/contrib/sessions/backends/base.py\n+++ b/django/contrib/sessions/backends/base.py\n@@ -119,8 +119,18 @@ class SessionBase:\n     def decode(self, session_data):\n         try:\n             return signing.loads(session_data, salt=self.key_salt, serializer=self.serializer)\n-        # RemovedInDjango40Warning: when the deprecation ends, handle here\n-        # exceptions similar to what _legacy_decode() does now.\n         except Exception:\n-            return self._legacy_decode(session_data)\n+            # RemovedInDjango40Warning: when the deprecation ends, handle here\n+            # exceptions similar to what _legacy_decode() does now.\n+            try:\n+                return self._legacy_decode(session_data)\n+            except Exception as e:\n+                # _legacy_decode() already logs SuspiciousOperation exceptions,\n+                # so only log other exception types to avoid duplicate logging.\n+                # Return empty dict to prevent session data corruption from\n+                # crashing the application.\n+                if not isinstance(e, SuspiciousOperation):\n+                    logger = logging.getLogger('django.security.SuspiciousSession')\n+                    logger.warning('Invalid session data: %s', e)\n+                return {}\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-20T23:04:52.403316+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1867,
+      "output_tokens": 615,
+      "latency_ms": 11415
+    },
+    {
+      "timestamp": "2026-02-20T23:05:15.939965+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 24289,
+      "output_tokens": 1294,
+      "latency_ms": 22659
+    },
+    {
+      "timestamp": "2026-02-20T23:05:23.042499+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 717,
+      "output_tokens": 299,
+      "latency_ms": 7101
+    },
+    {
+      "timestamp": "2026-02-20T23:05:56.083977+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 35157,
+      "output_tokens": 1964,
+      "latency_ms": 33041
+    },
+    {
+      "timestamp": "2026-02-20T23:06:02.974882+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 932,
+      "output_tokens": 334,
+      "latency_ms": 6890
+    },
+    {
+      "timestamp": "2026-02-20T23:06:35.800885+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 34917,
+      "output_tokens": 2097,
+      "latency_ms": 32825
+    },
+    {
+      "timestamp": "2026-02-20T23:06:44.696096+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 881,
+      "output_tokens": 370,
+      "latency_ms": 8894
+    },
+    {
+      "timestamp": "2026-02-20T23:07:14.677592+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13321",
+      "issue_id": "django__django-13321",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 412,
+      "output_tokens": 209,
+      "latency_ms": 4797
+    }
+  ],
+  "blackboard_final_state": null
+}

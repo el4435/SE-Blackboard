@@ -1,0 +1,9 @@
+# Abstract
+
+LLM-based multi-agent systems for software engineering typically employ message-passing communication, where agents relay information through sequential natural language messages. This architecture causes *knowledge drift*: key technical details progressively degrade as they pass through the agent chain.
+
+We present **SE-Blackboard**, a multi-agent framework that introduces the Blackboard shared-state architecture for software engineering, where all agents read from and write to a structured shared workspace. We further propose the **Information Fidelity Score (IFS)**, a metric that quantifies preservation of key technical entities across pipeline stages.
+
+In controlled experiments on 50 SWE-bench Lite issues comparing Message-Passing (MP), Blackboard (BB), and Hybrid architectures within a four-agent pipeline, BB improves Coder-stage information fidelity by 50% over MP (IFS: 0.584 vs. 0.390, Wilcoxon $p=0.058$). This translates to a correct file targeting rate of 83% for BB versus 55% for MP. The resolve rate increases from 12.0% (MP) to 16.0% (BB), though this difference is not statistically significant ($p=0.625$) due to limited sample size. A patch quality decomposition reveals that once the correct file is targeted, all modes achieve similar resolve rates (~22%), identifying LLM patch generation as the binding constraint rather than information quality.
+
+We propose an *information flow bottleneck model*: BB's upstream advantages (IFS +50%, file targeting +28pp) are attenuated by a systematic patch generation bottleneck, yielding an observed +4pp resolve gain consistent with the ~22% downstream conversion rate. Our findings demonstrate that shared-state communication effectively mitigates information loss and suggest its benefits will compound as LLM diff generation precision improves.

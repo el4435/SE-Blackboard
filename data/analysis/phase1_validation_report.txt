@@ -1,0 +1,106 @@
+Phase 1 验证结果
+================
+
+验证 Issues: [django__django-11179, django__django-12700, django__django-13028, django__django-13230, django__django-15347]
+(全部为 BB 配置下已 resolved 的 Easy issue)
+
+组 A (BB + whole_file + fallback):
+  Resolved: 4/5
+  Apply success: 4/5
+  Apply methods: {patch_fuzz3: 3, patch_strict: 1}
+  Empty patches: 1/5 (django-13028, file too large for whole-file mode)
+  Avg tokens: 53,823
+
+组 B (MP + whole_file + fallback):
+  Resolved: 2/5
+  Apply success: 4/5
+  Apply methods: {patch_fuzz3: 4}
+  Empty patches: 1/5 (django-13028)
+  Avg tokens: 29,999
+
+组 C (BB + diff + fallback):
+  Resolved: 5/5 (原始实验全部 resolved)
+  Apply success: 5/5
+  Apply methods: {patch_fuzz3: 4, patch_strict: 1}
+  Empty patches: 0/5
+  Avg tokens: 47,834
+
+详细结果
+--------
+
+Issue-level breakdown:
+
+| Issue             | Group A (BB+WF) | Group B (MP+WF) | Group C (BB+diff) |
+|-------------------|-----------------|-----------------|-------------------|
+| django-11179      | RESOLVED        | RESOLVED        | RESOLVED          |
+| django-12700      | RESOLVED        | FAILED          | RESOLVED          |
+| django-13028      | FAILED          | FAILED          | RESOLVED          |
+| django-13230      | RESOLVED        | RESOLVED        | RESOLVED          |
+| django-15347      | RESOLVED        | FAILED          | RESOLVED          |
+
+Token comparison:
+
+| Issue             | Group A tokens | Group B tokens | Group C tokens |
+|-------------------|---------------|---------------|---------------|
+| django-11179      | 22,349        | 19,145        | 76,151        |
+| django-12700      | 35,370        | 41,190        | 30,485        |
+| django-13028      | 138,633       | 55,360        | 68,960        |
+| django-13230      | 43,693        | 11,903        | 30,918        |
+| django-15347      | 29,069        | 22,398        | 32,656        |
+
+分析
+----
+
+1. 组 C (regression check): PASS
+   - 5/5 全部仍然 resolved，fallback apply 没有破坏已有结果
+   - 所有 patch 都通过 fallback 策略成功 apply（4x patch_fuzz3, 1x patch_strict）
+   - 说明 fallback apply 实现正确且安全
+
+2. 组 A (BB + whole_file): PASS (4/5 ≥ 4)
+   - 4/5 resolved，唯一失败的 django-13028 因文件过大（sql/query.py >1600行）
+   - LLM 无法在 16K token 限制内输出完整文件，导致 extract_file_blocks() 匹配失败
+   - 成功的 4 个 issue 都正确生成了 diff 并通过 fallback apply
+   - apply_method 分布合理：主要用 patch_fuzz3（因 difflib 生成的 diff 与原始上下文有微小差异）
+
+3. 组 B (MP + whole_file): 2/5
+   - MP 模式下 whole_file 效果较差，2/5 resolved
+   - django-15347: patch 成功 apply 但测试不通过（修复逻辑有误）
+   - django-12700: 前两次 extract_file_blocks 失败，第三次成功但修复不正确
+   - django-13028: 同组 A，文件过大导致空 patch
+   - MP 本身缺少 blackboard 的结构化信息，影响代码质量
+
+4. Token 消耗:
+   - whole_file 模式在小文件上 token 消耗合理（11K-43K）
+   - 大文件（django-13028）whole_file 消耗极高（138K），远超 diff 模式
+   - Group C (diff+fallback) 平均 47,834 tokens，与 v3 基线一致
+
+已发现并修复的 bug
+------------------
+
+1. MAX_TOKENS_PER_CALL=4096 对 whole-file 模式过小
+   - 修复: 新增 WHOLE_FILE_MAX_TOKENS=16384 设置
+   - 在 LLMClient.call() 和 BaseAgent._call_llm() 添加 max_tokens 参数
+   - _execute_whole_file() 使用 16384 token 限制
+
+2. (之前已修复) _call_llm_structured 无法处理大文件内容的 JSON 序列化
+   - 修复: 改用 _call_llm (free-form text) 模式
+
+已知限制
+--------
+
+- whole_file 模式不适合 >1000 行的大文件（LLM 无法在 token 限制内输出完整内容）
+- Phase 2 应考虑对大文件自动 fallback 到 diff 模式
+- patch_fuzz3 是主要的 apply 方法，说明 difflib 生成的 diff 上下文不够精确
+
+结论: PASS
+==========
+
+决策树判定:
+- 组 C 全部 resolved ✓ (5/5, 无 regression)
+- 组 A ≥ 4/5 resolved ✓ (4/5)
+→ PASS，可以进入 Phase 2（22 个 Easy issues 完整实验）
+
+建议 Phase 2 改进:
+1. 对文件行数 > WHOLE_FILE_MAX_LINES(2000) 的 issue，自动 fallback 到 diff 模式
+2. 考虑在 whole_file 提示中加入文件路径确认，减少 extract_file_blocks 失败率
+3. 收集 apply_method 分布数据，评估 fallback 策略效果

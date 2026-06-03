@@ -1,0 +1,112 @@
+{
+  "experiment_id": "seq_message_passing_django__django-14238_a9eb90ed",
+  "issue_id": "django__django-14238",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 48772,
+  "total_output_tokens": 3889,
+  "total_latency_ms": 89184,
+  "final_patch": "--- a/django/db/models/fields/__init__.py\n+++ b/django/db/models/fields/__init__.py\n@@ -2544,8 +2544,10 @@\n     of a specific AutoField variant.\n     \"\"\"\n     def __subclasscheck__(cls, subclass):\n+        if cls not in cls._subclasses:\n+            return super().__subclasscheck__(subclass)\n         for base in subclass.__mro__:\n             if base in cls._subclasses[cls]:\n                 return True\n-        return False\n+        return super().__subclasscheck__(subclass)\n",
+  "apply_method": "failed",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T22:47:48.488404+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1317,
+      "output_tokens": 554,
+      "latency_ms": 9693
+    },
+    {
+      "timestamp": "2026-02-22T22:48:02.702532+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 14993,
+      "output_tokens": 800,
+      "latency_ms": 13604
+    },
+    {
+      "timestamp": "2026-02-22T22:48:08.371556+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 718,
+      "output_tokens": 308,
+      "latency_ms": 5667
+    },
+    {
+      "timestamp": "2026-02-22T22:48:20.324792+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 14898,
+      "output_tokens": 656,
+      "latency_ms": 11952
+    },
+    {
+      "timestamp": "2026-02-22T22:48:28.558042+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 671,
+      "output_tokens": 372,
+      "latency_ms": 8232
+    },
+    {
+      "timestamp": "2026-02-22T22:48:45.440438+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 15013,
+      "output_tokens": 944,
+      "latency_ms": 16881
+    },
+    {
+      "timestamp": "2026-02-22T22:48:48.688548+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 754,
+      "output_tokens": 139,
+      "latency_ms": 3247
+    },
+    {
+      "timestamp": "2026-02-22T22:49:07.735968+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 116,
+      "latency_ms": 3053
+    }
+  ],
+  "blackboard_final_state": null
+}

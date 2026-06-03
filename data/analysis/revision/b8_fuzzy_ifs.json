@@ -1,0 +1,167 @@
+{
+  "per_issue": [
+    {
+      "issue_id": "django__django-11179",
+      "n_entities": 2,
+      "MP_rule": 1.0,
+      "MP_fuzzy": 1.0,
+      "BB_rule": 1.0,
+      "BB_fuzzy": 1.0
+    },
+    {
+      "issue_id": "django__django-12700",
+      "n_entities": 7,
+      "MP_rule": 0.4286,
+      "MP_fuzzy": 0.4286,
+      "BB_rule": 0.8571,
+      "BB_fuzzy": 0.5714
+    },
+    {
+      "issue_id": "django__django-12908",
+      "n_entities": 14,
+      "MP_rule": 0.1429,
+      "MP_fuzzy": 0.1429,
+      "BB_rule": 0.2857,
+      "BB_fuzzy": 0.2143
+    },
+    {
+      "issue_id": "django__django-12915",
+      "n_entities": 12,
+      "MP_rule": 0.75,
+      "MP_fuzzy": 0.4167,
+      "BB_rule": 0.5,
+      "BB_fuzzy": 0.3333
+    },
+    {
+      "issue_id": "django__django-13028",
+      "n_entities": 35,
+      "MP_rule": 0.0857,
+      "MP_fuzzy": 0.0571,
+      "BB_rule": 0.1714,
+      "BB_fuzzy": 0.1429
+    },
+    {
+      "issue_id": "django__django-13230",
+      "n_entities": 3,
+      "MP_rule": 1.0,
+      "MP_fuzzy": 1.0,
+      "BB_rule": 1.0,
+      "BB_fuzzy": 1.0
+    },
+    {
+      "issue_id": "django__django-13321",
+      "n_entities": 47,
+      "MP_rule": 0.1489,
+      "MP_fuzzy": 0.1915,
+      "BB_rule": 0.1064,
+      "BB_fuzzy": 0.1064
+    },
+    {
+      "issue_id": "django__django-14238",
+      "n_entities": 33,
+      "MP_rule": 0.0909,
+      "MP_fuzzy": 0.0303,
+      "BB_rule": 0.2727,
+      "BB_fuzzy": 0.1818
+    },
+    {
+      "issue_id": "django__django-15347",
+      "n_entities": 11,
+      "MP_rule": 0.2727,
+      "MP_fuzzy": 0.2727,
+      "BB_rule": 0.4545,
+      "BB_fuzzy": 0.5455
+    },
+    {
+      "issue_id": "django__django-16379",
+      "n_entities": 11,
+      "MP_rule": 0.8182,
+      "MP_fuzzy": 0.6364,
+      "BB_rule": 0.8182,
+      "BB_fuzzy": 0.7273
+    },
+    {
+      "issue_id": "sympy__sympy-13895",
+      "n_entities": 1,
+      "MP_rule": 0.0,
+      "MP_fuzzy": 0.0,
+      "BB_rule": null,
+      "BB_fuzzy": 0.0
+    },
+    {
+      "issue_id": "sympy__sympy-15345",
+      "n_entities": 1,
+      "MP_rule": 0.0,
+      "MP_fuzzy": 0.0,
+      "BB_rule": null,
+      "BB_fuzzy": 0.0
+    },
+    {
+      "issue_id": "sympy__sympy-20049",
+      "n_entities": 9,
+      "MP_rule": 0.0,
+      "MP_fuzzy": 0.0,
+      "BB_rule": 0.6667,
+      "BB_fuzzy": 0.5556
+    },
+    {
+      "issue_id": "sympy__sympy-21171",
+      "n_entities": 27,
+      "MP_rule": 0.0,
+      "MP_fuzzy": 0.0,
+      "BB_rule": 0.1111,
+      "BB_fuzzy": 0.0741
+    },
+    {
+      "issue_id": "sympy__sympy-24213",
+      "n_entities": 6,
+      "MP_rule": 0.6667,
+      "MP_fuzzy": 0.3333,
+      "BB_rule": 0.6667,
+      "BB_fuzzy": 0.5
+    },
+    {
+      "issue_id": "pytest-dev__pytest-11143",
+      "n_entities": 31,
+      "MP_rule": 0.0323,
+      "MP_fuzzy": 0.0645,
+      "BB_rule": 0.0645,
+      "BB_fuzzy": 0.0968
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-8713",
+      "n_entities": 8,
+      "MP_rule": 0.75,
+      "MP_fuzzy": 0.625,
+      "BB_rule": 0.875,
+      "BB_fuzzy": 0.75
+    },
+    {
+      "issue_id": "astropy__astropy-14182",
+      "n_entities": 17,
+      "MP_rule": 0.2941,
+      "MP_fuzzy": 0.1765,
+      "BB_rule": 0.4706,
+      "BB_fuzzy": 0.5294
+    },
+    {
+      "issue_id": "pydata__xarray-3364",
+      "n_entities": 2,
+      "MP_rule": 1.0,
+      "MP_fuzzy": 1.0,
+      "BB_rule": 1.0,
+      "BB_fuzzy": 1.0
+    }
+  ],
+  "summary": {
+    "subset_size": 19,
+    "MP_rule_mean": 0.3937,
+    "MP_fuzzy_mean": 0.3356,
+    "BB_rule_mean": 0.5483,
+    "BB_fuzzy_mean": 0.4384,
+    "delta_fuzzy_minus_rule_MP": -0.0581,
+    "delta_fuzzy_minus_rule_BB": -0.1099,
+    "bb_over_mp_rule_relative": 0.3927,
+    "bb_over_mp_fuzzy_relative": 0.3063
+  }
+}

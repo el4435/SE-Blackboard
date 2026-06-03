@@ -1,0 +1,28 @@
+\begin{table}[t]
+\centering
+\caption{Statistical test results. Significance at $\alpha=0.05$ marked with *.}
+\label{tab:statistics}
+\begin{tabular}{llrl}
+\toprule
+\textbf{Test} & \textbf{Comparison} & \textbf{Statistic} & \textbf{$p$-value} \\
+\midrule
+\multicolumn{4}{l}{\textit{Resolve Rate (McNemar's exact)}} \\
+ & MP vs BB & $b$=1, $c$=3 & $p=0.625$ \\
+ & MP vs Hybrid & $b$=1, $c$=1 & $p=1.000$ \\
+ & BB vs Hybrid & $b$=2, $c$=0 & $p=0.500$ \\
+\midrule
+\multicolumn{4}{l}{\textit{Effect Size (Cohen's $h$)}} \\
+ & BB vs MP & $h=0.1156$ & negligible \\
+\midrule
+\multicolumn{4}{l}{\textit{Odds Ratio (BB vs MP)}} \\
+ & BB vs MP & OR=1.40  & 95\%CI [0.45, 4.37] \\
+\midrule
+\multicolumn{4}{l}{\textit{Token Cost (Wilcoxon signed-rank)}} \\
+ & MP vs BB & $W=34$ & $p<0.001$* \\
+ & MP vs Hybrid & $W=183$ & $p<0.001$* \\
+\midrule
+\multicolumn{4}{l}{\textit{IFS Coder Stage (Wilcoxon signed-rank)}} \\
+ & MP vs BB & $W=36.5$ & $p=0.058$ \\
+\bottomrule
+\end{tabular}
+\end{table}

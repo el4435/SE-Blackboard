@@ -19,7 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 FIGURES_DIR = PROJECT_ROOT / "figures"
 FIGURES_DIR.mkdir(exist_ok=True)
 
-# Style
+# ── Style ────────────────────────────────────────────────────────────
 matplotlib.rcParams["font.family"] = "serif"
 matplotlib.rcParams["font.size"] = 11
 matplotlib.rcParams["figure.dpi"] = 300
@@ -40,7 +40,7 @@ def generate():
     ax.set_title("Information Flow Bottleneck Model",
                  fontsize=15, fontweight="bold", pad=18)
 
-    # Stage definitions
+    # ── Stage definitions ────────────────────────────────────────────
     # (label, bb_val, mp_val, diff_text, is_bottleneck)
     stages = [
         ("Issue",                    None,    None,    None,    None),
@@ -65,7 +65,7 @@ def generate():
         y_bot = y_center - box_h / 2
         box_positions.append((x, y_center))
 
-        # Box style
+        # ── Box style ────────────────────────────────────────────────
         if is_bottleneck is None:
             # "Issue" box — neutral gray
             fc, ec, ls, lw = GRAY_BG, "#AAAAAA", "solid", 1.5
@@ -83,7 +83,7 @@ def generate():
         )
         ax.add_patch(rect)
 
-        # Stage label (top of box)
+        # ── Stage label (top of box) ─────────────────────────────────
         if is_bottleneck is None:
             # "Issue" — centered single label
             ax.text(x + box_w / 2, y_center, label,
@@ -94,7 +94,7 @@ def generate():
                     ha="center", va="top", fontsize=11, fontweight="bold",
                     color=BLACK, linespacing=1.1)
 
-        # BB / MP values
+        # ── BB / MP values ───────────────────────────────────────────
         if bb_val and mp_val:
             bb_color = BLACK
             ax.text(x + box_w / 2, y_center - 0.15, bb_val,
@@ -109,7 +109,7 @@ def generate():
                         ha="center", va="center", fontsize=9,
                         color=BLACK, fontstyle="italic")
 
-        # Difference annotation (bottom of green boxes)
+        # ── Difference annotation (bottom of green boxes) ────────────
         if diff_text and not is_bottleneck:
             # Small green badge at bottom
             badge_y = y_bot + 0.35
@@ -123,7 +123,7 @@ def generate():
                     ha="center", va="center", fontsize=9,
                     color=BLACK, fontweight="bold")
 
-        # Arrow to next stage
+        # ── Arrow to next stage ──────────────────────────────────────
         if i < n - 1:
             arrow_x_start = x + box_w + 0.05
             arrow_x_end = x + box_w + gap - 0.05
@@ -140,7 +140,7 @@ def generate():
                             arrowprops=dict(arrowstyle="->, head_width=0.3",
                                             color="#666666", lw=1.8))
 
-    # BOTTLENECK label under the patch generation box
+    # ── BOTTLENECK label under the patch generation box ──────────────
     bottleneck_x = x_start + 3 * (box_w + gap) + box_w / 2
     bottleneck_y = y_center - box_h / 2 - 0.35
     bbox_props = dict(boxstyle="round,pad=0.15", facecolor=RED_BG,
@@ -149,7 +149,7 @@ def generate():
             ha="center", va="center", fontsize=10, fontweight="bold",
             color=RED_BORDER, bbox=bbox_props)
 
-    # Legend
+    # ── Legend ───────────────────────────────────────────────────────
     legend_elements = [
         mpatches.Patch(facecolor=GREEN_BG, edgecolor=GREEN,
                        linewidth=1.5, label="BB > MP (upstream advantage)"),
@@ -160,7 +160,7 @@ def generate():
     ax.legend(handles=legend_elements, loc="lower right", fontsize=9,
               framealpha=0.9, edgecolor="#CCCCCC")
 
-    # Save
+    # ── Save ─────────────────────────────────────────────────────────
     plt.tight_layout()
     fig.savefig(FIGURES_DIR / "fig4_bottleneck_model.pdf", bbox_inches="tight")
     fig.savefig(FIGURES_DIR / "fig4_bottleneck_model.png", bbox_inches="tight", dpi=300)

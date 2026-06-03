@@ -1,0 +1,132 @@
+{
+  "experiment_id": "deb_hybrid_django__django-13028_16ed9fd8",
+  "issue_id": "django__django-13028",
+  "topology": "debate",
+  "communication": "hybrid",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 23787,
+  "total_output_tokens": 3960,
+  "total_latency_ms": 59944,
+  "final_patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1128,6 +1128,11 @@\n     def check_filterable(self, expression):\n         \"\"\"Raise an error if expression cannot be used in a WHERE clause.\"\"\"\n-        if hasattr(expression, 'filterable') and not expression.filterable:\n+        # Model instances are always filterable, even if they have a field\n+        # named 'filterable'. Only check the filterable attribute for\n+        # expressions that are not model instances.\n+        from django.db.models import Model\n+        if (not isinstance(expression, Model) and\n+                hasattr(expression, 'filterable') and not expression.filterable):\n             raise NotSupportedError(\n                 expression.__class__.__name__ + ' is disallowed in the filter '\n                 'clause.'\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T02:58:57.076524+00:00",
+      "experiment_id": "debate_hybrid_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Deb-H",
+      "agent_role": "Planner",
+      "communication_mode": "hybrid",
+      "iteration": 0,
+      "input_tokens": 6180,
+      "output_tokens": 1333,
+      "latency_ms": 23170
+    },
+    {
+      "timestamp": "2026-02-15T02:59:08.666216+00:00",
+      "experiment_id": "debate_hybrid_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Deb-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 6758,
+      "output_tokens": 882,
+      "latency_ms": 11588
+    },
+    {
+      "timestamp": "2026-02-15T02:59:24.675760+00:00",
+      "experiment_id": "debate_hybrid_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Deb-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 7223,
+      "output_tokens": 1302,
+      "latency_ms": 16008
+    },
+    {
+      "timestamp": "2026-02-15T02:59:33.847011+00:00",
+      "experiment_id": "debate_hybrid_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Deb-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 3626,
+      "output_tokens": 443,
+      "latency_ms": 9170
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-13028",
+      "problem_statement": "Queryset raises NotSupportedError when RHS has filterable=False attribute.\nDescription\n\t \n\t\t(last modified by Nicolas Baccelli)\n\t \nI'm migrating my app to django 3.0.7 and I hit a strange behavior using a model class with a field labeled filterable\nclass ProductMetaDataType(models.Model):\n\tlabel = models.CharField(max_length=255, unique=True, blank=False, null=False)\n\tfilterable = models.BooleanField(default=False, verbose_name=_(\"filterable\"))\n\tclass Meta:\n\t\tapp_label = \"adminpricing\"\n\t\tverbose_name = _(\"product meta data type\")\n\t\tverbose_name_plural = _(\"product meta data types\")\n\tdef __str__(self):\n\t\treturn self.label\nclass ProductMetaData(models.Model):\n\tid = models.BigAutoField(primary_key=True)\n\tproduct = models.ForeignKey(\n\t\tProduit, null=False, blank=False, on_delete=models.CASCADE\n\t)\n\tvalue = models.TextField(null=False, blank=False)\n\tmarketplace = models.ForeignKey(\n\t\tPlateforme, null=False, blank=False, on_delete=models.CASCADE\n\t)\n\tdate_created = models.DateTimeField(null=True, default=timezone.now)\n\tmetadata_type = models.ForeignKey(\n\t\tProductMetaDataType, null=False, blank=False, on_delete=models.CASCADE\n\t)\n\tclass Meta:\n\t\tapp_label = \"adminpricing\"\n\t\tverbose_name = _(\"product meta data\")\n\t\tverbose_name_plural = _(\"product meta datas\")\nError happened when filtering ProductMetaData with a metadata_type :\nProductMetaData.objects.filter(value=\"Dark Vador\", metadata_type=self.brand_metadata)\nError traceback :\nTraceback (most recent call last):\n File \"/backoffice/backoffice/adminpricing/tests/test_pw.py\", line 481, in test_checkpolicywarning_by_fields\n\tfor p in ProductMetaData.objects.filter(\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/manager.py\", line 82, in manager_method\n\treturn getattr(self.get_queryset(), name)(*args, **kwargs)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/query.py\", line 904, in filter\n\treturn self._filter_or_exclude(False, *args, **kwargs)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/query.py\", line 923, in _filter_or_exclude\n\tclone.query.add_q(Q(*args, **kwargs))\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1351, in add_q\n\tclause, _ = self._add_q(q_object, self.used_aliases)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1378, in _add_q\n\tchild_clause, needed_inner = self.build_filter(\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1264, in build_filter\n\tself.check_filterable(value)\n File \"/usr/local/lib/python3.8/site-packages/django/db/models/sql/query.py\", line 1131, in check_filterable\n\traise NotSupportedError(\ndjango.db.utils.NotSupportedError: ProductMetaDataType is disallowed in the filter clause.\nI changed label to filterable_test and it fixed this issue\nThis should be documented or fix.\n",
+      "repo": "django/django",
+      "base_commit": "78ad4b4b0201003792bfdbf1a7781cbc9ee03539",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The `check_filterable` method in `django/db/models/sql/query.py` checks for a `filterable` attribute on the right-hand side value used in filters. When a model instance has a field named `filterable` set to `False`, Django incorrectly interprets this user-defined field as Django's internal `filterable` marker, causing it to reject the model instance as a filter value. The method uses `hasattr(value, 'filterable')` which matches any object attribute named `filterable`, not just Django's internal query expression marker.",
+      "relevant_files": [
+        "django/db/models/sql/query.py"
+      ],
+      "relevant_functions": [
+        "django.db.models.sql.query.Query.check_filterable",
+        "django.db.models.sql.query.Query.build_filter"
+      ],
+      "fix_strategy": "1. Locate the `check_filterable` method in `django/db/models/sql/query.py` (around line 1131 based on the traceback).\n\n2. The current implementation checks `hasattr(value, 'filterable')` and `not value.filterable`, which incorrectly matches user-defined model fields named `filterable`.\n\n3. Modify the check to distinguish between Django's internal query expression objects and model instances. The best approach is to check if the value is a Model instance before checking the `filterable` attribute, since Model instances should always be allowed in filters regardless of their field names.\n\n4. Add a condition like `from django.db.models import Model` and check `isinstance(value, Model)` to skip the filterable check for model instances.\n\n5. Alternatively, make the check more specific by verifying the value is a query expression type (like Expression, Subquery, etc.) before checking the `filterable` attribute.\n\n6. Add test cases to verify that model instances with a field named `filterable` can be used in filters, while query expressions with `filterable=False` are still properly rejected.",
+      "confidence": 0.95,
+      "relevant_code": "## Source Code Context\n\n## File: django/db/models/sql/query.py\n```python\n# Mock content for django/db/models/sql/query.py\n# This is a placeholder.\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder_A",
+        "diff": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1128,6 +1128,11 @@\n     def check_filterable(self, expression):\n         \"\"\"Raise an error if expression cannot be used in a WHERE clause.\"\"\"\n-        if hasattr(expression, 'filterable') and not expression.filterable:\n+        # Model instances are always filterable, even if they have a field\n+        # named 'filterable'. Only check the filterable attribute for\n+        # expressions that are not model instances.\n+        from django.db.models import Model\n+        if (not isinstance(expression, Model) and\n+                hasattr(expression, 'filterable') and not expression.filterable):\n             raise NotSupportedError(\n                 expression.__class__.__name__ + ' is disallowed in the filter '\n                 'clause.'\n",
+        "description": "Fix NotSupportedError when filtering with model instances that have a 'filterable' field. The check_filterable method now skips the filterable attribute check for Model instances, since they should always be allowed in filter clauses regardless of their field names. Only Django's internal query expression objects are subject to the filterable check.",
+        "timestamp": "2026-02-15T02:59:08.666590Z"
+      },
+      {
+        "version": 1,
+        "author": "Coder_B",
+        "diff": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -1128,7 +1128,10 @@\n     def check_filterable(self, expression):\n         \"\"\"Raise an error if expression cannot be used in a WHERE clause.\"\"\"\n-        if hasattr(expression, 'filterable') and not expression.filterable:\n+        from django.db.models import Model\n+        if (not isinstance(expression, Model) and\n+                hasattr(expression, 'filterable') and\n+                not expression.filterable):\n             raise NotSupportedError(\n                 expression.__class__.__name__ + ' is disallowed in the filter '\n                 'clause.'\n",
+        "description": "Fix check_filterable to avoid rejecting model instances with a 'filterable' field. The method now checks if the value is a Model instance before checking the filterable attribute. Model instances are always valid filter values regardless of their field names, while only Django's internal query expression objects with filterable=False should be rejected.",
+        "timestamp": "2026-02-15T02:59:24.676188Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider adding a test case to verify that model instances with a 'filterable' field set to False can be used in filter clauses",
+          "Consider adding a test case to verify that query expressions with filterable=False are still properly rejected",
+          "The import statement 'from django.db.models import Model' could potentially be moved to the top of the file for better performance, though the current placement is acceptable for clarity"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 1,
+        "passed": true,
+        "pass_count": 42,
+        "fail_count": 0,
+        "failing_tests": [],
+        "error_traces": []
+      }
+    ],
+    "metadata": {
+      "status": "resolved",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-15T02:58:33.904062Z",
+      "end_time": null
+    }
+  }
+}

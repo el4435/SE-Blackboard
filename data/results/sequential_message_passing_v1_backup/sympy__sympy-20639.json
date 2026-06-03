@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-20639_5e80cd57",
+  "issue_id": "sympy__sympy-20639",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 12076,
+  "total_output_tokens": 5192,
+  "total_latency_ms": 101172,
+  "final_patch": "--- a/sympy/printing/pretty/pretty.py\n+++ b/sympy/printing/pretty/pretty.py\n@@ -1,3 +1,100 @@\n-# Mock content for sympy/printing/pretty/pretty.py\n-# This is a placeholder.\n+from sympy.core.sympify import SympifyError\n+from sympy.printing.printer import Printer\n+from sympy.printing.pretty.stringpict import prettyForm, stringPict\n+from sympy.printing.pretty.pretty_symbology import xstr, hobj, vobj, xobj, \\\n+    xsym, pretty_symbol, pretty_atom, pretty_use_unicode, greek_unicode, \\\n+    pretty_try_use_unicode, annotated\n+\n+class PrettyPrinter(Printer):\n+    \"\"\"Printer which converts an expression into 2D ASCII-art figure.\"\"\"\n+    printmethod = \"_pretty\"\n+\n+    _default_settings = {\n+        \"order\": None,\n+        \"full_prec\": \"auto\",\n+        \"use_unicode\": None,\n+        \"wrap_line\": True,\n+        \"num_columns\": None,\n+        \"use_unicode_sqrt_char\": True,\n+    }\n+\n+    def __init__(self, settings=None):\n+        Printer.__init__(self, settings)\n+        self.emptyPrinter = lambda x: prettyForm(xstr(x))\n+\n+    def _print_Pow(self, power):\n+        from sympy.simplify.simplify import fraction\n+        b, e = power.as_base_exp()\n+        if power.is_commutative:\n+            if e is S.NegativeOne:\n+                return prettyForm(\"1\")/self._print(b)\n+            n, d = fraction(e)\n+            if n is S.One and d.is_Atom and not e.is_Integer and self._settings['root_notation']:\n+                return self._print_nth_root(b, e)\n+            if e.is_Rational and e < 0:\n+                return prettyForm(\"1\")/self._print(Pow(b, -e, evaluate=False))\n+\n+        if b.is_RelationalOperator:\n+            return prettyForm(*self._print(b).parens()).__pow__(self._print(e))\n+\n+        return self._print(b)**self._print(e)\n+\n+    def _print_nth_root(self, base, expt):\n+        \"\"\"Print nth root of base with exponent 1/n.\"\"\"\n+        bpretty = self._print(base)\n+\n+        # Determine if we should use root notation\n+        # expt should be a simple rational 1/n where n is a positive integer > 1\n+        # We need to ensure expt is actually a Rational number (not symbolic)\n+        if expt.is_Rational and expt.p == 1 and expt.q.is_Integer and expt.q > 1 and not expt.free_symbols:\n+            n = expt.q\n+        else:\n+            # Fall back to power notation for symbolic or non-standard exponents\n+            return self._print(base)**self._print(expt)\n+\n+        # Use root notation\n+        if n == 2:\n+            # Square root\n+            if self._settings['use_unicode']:\n+                return prettyForm(*bpretty.root(n))\n+            else:\n+                return prettyForm('sqrt(%s)' % bpretty)\n+        else:\n+            # nth root\n+            return prettyForm(*bpretty.root(n))\n+\n+def pretty(expr, **settings):\n+    \"\"\"Returns a string containing the prettified form of expr.\n+\n+    For information on keyword arguments see pretty_print function.\n+\n+    \"\"\"\n+    pp = PrettyPrinter(settings)\n+\n+    # XXX: this is an ugly hack, but at least it works\n+    use_unicode = pp._settings['use_unicode']\n+    uflag = pretty_use_unicode(use_unicode)\n+\n+    try:\n+        return pp.doprint(expr)\n+    finally:\n+        pretty_use_unicode(uflag)\n+\n+\n+def pretty_print(expr, **settings):\n+    \"\"\"Prints expr in pretty form.\n+\n+    pprint is just a shortcut for this function.\n+\n+    Parameters\n+    ==========\n+\n+    expr : expression\n+        the expression to print\n+    wrap_line : bool, optional (default=True)\n+        line wrapping enabled/disabled\n+    num_columns : int or None, optional (default=None)\n+        number of columns before line breaking (default to None which reads\n+        the terminal width), useful when using SymPy without terminal.\n+    use_unicode : bool or None, optional (default=None)\n+        use unicode characters, such as the Greek letter pi instead of\n+        the string pi.\n+    full_prec : bool or string, optional (default=\"auto\")\n+        use full precision. Default is \"auto\"\n+    order : bool or string, optional (default=None)\n+        set to 'none' for long expressions if slow; default is None\n+    use_unicode_sqrt_char : bool, optional (default=True)\n+        use compact single-character square root symbol (when use_unicode=True)\n+    \"\"\"\n+    print(pretty(expr, **settings))\n+\n+pprint = pretty_print",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T04:45:15.573443+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 565,
+      "output_tokens": 597,
+      "latency_ms": 13217
+    },
+    {
+      "timestamp": "2026-02-14T04:45:27.180010+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3546,
+      "output_tokens": 785,
+      "latency_ms": 11605
+    },
+    {
+      "timestamp": "2026-02-14T04:45:39.230164+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 722,
+      "output_tokens": 431,
+      "latency_ms": 12049
+    },
+    {
+      "timestamp": "2026-02-14T04:45:52.651486+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 3161,
+      "output_tokens": 809,
+      "latency_ms": 13420
+    },
+    {
+      "timestamp": "2026-02-14T04:46:03.138784+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 779,
+      "output_tokens": 458,
+      "latency_ms": 10486
+    },
+    {
+      "timestamp": "2026-02-14T04:46:32.010944+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1254,
+      "output_tokens": 1621,
+      "latency_ms": 28871
+    },
+    {
+      "timestamp": "2026-02-14T04:46:43.526779+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-20639",
+      "issue_id": "sympy__sympy-20639",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 2049,
+      "output_tokens": 491,
+      "latency_ms": 11514
+    }
+  ],
+  "blackboard_final_state": null
+}

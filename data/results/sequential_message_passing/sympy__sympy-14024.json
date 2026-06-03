@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-14024_e15cd56b",
+  "issue_id": "sympy__sympy-14024",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 6787,
+  "total_output_tokens": 3122,
+  "total_latency_ms": 113733,
+  "final_patch": "--- a/django/db/models/sql/compiler.py\n+++ b/django/db/models/sql/compiler.py\n@@ -196,6 +196,14 @@\n                 if alias not in self.query.annotation_select:\n                     continue\n                 expr = self.query.annotations[alias]\n+                # Check if expression contains a subquery - these should not be\n+                # added to SELECT as they're already handled in annotations\n+                from django.db.models.expressions import Subquery\n+                def contains_subquery(expression):\n+                    if isinstance(expression, Subquery):\n+                        return True\n+                    return any(contains_subquery(source) for source in expression.get_source_expressions())\n+                \n                 if isinstance(expr, Ref):\n                     expr = self.query.annotations[expr.refs]\n                 if not self._gen_cols([expr], resolve_refs=False):\n@@ -203,7 +211,7 @@\n                 if expr not in select_cols:\n                     select_cols.append(expr)\n                 elif isinstance(expr, OrderBy):\n-                    if expr.expression not in select_cols:\n+                    if expr.expression not in select_cols and not contains_subquery(expr.expression):\n                         select_cols.append(expr.expression)\n         result = []\n         col_idx = 1\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:08:03.574689+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14024",
+      "issue_id": "sympy__sympy-14024",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 774,
+      "output_tokens": 817,
+      "latency_ms": 17702
+    },
+    {
+      "timestamp": "2026-02-16T18:08:42.305978+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14024",
+      "issue_id": "sympy__sympy-14024",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 446,
+      "output_tokens": 202,
+      "latency_ms": 5614
+    },
+    {
+      "timestamp": "2026-02-16T18:08:52.811266+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14024",
+      "issue_id": "sympy__sympy-14024",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2468,
+      "output_tokens": 660,
+      "latency_ms": 10504
+    },
+    {
+      "timestamp": "2026-02-16T18:09:01.643554+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14024",
+      "issue_id": "sympy__sympy-14024",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 693,
+      "output_tokens": 359,
+      "latency_ms": 8831
+    },
+    {
+      "timestamp": "2026-02-16T18:09:10.199910+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14024",
+      "issue_id": "sympy__sympy-14024",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1069,
+      "output_tokens": 501,
+      "latency_ms": 8555
+    },
+    {
+      "timestamp": "2026-02-16T18:09:20.636108+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14024",
+      "issue_id": "sympy__sympy-14024",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 929,
+      "output_tokens": 462,
+      "latency_ms": 10435
+    },
+    {
+      "timestamp": "2026-02-16T18:09:39.604061+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-14024",
+      "issue_id": "sympy__sympy-14024",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3070
+    }
+  ],
+  "blackboard_final_state": null
+}

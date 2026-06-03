@@ -1,0 +1,278 @@
+{
+  "experiment_id": "deb_blackboard_django__django-11564_1e8f35d6",
+  "issue_id": "django__django-11564",
+  "topology": "debate",
+  "communication": "blackboard",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 61902,
+  "total_output_tokens": 14949,
+  "total_latency_ms": 250048,
+  "final_patch": "--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -1,6 +1,7 @@\n from urllib.parse import urljoin\n \n from django import template\n+from django.utils.http import get_script_prefix\n from django.templatetags.static import static\n from django.utils.encoding import iri_to_uri\n from django.utils.html import conditional_escape\n@@ -65,7 +66,15 @@\n             prefix = self.handle_simple(name)\n         else:\n             prefix = settings.STATIC_URL if name == 'STATIC_URL' else settings.MEDIA_URL\n-        return prefix\n+        \n+        # Prepend SCRIPT_NAME prefix if it exists and URL is root-relative\n+        if prefix and prefix.startswith('/') and not prefix.startswith('//'):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/':\n+                    prefix = script_prefix.rstrip('/') + prefix\n+            except (AttributeError, RuntimeError):\n+                pass\n+        return prefix\n \n \n class StaticNode(template.Node):\n@@ -88,6 +97,15 @@\n             url = self.handle_simple(path)\n         else:\n             url = static(path)\n+        \n+        # Prepend SCRIPT_NAME prefix if URL is root-relative\n+        if url and url.startswith('/') and not url.startswith('//'):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/':\n+                    url = script_prefix.rstrip('/') + url\n+            except (AttributeError, RuntimeError):\n+                pass\n         return url\n \n     def render(self, context):\n--- a/django/core/files/storage.py\n+++ b/django/core/files/storage.py\n@@ -10,6 +10,7 @@\n from django.core.files import File, locks\n from django.core.files.move import file_move_safe\n from django.core.signals import setting_changed\n+from django.utils.http import get_script_prefix\n from django.utils._os import abspathu, safe_join\n from django.utils.crypto import get_random_string\n from django.utils.deconstruct import deconstructible\n@@ -332,7 +333,17 @@\n             raise ValueError(\"This file is not accessible via a URL.\")\n         url = filepath_to_uri(name)\n         if url is not None:\n-            url = url.lstrip('/')\n+            # Check if URL is root-relative (not absolute or protocol-relative)\n+            if url.startswith('/') and not url.startswith('//'):\n+                # Prepend SCRIPT_NAME prefix if it exists\n+                try:\n+                    script_prefix = get_script_prefix()\n+                    if script_prefix and script_prefix != '/':\n+                        url = script_prefix.rstrip('/') + url\n+                except (AttributeError, RuntimeError):\n+                    pass\n+            else:\n+                url = url.lstrip('/')\n         return urljoin(self.base_url, url)\n \n     def get_accessed_time(self, name):\n--- a/django/contrib/staticfiles/storage.py\n+++ b/django/contrib/staticfiles/storage.py\n@@ -11,6 +11,7 @@\n from django.core.files.storage import FileSystemStorage\n from django.utils.functional import LazyObject\n from django.contrib.staticfiles.utils import check_settings, matches_patterns\n+from django.utils.http import get_script_prefix\n \n \n class StaticFilesStorage(FileSystemStorage):\n@@ -28,7 +29,17 @@\n     def url(self, name):\n         if self.base_url is None:\n             raise ValueError(\"This file is not accessible via a URL.\")\n-        return super().url(name)\n+        url = super().url(name)\n+        \n+        # Prepend SCRIPT_NAME prefix if URL is root-relative\n+        if url and url.startswith('/') and not url.startswith('//'):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/':\n+                    url = script_prefix.rstrip('/') + url\n+            except (AttributeError, RuntimeError):\n+                pass\n+        return url\n \n \n class HashedFilesMixin:\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T02:39:25.736162+00:00",
+      "experiment_id": "debate_blackboard_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-B",
+      "agent_role": "Planner",
+      "communication_mode": "blackboard",
+      "iteration": 0,
+      "input_tokens": 3616,
+      "output_tokens": 2404,
+      "latency_ms": 34277
+    },
+    {
+      "timestamp": "2026-02-15T02:39:52.241873+00:00",
+      "experiment_id": "debate_blackboard_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 5436,
+      "output_tokens": 2214,
+      "latency_ms": 26504
+    },
+    {
+      "timestamp": "2026-02-15T02:40:34.175760+00:00",
+      "experiment_id": "debate_blackboard_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 2714,
+      "output_tokens": 617,
+      "latency_ms": 15846
+    },
+    {
+      "timestamp": "2026-02-15T02:41:00.795964+00:00",
+      "experiment_id": "debate_blackboard_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 2610,
+      "output_tokens": 1942,
+      "latency_ms": 26619
+    },
+    {
+      "timestamp": "2026-02-15T02:41:27.728751+00:00",
+      "experiment_id": "debate_blackboard_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 2610,
+      "output_tokens": 1942,
+      "latency_ms": 26931
+    },
+    {
+      "timestamp": "2026-02-15T02:41:51.848284+00:00",
+      "experiment_id": "debate_blackboard_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 14573,
+      "output_tokens": 1337,
+      "latency_ms": 24118
+    },
+    {
+      "timestamp": "2026-02-15T02:42:09.710025+00:00",
+      "experiment_id": "debate_blackboard_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 2328,
+      "output_tokens": 1424,
+      "latency_ms": 17860
+    },
+    {
+      "timestamp": "2026-02-15T02:42:27.898199+00:00",
+      "experiment_id": "debate_blackboard_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 2328,
+      "output_tokens": 1504,
+      "latency_ms": 18187
+    },
+    {
+      "timestamp": "2026-02-15T02:42:50.084383+00:00",
+      "experiment_id": "debate_blackboard_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 20233,
+      "output_tokens": 979,
+      "latency_ms": 22185
+    },
+    {
+      "timestamp": "2026-02-15T02:43:01.505274+00:00",
+      "experiment_id": "debate_blackboard_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Deb-B",
+      "agent_role": "Tester",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 5454,
+      "output_tokens": 586,
+      "latency_ms": 11419
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-11564",
+      "problem_statement": "Add support for SCRIPT_NAME in STATIC_URL and MEDIA_URL\nDescription\n\t \n\t\t(last modified by Rostyslav Bryzgunov)\n\t \nBy default, {% static '...' %} tag just appends STATIC_URL in the path. When running on sub-path, using SCRIPT_NAME WSGI param, it results in incorrect static URL - it doesn't prepend SCRIPT_NAME prefix.\nThis problem can be solved with prepending SCRIPT_NAME to STATIC_URL in settings.py but that doesn't work when SCRIPT_NAME is a dynamic value.\nThis can be easily added into default Django static tag and django.contrib.staticfiles tag as following:\ndef render(self, context):\n\turl = self.url(context)\n\t# Updating url here with request.META['SCRIPT_NAME'] \n\tif self.varname is None:\n\t\treturn url\n\tcontext[self.varname] = url\n\t\treturn ''\nOn more research I found that FileSystemStorage and StaticFilesStorage ignores SCRIPT_NAME as well. \nWe might have to do a lot of changes but I think it's worth the efforts.\n",
+      "repo": "django/django",
+      "base_commit": "580e644f24f1c5ae5b94784fb73a9953a178fd26",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "Django's static file handling system (template tags and storage backends) doesn't account for the WSGI SCRIPT_NAME parameter when generating URLs. When applications run on sub-paths, static file URLs are generated without the proper prefix, causing broken links. The STATIC_URL and MEDIA_URL settings are used directly without prepending the SCRIPT_NAME value.",
+      "relevant_files": [
+        "django/templatetags/static.py",
+        "django/contrib/staticfiles/templatetags/staticfiles.py",
+        "django/contrib/staticfiles/storage.py",
+        "django/core/files/storage.py"
+      ],
+      "relevant_functions": [
+        "django.templatetags.static.StaticNode.render",
+        "django.templatetags.static.StaticNode.url",
+        "django.templatetags.static.PrefixNode.render",
+        "django.contrib.staticfiles.templatetags.staticfiles.StaticFilesNode",
+        "django.core.files.storage.FileSystemStorage.url",
+        "django.contrib.staticfiles.storage.StaticFilesStorage.url"
+      ],
+      "fix_strategy": "1. Leverage Django's existing `django.utils.http.get_script_prefix()` function which already handles SCRIPT_NAME from thread-local storage.\n\n2. Update `PrefixNode.render()` in `django/templatetags/static.py` to prepend the script prefix when returning STATIC_URL or MEDIA_URL. This affects both `{% get_static_prefix %}` and `{% get_media_prefix %}` tags.\n\n3. Update `StaticNode.url()` method to use `get_script_prefix()` when constructing URLs, ensuring the script prefix is included in static file URLs.\n\n4. Modify `FileSystemStorage.url()` in `django/core/files/storage.py` to prepend script prefix when base_url is relative and matches MEDIA_URL pattern.\n\n5. Update `StaticFilesStorage` in `django/contrib/staticfiles/storage.py` to handle script prefix in URL generation, particularly in the `url()` method.\n\n6. Ensure backward compatibility by only prepending script prefix when it exists and is not empty or '/'.\n\n7. Add comprehensive tests covering: static tag with SCRIPT_NAME, media files with SCRIPT_NAME, storage backend URL generation, and edge cases (empty SCRIPT_NAME, root path, etc.).\n\n8. Update documentation to explain SCRIPT_NAME support and provide examples of deploying Django applications on sub-paths.",
+      "confidence": 0.85,
+      "relevant_code": "## Source Code Context\n\n## File: django/templatetags/static.py\n```python\n# Mock content for django/templatetags/static.py\n# This is a placeholder.\n\n```\n\n## File: django/contrib/staticfiles/templatetags/staticfiles.py\n```python\n# Mock content for django/contrib/staticfiles/templatetags/staticfiles.py\n# This is a placeholder.\n\n```\n\n## File: django/contrib/staticfiles/storage.py\n```python\n# Mock content for django/contrib/staticfiles/storage.py\n# This is a placeholder.\n\n```\n\n## File: django/core/files/storage.py\n```python\n# Mock content for django/core/files/storage.py\n# This is a placeholder.\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder_A",
+        "diff": "--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -1,6 +1,7 @@\n from urllib.parse import urljoin\n \n from django import template\n+from django.utils.http import get_script_prefix\n from django.apps import apps\n from django.utils.encoding import iri_to_uri\n from django.utils.html import conditional_escape\n@@ -15,7 +16,9 @@\n     def render(self, context):\n         prefix = self.handle_simple(self.name)\n         if self.varname is None:\n-            return prefix\n+            script_prefix = get_script_prefix()\n+            if prefix.startswith('/') and script_prefix != '/':\n+                return script_prefix.rstrip('/') + prefix\n+            return prefix\n         context[self.varname] = prefix\n         return ''\n \n@@ -89,6 +92,9 @@\n \n     def render(self, context):\n         url = self.url(context)\n+        script_prefix = get_script_prefix()\n+        if url.startswith('/') and script_prefix != '/':\n+            url = script_prefix.rstrip('/') + url\n         if self.varname is None:\n             return url\n         context[self.varname] = url\n--- a/django/contrib/staticfiles/storage.py\n+++ b/django/contrib/staticfiles/storage.py\n@@ -10,6 +10,7 @@\n from django.core.files.base import ContentFile\n from django.core.files.storage import FileSystemStorage\n from django.utils.functional import LazyObject\n+from django.utils.http import get_script_prefix\n \n \n class StaticFilesStorage(FileSystemStorage):\n@@ -154,6 +155,10 @@\n \n     def url(self, name, force=False):\n         url = super().url(name)\n+        script_prefix = get_script_prefix()\n+        if url.startswith('/') and script_prefix != '/':\n+            url = script_prefix.rstrip('/') + url\n+            return url\n         if not force:\n             url = self._url(url)\n         return url\n--- a/django/core/files/storage.py\n+++ b/django/core/files/storage.py\n@@ -10,6 +10,7 @@\n from django.core.files import File, locks\n from django.core.files.move import file_move_safe\n from django.core.signals import setting_changed\n+from django.utils.http import get_script_prefix\n from django.utils._os import abspathu, safe_join\n from django.utils.deconstruct import deconstructible\n from django.utils.encoding import filepath_to_uri\n@@ -138,7 +139,11 @@\n             url = filepath_to_uri(name)\n         if url is not None:\n             url = url.lstrip('/')\n-            return urljoin(self.base_url, url)\n+            final_url = urljoin(self.base_url, url)\n+            script_prefix = get_script_prefix()\n+            if self.base_url and self.base_url.startswith('/') and script_prefix != '/':\n+                final_url = script_prefix.rstrip('/') + final_url\n+            return final_url\n         raise ValueError(\"This file is not accessible via a URL.\")\n \n     def get_available_name(self, name, max_length=None):\n",
+        "description": "Add support for SCRIPT_NAME in STATIC_URL and MEDIA_URL by using get_script_prefix() in template tags and storage backends",
+        "timestamp": "2026-02-15T02:39:52.242160Z"
+      },
+      {
+        "version": 2,
+        "author": "Coder_A",
+        "diff": "--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -1,6 +1,7 @@\n from urllib.parse import urljoin\n \n from django import template\n+from django.utils.http import get_script_prefix\n from django.templatetags.static import StaticNode as _StaticNode\n from django.utils.encoding import iri_to_uri\n from django.utils.html import conditional_escape\n@@ -65,7 +66,14 @@\n             prefix = self.handle_simple(name)\n         else:\n             prefix = settings.STATIC_URL if name == 'STATIC_URL' else settings.MEDIA_URL\n-        return prefix\n+        \n+        # Only prepend script prefix if URL is relative (not absolute or protocol-relative)\n+        if prefix and not prefix.startswith(('http://', 'https://', '//', 'data:')):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/' and not prefix.startswith(script_prefix):\n+                    prefix = script_prefix.rstrip('/') + '/' + prefix.lstrip('/')\n+            except Exception:\n+                pass  # Not in request context, use prefix as-is\n+        return prefix\n \n     def render(self, context):\n         prefix = self.handle_token()\n@@ -96,7 +104,17 @@\n     def url(self, context):\n         path = self.path.resolve(context)\n         return self.handle_simple(path)\n-\n+    \n     def render(self, context):\n         url = self.url(context)\n+        \n+        # Only prepend script prefix if URL is relative (not absolute or protocol-relative)\n+        if url and not url.startswith(('http://', 'https://', '//', 'data:')):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/' and not url.startswith(script_prefix):\n+                    url = script_prefix.rstrip('/') + '/' + url.lstrip('/')\n+            except Exception:\n+                pass  # Not in request context, use url as-is\n+        \n         if self.varname is None:\n             return url\n--- a/django/core/files/storage.py\n+++ b/django/core/files/storage.py\n@@ -8,6 +8,7 @@\n from django.core.files import File\n from django.core.files.move import file_move_safe\n from django.utils._os import safe_join\n+from django.utils.http import get_script_prefix\n from django.utils.crypto import get_random_string\n from django.utils.deconstruct import deconstructible\n from django.utils.encoding import filepath_to_uri\n@@ -145,7 +146,19 @@\n             url = filepath_to_uri(name)\n         if url is not None:\n             url = url.lstrip('/')\n-        return urljoin(self.base_url, url)\n+        final_url = urljoin(self.base_url, url)\n+        \n+        # Only prepend script prefix if base_url is relative (not absolute or protocol-relative)\n+        if self.base_url and not self.base_url.startswith(('http://', 'https://', '//', 'data:')):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/' and not final_url.startswith(script_prefix):\n+                    # Only apply if final_url is root-relative\n+                    if final_url.startswith('/'):\n+                        final_url = script_prefix.rstrip('/') + final_url\n+            except Exception:\n+                pass  # Not in request context, use final_url as-is\n+        \n+        return final_url\n \n     def get_accessed_time(self, name):\n         return datetime.fromtimestamp(os.path.getatime(self.path(name)))\n--- a/django/contrib/staticfiles/storage.py\n+++ b/django/contrib/staticfiles/storage.py\n@@ -11,6 +11,7 @@\n from django.core.files.storage import FileSystemStorage\n from django.utils.functional import LazyObject\n from django.utils.encoding import force_bytes, force_text\n+from django.utils.http import get_script_prefix\n \n \n class StaticFilesStorage(FileSystemStorage):\n@@ -30,10 +31,22 @@\n         if not self.location:\n             raise ImproperlyConfigured(\"You're using the staticfiles app \"\n                                        \"without having set the STATIC_ROOT \"\n                                        \"setting to a filesystem path.\")\n \n     def url(self, name):\n-        if self.base_url is None:\n+        if self.base_url is None:\n             raise ValueError(\"This file is not accessible via a URL.\")\n-        return super().url(name)\n+        \n+        # Get the URL from parent (which may apply hashing for Manifest/Cached storage)\n+        url = super().url(name)\n+        \n+        # Only prepend script prefix if base_url is relative (not absolute or protocol-relative)\n+        if self.base_url and not self.base_url.startswith(('http://', 'https://', '//', 'data:')):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/' and not url.startswith(script_prefix):\n+                    if url.startswith('/'):\n+                        url = script_prefix.rstrip('/') + url\n+            except Exception:\n+                pass  # Not in request context, use url as-is\n+        \n+        return url\n \n \n class HashedFilesMixin:\n",
+        "description": "Add support for SCRIPT_NAME in STATIC_URL and MEDIA_URL. This patch addresses the issue where Django's static file handling system doesn't account for the WSGI SCRIPT_NAME parameter when generating URLs. The fix:\n\n1. Updates PrefixNode.render() in django/templatetags/static.py to prepend script prefix to STATIC_URL and MEDIA_URL when they are relative URLs.\n\n2. Updates StaticNode.render() to prepend script prefix to generated static URLs when they are relative.\n\n3. Modifies FileSystemStorage.url() in django/core/files/storage.py to prepend script prefix to the final URL after urljoin, but only for root-relative paths.\n\n4. Updates StaticFilesStorage.url() in django/contrib/staticfiles/storage.py to apply script prefix after calling super().url(), preserving hashed filename functionality for ManifestStaticFilesStorage.\n\nThe patch includes safeguards to:\n- Only modify relative URLs (not absolute URLs, CDN URLs, or protocol-relative URLs)\n- Handle cases where get_script_prefix() is called outside request context\n- Avoid double-prefixing by checking if the URL already starts with the script prefix\n- Preserve backward compatibility by only applying the prefix when it exists and is not '/'\n\nThis ensures Django applications can run correctly on sub-paths while maintaining compatibility with CDN configurations and existing deployments.",
+        "timestamp": "2026-02-15T02:41:00.796232Z"
+      },
+      {
+        "version": 2,
+        "author": "Coder_B",
+        "diff": "--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -1,6 +1,7 @@\n from urllib.parse import urljoin\n \n from django import template\n+from django.utils.http import get_script_prefix\n from django.templatetags.static import StaticNode as _StaticNode\n from django.utils.encoding import iri_to_uri\n from django.utils.html import conditional_escape\n@@ -65,7 +66,14 @@\n             prefix = self.handle_simple(name)\n         else:\n             prefix = settings.STATIC_URL if name == 'STATIC_URL' else settings.MEDIA_URL\n-        return prefix\n+        \n+        # Only prepend script prefix if URL is relative (not absolute or protocol-relative)\n+        if prefix and not prefix.startswith(('http://', 'https://', '//', 'data:')):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/' and not prefix.startswith(script_prefix):\n+                    prefix = script_prefix.rstrip('/') + '/' + prefix.lstrip('/')\n+            except Exception:\n+                pass  # Not in request context, use prefix as-is\n+        return prefix\n \n     def render(self, context):\n         prefix = self.handle_token()\n@@ -96,7 +104,17 @@\n     def url(self, context):\n         path = self.path.resolve(context)\n         return self.handle_simple(path)\n-\n+    \n     def render(self, context):\n         url = self.url(context)\n+        \n+        # Only prepend script prefix if URL is relative (not absolute or protocol-relative)\n+        if url and not url.startswith(('http://', 'https://', '//', 'data:')):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/' and not url.startswith(script_prefix):\n+                    url = script_prefix.rstrip('/') + '/' + url.lstrip('/')\n+            except Exception:\n+                pass  # Not in request context, use url as-is\n+        \n         if self.varname is None:\n             return url\n--- a/django/core/files/storage.py\n+++ b/django/core/files/storage.py\n@@ -8,6 +8,7 @@\n from django.core.files import File\n from django.core.files.move import file_move_safe\n from django.utils._os import safe_join\n+from django.utils.http import get_script_prefix\n from django.utils.crypto import get_random_string\n from django.utils.deconstruct import deconstructible\n from django.utils.encoding import filepath_to_uri\n@@ -145,7 +146,19 @@\n             url = filepath_to_uri(name)\n         if url is not None:\n             url = url.lstrip('/')\n-        return urljoin(self.base_url, url)\n+        final_url = urljoin(self.base_url, url)\n+        \n+        # Only prepend script prefix if base_url is relative (not absolute or protocol-relative)\n+        if self.base_url and not self.base_url.startswith(('http://', 'https://', '//', 'data:')):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/' and not final_url.startswith(script_prefix):\n+                    # Only apply if final_url is root-relative\n+                    if final_url.startswith('/'):\n+                        final_url = script_prefix.rstrip('/') + final_url\n+            except Exception:\n+                pass  # Not in request context, use final_url as-is\n+        \n+        return final_url\n \n     def get_accessed_time(self, name):\n         return datetime.fromtimestamp(os.path.getatime(self.path(name)))\n--- a/django/contrib/staticfiles/storage.py\n+++ b/django/contrib/staticfiles/storage.py\n@@ -11,6 +11,7 @@\n from django.core.files.storage import FileSystemStorage\n from django.utils.functional import LazyObject\n from django.utils.encoding import force_bytes, force_text\n+from django.utils.http import get_script_prefix\n \n \n class StaticFilesStorage(FileSystemStorage):\n@@ -30,10 +31,22 @@\n         if not self.location:\n             raise ImproperlyConfigured(\"You're using the staticfiles app \"\n                                        \"without having set the STATIC_ROOT \"\n                                        \"setting to a filesystem path.\")\n \n     def url(self, name):\n-        if self.base_url is None:\n+        if self.base_url is None:\n             raise ValueError(\"This file is not accessible via a URL.\")\n-        return super().url(name)\n+        \n+        # Get the URL from parent (which may apply hashing for Manifest/Cached storage)\n+        url = super().url(name)\n+        \n+        # Only prepend script prefix if base_url is relative (not absolute or protocol-relative)\n+        if self.base_url and not self.base_url.startswith(('http://', 'https://', '//', 'data:')):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/' and not url.startswith(script_prefix):\n+                    if url.startswith('/'):\n+                        url = script_prefix.rstrip('/') + url\n+            except Exception:\n+                pass  # Not in request context, use url as-is\n+        \n+        return url\n \n \n class HashedFilesMixin:\n",
+        "description": "Add support for SCRIPT_NAME in STATIC_URL and MEDIA_URL. This patch addresses the issue where Django's static file handling system doesn't account for the WSGI SCRIPT_NAME parameter when generating URLs. The fix:\n\n1. Updates PrefixNode.render() in django/templatetags/static.py to prepend script prefix to STATIC_URL and MEDIA_URL when they are relative URLs.\n\n2. Updates StaticNode.render() to prepend script prefix to generated static URLs when they are relative.\n\n3. Modifies FileSystemStorage.url() in django/core/files/storage.py to prepend script prefix to the final URL after urljoin, but only for root-relative paths.\n\n4. Updates StaticFilesStorage.url() in django/contrib/staticfiles/storage.py to apply script prefix after calling super().url(), preserving hashed filename functionality for ManifestStaticFilesStorage.\n\nThe patch includes safeguards to:\n- Only modify relative URLs (not absolute URLs, CDN URLs, or protocol-relative URLs)\n- Handle cases where get_script_prefix() is called outside request context\n- Avoid double-prefixing by checking if the URL already starts with the script prefix\n- Preserve backward compatibility by only applying the prefix when it exists and is not '/'\n\nThis ensures Django applications can run correctly on sub-paths while maintaining compatibility with CDN configurations and existing deployments.",
+        "timestamp": "2026-02-15T02:41:27.729017Z"
+      },
+      {
+        "version": 3,
+        "author": "Coder_A",
+        "diff": "--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -1,6 +1,7 @@\n from urllib.parse import urljoin\n \n from django import template\n+from django.utils.http import get_script_prefix\n from django.templatetags.static import static\n from django.utils.encoding import iri_to_uri\n from django.utils.html import conditional_escape\n@@ -65,7 +66,15 @@\n             prefix = self.handle_simple(name)\n         else:\n             prefix = settings.STATIC_URL if name == 'STATIC_URL' else settings.MEDIA_URL\n-        return prefix\n+        \n+        # Prepend SCRIPT_NAME prefix if it exists and URL is root-relative\n+        if prefix and prefix.startswith('/') and not prefix.startswith('//'):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/':\n+                    prefix = script_prefix.rstrip('/') + prefix\n+            except (AttributeError, RuntimeError):\n+                pass\n+        return prefix\n \n \n class StaticNode(template.Node):\n@@ -88,6 +97,15 @@\n             url = self.handle_simple(path)\n         else:\n             url = static(path)\n+        \n+        # Prepend SCRIPT_NAME prefix if URL is root-relative\n+        if url and url.startswith('/') and not url.startswith('//'):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/':\n+                    url = script_prefix.rstrip('/') + url\n+            except (AttributeError, RuntimeError):\n+                pass\n         return url\n \n     def render(self, context):\n--- a/django/core/files/storage.py\n+++ b/django/core/files/storage.py\n@@ -10,6 +10,7 @@\n from django.core.files import File, locks\n from django.core.files.move import file_move_safe\n from django.core.signals import setting_changed\n+from django.utils.http import get_script_prefix\n from django.utils._os import abspathu, safe_join\n from django.utils.crypto import get_random_string\n from django.utils.deconstruct import deconstructible\n@@ -332,7 +333,17 @@\n             raise ValueError(\"This file is not accessible via a URL.\")\n         url = filepath_to_uri(name)\n         if url is not None:\n-            url = url.lstrip('/')\n+            # Check if URL is root-relative (not absolute or protocol-relative)\n+            if url.startswith('/') and not url.startswith('//'):\n+                # Prepend SCRIPT_NAME prefix if it exists\n+                try:\n+                    script_prefix = get_script_prefix()\n+                    if script_prefix and script_prefix != '/':\n+                        url = script_prefix.rstrip('/') + url\n+                except (AttributeError, RuntimeError):\n+                    pass\n+            else:\n+                url = url.lstrip('/')\n         return urljoin(self.base_url, url)\n \n     def get_accessed_time(self, name):\n--- a/django/contrib/staticfiles/storage.py\n+++ b/django/contrib/staticfiles/storage.py\n@@ -11,6 +11,7 @@\n from django.core.files.storage import FileSystemStorage\n from django.utils.functional import LazyObject\n from django.contrib.staticfiles.utils import check_settings, matches_patterns\n+from django.utils.http import get_script_prefix\n \n \n class StaticFilesStorage(FileSystemStorage):\n@@ -28,7 +29,17 @@\n     def url(self, name):\n         if self.base_url is None:\n             raise ValueError(\"This file is not accessible via a URL.\")\n-        return super().url(name)\n+        url = super().url(name)\n+        \n+        # Prepend SCRIPT_NAME prefix if URL is root-relative\n+        if url and url.startswith('/') and not url.startswith('//'):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/':\n+                    url = script_prefix.rstrip('/') + url\n+            except (AttributeError, RuntimeError):\n+                pass\n+        return url\n \n \n class HashedFilesMixin:\n",
+        "description": "Add support for SCRIPT_NAME in STATIC_URL and MEDIA_URL. This patch updates Django's static file handling to respect the WSGI SCRIPT_NAME parameter when generating URLs. Changes include: (1) Modified PrefixNode.render() to prepend script prefix to STATIC_URL/MEDIA_URL, (2) Updated StaticNode.url() to include script prefix in static file URLs, (3) Modified FileSystemStorage.url() to handle script prefix for media files, (4) Updated StaticFilesStorage.url() to prepend script prefix. All changes use specific exception handling (AttributeError, RuntimeError) and only apply to root-relative URLs (starting with '/' but not '//').",
+        "timestamp": "2026-02-15T02:42:09.710298Z"
+      },
+      {
+        "version": 3,
+        "author": "Coder_B",
+        "diff": "--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -1,6 +1,7 @@\n from urllib.parse import urljoin\n \n from django import template\n+from django.utils.http import get_script_prefix\n from django.templatetags.static import static\n from django.utils.encoding import iri_to_uri\n from django.utils.html import conditional_escape\n@@ -65,7 +66,15 @@\n             prefix = self.handle_simple(name)\n         else:\n             prefix = settings.STATIC_URL if name == 'STATIC_URL' else settings.MEDIA_URL\n-        return prefix\n+        \n+        # Prepend SCRIPT_NAME prefix if it exists and prefix is root-relative\n+        if prefix and prefix.startswith('/') and not prefix.startswith('//'):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/':\n+                    prefix = script_prefix.rstrip('/') + prefix\n+            except (AttributeError, RuntimeError):\n+                pass\n+        return prefix\n \n \n class StaticNode(template.Node):\n@@ -88,6 +97,15 @@\n             url = self.handle_simple(path)\n         else:\n             url = static(path)\n+        \n+        # Prepend SCRIPT_NAME prefix if URL is root-relative\n+        if url and url.startswith('/') and not url.startswith('//'):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/':\n+                    url = script_prefix.rstrip('/') + url\n+            except (AttributeError, RuntimeError):\n+                pass\n         return url\n \n     def render(self, context):\n--- a/django/core/files/storage.py\n+++ b/django/core/files/storage.py\n@@ -10,6 +10,7 @@\n from django.core.files import File, locks\n from django.core.files.move import file_move_safe\n from django.core.signals import setting_changed\n+from django.utils.http import get_script_prefix\n from django.utils._os import abspathu, safe_join\n from django.utils.deconstruct import deconstructible\n from django.utils.encoding import filepath_to_uri\n@@ -145,7 +146,17 @@\n         if self.base_url is None:\n             raise ValueError(\"This file is not accessible via a URL.\")\n         url = filepath_to_uri(name)\n-        return urljoin(self.base_url, url)\n+        final_url = urljoin(self.base_url, url)\n+        \n+        # Prepend SCRIPT_NAME prefix if URL is root-relative\n+        if final_url and final_url.startswith('/') and not final_url.startswith('//'):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/':\n+                    final_url = script_prefix.rstrip('/') + final_url\n+            except (AttributeError, RuntimeError):\n+                pass\n+        return final_url\n \n     def get_accessed_time(self, name):\n         return datetime.fromtimestamp(os.path.getatime(self.path(name)))\n--- a/django/contrib/staticfiles/storage.py\n+++ b/django/contrib/staticfiles/storage.py\n@@ -11,6 +11,7 @@\n from django.core.files.base import ContentFile\n from django.core.files.storage import FileSystemStorage\n from django.utils.functional import LazyObject\n+from django.utils.http import get_script_prefix\n \n \n class StaticFilesStorage(FileSystemStorage):\n@@ -28,7 +29,17 @@\n         if self.base_url is None:\n             raise ValueError(\"This file is not accessible via a URL.\")\n         url = filepath_to_uri(name)\n-        return urljoin(self.base_url, url)\n+        final_url = urljoin(self.base_url, url)\n+        \n+        # Prepend SCRIPT_NAME prefix if URL is root-relative\n+        if final_url and final_url.startswith('/') and not final_url.startswith('//'):\n+            try:\n+                script_prefix = get_script_prefix()\n+                if script_prefix and script_prefix != '/':\n+                    final_url = script_prefix.rstrip('/') + final_url\n+            except (AttributeError, RuntimeError):\n+                pass\n+        return final_url\n \n \n class HashedFilesMixin:\n",
+        "description": "Add support for SCRIPT_NAME in STATIC_URL and MEDIA_URL. This patch updates Django's static file handling to respect the WSGI SCRIPT_NAME parameter when generating URLs. Changes include: (1) Updated PrefixNode.render() in django/templatetags/static.py to prepend script prefix to STATIC_URL and MEDIA_URL; (2) Updated StaticNode.url() to prepend script prefix to static file URLs; (3) Modified FileSystemStorage.url() in django/core/files/storage.py to handle script prefix for media files; (4) Updated StaticFilesStorage.url() in django/contrib/staticfiles/storage.py to prepend script prefix. All changes use get_script_prefix() from django.utils.http and include proper checks for root-relative URLs and specific exception handling to avoid masking errors.",
+        "timestamp": "2026-02-15T02:42:27.898462Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "In StaticFilesStorage.url(), the early return after prepending script_prefix bypasses the self._url(url) call when force=False. This breaks the hashed filename functionality for ManifestStaticFilesStorage and CachedStaticFilesStorage.",
+          "The logic in FileSystemStorage.url() prepends script_prefix to the final_url after urljoin, which may result in double-prefixing if base_url already contains a path component.",
+          "Missing check for whether we're in a request context - get_script_prefix() may fail or return '/' when called outside of request handling (e.g., management commands, async tasks).",
+          "The condition 'url.startswith('/')' in StaticNode.render() may not handle all cases correctly - what if the URL is already absolute (http://...) or protocol-relative (//...)?",
+          "No handling of the case where STATIC_URL or MEDIA_URL are already absolute URLs (e.g., CDN URLs like 'https://cdn.example.com/static/') - these should not be modified."
+        ],
+        "suggestions": [
+          "In StaticFilesStorage.url(), move the script_prefix logic after the self._url(url) call to preserve the hashing functionality: apply script prefix to the final URL returned by _url().",
+          "Add a helper function to check if a URL should have script_prefix applied (e.g., is_relative_url()) that returns False for absolute URLs, protocol-relative URLs, and URLs that already start with the script prefix.",
+          "Wrap get_script_prefix() calls in try-except blocks or check if we're in a request context before applying the prefix to avoid errors in non-request contexts.",
+          "In FileSystemStorage.url(), only apply script_prefix if base_url is a simple root-relative path (starts with '/' and doesn't contain a domain). Check if base_url is already absolute before applying the prefix.",
+          "Add unit tests that verify: (1) CDN URLs are not modified, (2) absolute URLs are not modified, (3) the patch works correctly with ManifestStaticFilesStorage, (4) behavior in non-request contexts.",
+          "Consider checking settings.FORCE_SCRIPT_NAME in addition to get_script_prefix() to handle cases where SCRIPT_NAME should be explicitly set.",
+          "Document the expected behavior when STATIC_URL/MEDIA_URL are absolute URLs vs relative paths in the code comments."
+        ]
+      },
+      {
+        "patch_version": 2,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "Circular import error: 'from django.templatetags.static import StaticNode as _StaticNode' in django/templatetags/static.py imports from itself",
+          "Overly broad exception handling with 'except Exception:' - should be more specific like 'except (AttributeError, RuntimeError):' to avoid masking real errors",
+          "Redundant check 'if url.startswith('/')' in StaticFilesStorage.url() since non-root-relative URLs wouldn't need script prefix anyway"
+        ],
+        "suggestions": [
+          "Remove the circular import line 'from django.templatetags.static import StaticNode as _StaticNode' from django/templatetags/static.py",
+          "Replace 'except Exception:' with more specific exception types like 'except (AttributeError, RuntimeError):' throughout the patch",
+          "Simplify the logic in StaticFilesStorage.url() by removing the redundant 'if url.startswith('/')' check",
+          "Add inline comments explaining why we check for absolute/protocol-relative URLs to improve code maintainability",
+          "Consider adding a helper function to avoid code duplication across PrefixNode and StaticNode render methods"
+        ]
+      },
+      {
+        "patch_version": 3,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [
+          "In StaticFilesStorage.url(), the implementation duplicates logic from FileSystemStorage.url() instead of calling super().url(), which could cause maintenance issues if the parent class changes"
+        ],
+        "suggestions": [
+          "Consider refactoring StaticFilesStorage.url() to call super().url(name) and then apply the script prefix to the result, maintaining proper inheritance",
+          "Add a check to prevent double-prefixing if the URL already starts with script_prefix (e.g., 'if not final_url.startswith(script_prefix)')",
+          "Add comprehensive tests covering: SCRIPT_NAME with ManifestStaticFilesStorage, nested sub-paths, CDN URLs, empty SCRIPT_NAME, and outside request context scenarios"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 1,
+        "passed": false,
+        "pass_count": 38,
+        "fail_count": 4,
+        "failing_tests": [
+          "Unknown test - AssertionError",
+          "Unknown test - ValueError"
+        ],
+        "error_traces": [
+          "AssertionError: Expected ordered result set",
+          "ValueError: Column mismatch in UNION query"
+        ]
+      }
+    ],
+    "metadata": {
+      "status": "testing",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-15T02:38:51.457572Z",
+      "end_time": null
+    }
+  }
+}

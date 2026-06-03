@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-11564_8ed4bf9d",
+  "issue_id": "django__django-11564",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 42432,
+  "total_output_tokens": 6671,
+  "total_latency_ms": 126933,
+  "final_patch": "--- a/django/templatetags/static.py\n+++ b/django/templatetags/static.py\n@@ -1,4 +1,4 @@\n-from urllib.parse import quote, urljoin\n+from urllib.parse import quote, urljoin, urlsplit\n \n from django import template\n from django.apps import apps\n@@ -119,11 +119,28 @@\n \n     def url(self, context):\n         path = self.path.resolve(context)\n-        return self.handle_simple(path)\n+        url = self.handle_simple(path)\n+        # Prepend SCRIPT_NAME if needed\n+        request = context.get('request')\n+        if request:\n+            script_name = request.META.get('SCRIPT_NAME', '')\n+            if script_name:\n+                parsed_url = urlsplit(url)\n+                # Only prepend if URL is relative and doesn't already start with SCRIPT_NAME\n+                if not parsed_url.scheme and not parsed_url.netloc and not url.startswith(script_name + '/'):\n+                    url = script_name + url\n+        return url\n \n     def render(self, context):\n         url = self.url(context)\n         if context.autoescape:\n             url = conditional_escape(url)\n         if self.varname is None:\n             return url\n@@ -133,7 +150,18 @@\n     @classmethod\n     def handle_simple(cls, path):\n         if apps.is_installed('django.contrib.staticfiles'):\n             from django.contrib.staticfiles.storage import staticfiles_storage\n-            return staticfiles_storage.url(path)\n+            url = staticfiles_storage.url(path)\n+            # Check if STATIC_URL is absolute - if so, don't modify\n+            from django.conf import settings\n+            static_url = getattr(settings, 'STATIC_URL', '')\n+            parsed_static = urlsplit(static_url)\n+            # If STATIC_URL is absolute (has scheme or netloc), return as-is\n+            if parsed_static.scheme or parsed_static.netloc:\n+                return url\n+            # Otherwise return the URL (SCRIPT_NAME will be added in url() method when context is available)\n+            return url\n         else:\n             return urljoin(PrefixNode.handle_simple(\"STATIC_URL\"), quote(path))\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:35:29.210673+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 701,
+      "output_tokens": 766,
+      "latency_ms": 13743
+    },
+    {
+      "timestamp": "2026-02-16T18:35:52.639928+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 15415,
+      "output_tokens": 1900,
+      "latency_ms": 22197
+    },
+    {
+      "timestamp": "2026-02-16T18:36:05.719512+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1322,
+      "output_tokens": 593,
+      "latency_ms": 13078
+    },
+    {
+      "timestamp": "2026-02-16T18:36:26.290537+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 15180,
+      "output_tokens": 1449,
+      "latency_ms": 20570
+    },
+    {
+      "timestamp": "2026-02-16T18:36:37.690924+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1104,
+      "output_tokens": 480,
+      "latency_ms": 11399
+    },
+    {
+      "timestamp": "2026-02-16T18:36:50.499020+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 7112,
+      "output_tokens": 762,
+      "latency_ms": 12807
+    },
+    {
+      "timestamp": "2026-02-16T18:37:03.193035+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1190,
+      "output_tokens": 609,
+      "latency_ms": 12693
+    },
+    {
+      "timestamp": "2026-02-16T18:37:22.399335+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11564",
+      "issue_id": "django__django-11564",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 112,
+      "latency_ms": 3276
+    }
+  ],
+  "blackboard_final_state": null
+}

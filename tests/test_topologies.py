@@ -28,7 +28,11 @@ from src.communication.hybrid_comm import HybridCommunication
 from src.topologies.sequential import SequentialPipeline
 from src.topologies.debate import PeerDebate
 from src.utils.logger import ExperimentLogger
+
+
+# ---------------------------------------------------------------------------
 # Mock LLM Client (same as test_agents.py but standalone)
+# ---------------------------------------------------------------------------
 
 class MockLLMClient:
     def __init__(self) -> None:
@@ -93,7 +97,11 @@ class MockLLMClient:
     def reset_token_counts(self) -> None:
         self.cumulative_input_tokens = 0
         self.cumulative_output_tokens = 0
+
+
+# ---------------------------------------------------------------------------
 # Fixtures
+# ---------------------------------------------------------------------------
 
 @pytest.fixture
 def mock_llm() -> MockLLMClient:
@@ -130,7 +138,11 @@ def _make_agents(mock_llm, mock_logger, topology="sequential"):
         agents["coder_a"] = CoderAgent(llm_client=mock_llm, logger=mock_logger)
         agents["coder_b"] = CoderAgent(llm_client=mock_llm, logger=mock_logger)
     return agents
+
+
+# ---------------------------------------------------------------------------
 # SequentialPipeline tests
+# ---------------------------------------------------------------------------
 
 class TestSequentialPipeline:
     @pytest.mark.asyncio
@@ -222,7 +234,11 @@ class TestSequentialPipeline:
         restored = ExperimentResult.model_validate_json(json_str)
         assert restored.issue_id == result.issue_id
         assert restored.resolved == result.resolved
+
+
+# ---------------------------------------------------------------------------
 # PeerDebate tests
+# ---------------------------------------------------------------------------
 
 class TestPeerDebate:
     @pytest.mark.asyncio
@@ -279,7 +295,11 @@ class TestPeerDebate:
 
         # Debate has 2 coders, so more traces
         assert len(deb_result.agent_traces) > len(seq_result.agent_traces)
+
+
+# ---------------------------------------------------------------------------
 # ExperimentResult model tests
+# ---------------------------------------------------------------------------
 
 class TestExperimentResult:
     def test_creation(self) -> None:

@@ -1,0 +1,123 @@
+{
+  "experiment_id": "seq_message_passing_sphinx-doc__sphinx-7738_578e9804",
+  "issue_id": "sphinx-doc__sphinx-7738",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 7555,
+  "total_output_tokens": 2997,
+  "total_latency_ms": 95999,
+  "final_patch": "--- a/sphinx/ext/napoleon/docstring.py\n+++ b/sphinx/ext/napoleon/docstring.py\n@@ -664,7 +664,7 @@\n \n     def _parse_attributes_section(self, section: str) -> List[str]:\n         lines = self._consume_fields()\n-        return self._format_fields(_('Attributes'), lines)\n+        return self._format_fields(_('Attributes'), lines, no_escape=True)\n \n     def _parse_examples_section(self, section: str) -> List[str]:\n         labels = {\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:45:53.571734+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 754,
+      "output_tokens": 658,
+      "latency_ms": 13203
+    },
+    {
+      "timestamp": "2026-02-16T17:46:04.099299+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1369,
+      "output_tokens": 652,
+      "latency_ms": 10512
+    },
+    {
+      "timestamp": "2026-02-16T17:46:12.115646+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1080,
+      "output_tokens": 381,
+      "latency_ms": 8015
+    },
+    {
+      "timestamp": "2026-02-16T17:46:17.868282+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1091,
+      "output_tokens": 349,
+      "latency_ms": 5751
+    },
+    {
+      "timestamp": "2026-02-16T17:46:21.083938+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 777,
+      "output_tokens": 131,
+      "latency_ms": 3214
+    },
+    {
+      "timestamp": "2026-02-16T17:46:41.024656+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 408,
+      "output_tokens": 112,
+      "latency_ms": 4031
+    },
+    {
+      "timestamp": "2026-02-16T17:46:46.454697+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 973,
+      "output_tokens": 267,
+      "latency_ms": 5429
+    },
+    {
+      "timestamp": "2026-02-16T17:46:54.714506+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 695,
+      "output_tokens": 325,
+      "latency_ms": 8259
+    },
+    {
+      "timestamp": "2026-02-16T17:47:16.366342+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 122,
+      "latency_ms": 5756
+    }
+  ],
+  "blackboard_final_state": null
+}

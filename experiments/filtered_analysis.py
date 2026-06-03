@@ -1,4 +1,4 @@
-"""Filtered Analysis: Patch Quality, IFS Correlation, and Bottleneck Attribution."""
+"""Day 8 Prompt 1 -C1 Filtered Analysis + Patch Quality + IFS Correlation + Bottleneck Attribution."""
 
 from __future__ import annotations
 
@@ -62,13 +62,13 @@ def is_empty_patch(patch: str) -> bool:
     return not (has_diff_markers and has_changes)
 
 
-# Load data
+# ── Load data ────────────────────────────────────────────────────────
 
 import io, sys as _sys
 _sys.stdout = io.TextIOWrapper(_sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 print("=" * 70)
-print("Filtered Analysis")
+print("Day 8 - C1 Filtered Analysis")
 print("=" * 70)
 
 # Load all results
@@ -92,7 +92,7 @@ ifs_config_map = {
 issue_ids = sorted(all_results["MP"].keys())
 N = len(issue_ids)
 
-# 1. Classify each issue per config
+# ── 1. Classify each issue per config ─────────────────────────────────
 
 print(f"\nTotal issues: {N}")
 
@@ -126,7 +126,7 @@ for label in CONFIGS:
     print(f"  Non-empty Failed:  {non_empty_failed}")
     print(f"  Total:             {resolved + empty + non_empty_failed}")
 
-# 2. Filtered Analysis: Only non-empty patches
+# ── 2. Filtered Analysis: Only non-empty patches ──────────────────────
 
 print("\n" + "=" * 60)
 print("  Section 2: Filtered Analysis - Non-empty Patch Subset")
@@ -147,7 +147,7 @@ for label in CONFIGS:
     filtered_stats[label] = {"non_empty": non_empty, "resolved": resolved, "rate": rate}
     print(f"{label:<12} {non_empty:>7}/50  {resolved:>8}    {rate:>8.1f}%")
 
-# 3. Patch Quality Matrix
+# ── 3. Patch Quality Matrix ───────────────────────────────────────────
 
 print("\n" + "=" * 60)
 print("  Section 3: Patch Quality Matrix (per-issue)")
@@ -240,7 +240,7 @@ for label in CONFIGS:
 print(f"{'Resolve rate (of correct file)':<30} {resolve_of_correct['MP']:>7.1f}% {resolve_of_correct['BB']:>7.1f}% {resolve_of_correct['Hybrid']:>7.1f}%")
 
 
-# 4. IFS vs Resolve Rate Correlation
+# ── 4. IFS vs Resolve Rate Correlation ────────────────────────────────
 
 print()
 print("=" * 60)
@@ -362,7 +362,7 @@ if all_coder_ifs:
         print("  scipy not available")
 
 
-# 5. Bottleneck Attribution
+# ── 5. Bottleneck Attribution ──────────────────────────────────────────
 
 print()
 print("=" * 60)
@@ -425,7 +425,7 @@ print(f"  4. BB's information advantage is real (IFS +50%) but cannot overcome")
 print(f"     the patch formatting bottleneck that affects ALL configs")
 
 
-# 6. Save results
+# ── 6. Save results ───────────────────────────────────────────────────
 
 output = {
     "filtered_analysis": filtered_stats,

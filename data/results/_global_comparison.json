@@ -1,0 +1,163 @@
+{
+  "title": "Global Comparison - 2 Topologies x 3 Communication Modes",
+  "description": "All 6 configs run on the same codebase (v2) with improved code context retrieval. 50 SWE-bench Lite issues (20 easy, 20 medium, 10 hard).",
+  "generated_at": "2026-02-14",
+  "codebase_version": "v2 (with smart code context retrieval, function region extraction, grep fallback)",
+
+  "resolve_rate_matrix": {
+    "description": "Resolve rate (%) for each topology x communication combination",
+    "Sequential": {
+      "Message-Passing": {"resolved": 6, "rate": 12.0},
+      "Blackboard": {"resolved": 16, "rate": 32.0},
+      "Hybrid": {"resolved": 17, "rate": 34.0}
+    },
+    "Debate": {
+      "Message-Passing": {"resolved": 12, "rate": 24.0},
+      "Blackboard": {"resolved": 25, "rate": 50.0},
+      "Hybrid": {"resolved": 25, "rate": 50.0}
+    }
+  },
+
+  "avg_tokens_matrix": {
+    "description": "Average tokens per issue for each topology x communication combination",
+    "Sequential": {
+      "Message-Passing": 18189,
+      "Blackboard": 23338,
+      "Hybrid": 29149
+    },
+    "Debate": {
+      "Message-Passing": 31969,
+      "Blackboard": 48977,
+      "Hybrid": 52324
+    }
+  },
+
+  "avg_latency_matrix": {
+    "description": "Average latency (seconds) per issue for each topology x communication combination",
+    "Sequential": {
+      "Message-Passing": 111.8,
+      "Blackboard": 92.1,
+      "Hybrid": 96.7
+    },
+    "Debate": {
+      "Message-Passing": 153.3,
+      "Blackboard": 152.2,
+      "Hybrid": 163.8
+    }
+  },
+
+  "difficulty_breakdown": {
+    "easy": {
+      "count": 20,
+      "Sequential": {"MP": 10.0, "BB": 40.0, "Hybrid": 45.0},
+      "Debate": {"MP": 30.0, "BB": 60.0, "Hybrid": 55.0}
+    },
+    "medium": {
+      "count": 20,
+      "Sequential": {"MP": 20.0, "BB": 35.0, "Hybrid": 40.0},
+      "Debate": {"MP": 25.0, "BB": 60.0, "Hybrid": 60.0}
+    },
+    "hard": {
+      "count": 10,
+      "Sequential": {"MP": 0.0, "BB": 10.0, "Hybrid": 0.0},
+      "Debate": {"MP": 10.0, "BB": 10.0, "Hybrid": 20.0}
+    }
+  },
+
+  "blackboard_effect_cross_topology": {
+    "description": "Blackboard vs Message-Passing improvement by topology",
+    "Sequential": {
+      "MP_rate": 12.0,
+      "BB_rate": 32.0,
+      "delta_pp": 20.0,
+      "delta_relative_pct": 166.7
+    },
+    "Debate": {
+      "MP_rate": 24.0,
+      "BB_rate": 50.0,
+      "delta_pp": 26.0,
+      "delta_relative_pct": 108.3
+    },
+    "conclusion": "Blackboard advantage is consistent and even STRONGER in Debate (+26pp) than Sequential (+20pp). This validates that structured shared state benefits are topology-independent."
+  },
+
+  "hybrid_effect_cross_topology": {
+    "description": "Hybrid vs Message-Passing improvement by topology",
+    "Sequential": {
+      "MP_rate": 12.0,
+      "Hybrid_rate": 34.0,
+      "delta_pp": 22.0
+    },
+    "Debate": {
+      "MP_rate": 24.0,
+      "Hybrid_rate": 50.0,
+      "delta_pp": 26.0
+    },
+    "conclusion": "Hybrid improvement is also consistent across topologies (+22pp Sequential, +26pp Debate)."
+  },
+
+  "hybrid_vs_blackboard_cross_topology": {
+    "description": "Does adding NL context (Hybrid) help beyond pure Blackboard?",
+    "Sequential": {
+      "BB_rate": 32.0,
+      "Hybrid_rate": 34.0,
+      "delta_pp": 2.0
+    },
+    "Debate": {
+      "BB_rate": 50.0,
+      "Hybrid_rate": 50.0,
+      "delta_pp": 0.0
+    },
+    "conclusion": "Hybrid provides marginal benefit in Sequential (+2pp) but zero benefit in Debate (0pp). In Debate, the multi-perspective competition already compensates for NL context value."
+  },
+
+  "topology_effect_by_comm_mode": {
+    "description": "Debate vs Sequential improvement by communication mode",
+    "Message-Passing": {
+      "Seq_rate": 12.0,
+      "Debate_rate": 24.0,
+      "delta_pp": 12.0,
+      "interpretation": "Multi-perspective debate doubles MP performance"
+    },
+    "Blackboard": {
+      "Seq_rate": 32.0,
+      "Debate_rate": 50.0,
+      "delta_pp": 18.0,
+      "interpretation": "Debate + BB is the strongest combination: BB structured state + multi-perspective competition"
+    },
+    "Hybrid": {
+      "Seq_rate": 34.0,
+      "Debate_rate": 50.0,
+      "delta_pp": 16.0,
+      "interpretation": "Similar to BB; Hybrid's NL context adds little when Debate already provides multiple perspectives"
+    }
+  },
+
+  "token_efficiency": {
+    "description": "Tokens per resolved issue (lower is more efficient)",
+    "Sequential": {
+      "MP": {"total_tokens": 909443, "resolved": 6, "per_resolve": 151574},
+      "BB": {"total_tokens": 1166906, "resolved": 16, "per_resolve": 72932},
+      "Hybrid": {"total_tokens": 1457426, "resolved": 17, "per_resolve": 85731}
+    },
+    "Debate": {
+      "MP": {"total_tokens": 1598471, "resolved": 12, "per_resolve": 133206},
+      "BB": {"total_tokens": 2448836, "resolved": 25, "per_resolve": 97953},
+      "Hybrid": {"total_tokens": 2616219, "resolved": 25, "per_resolve": 104649}
+    },
+    "most_efficient": "Sequential + Blackboard (72,932 tokens/resolve)",
+    "best_resolve_rate": "Debate + Blackboard/Hybrid (50.0%)"
+  },
+
+  "key_findings": [
+    "1. BEST CONFIG: Debate + Blackboard achieves 50.0% resolve rate (25/50), the highest across all 6 configs",
+    "2. BLACKBOARD EFFECT IS TOPOLOGY-INDEPENDENT: +20pp in Sequential, +26pp in Debate — consistent and strong",
+    "3. DEBATE AMPLIFIES BLACKBOARD: Debate + BB gains +18pp over Seq + BB, more than MP's +12pp gain from Debate",
+    "4. HYBRID = BLACKBOARD IN DEBATE: No additional benefit from NL context when multi-perspective debate already provides diversity",
+    "5. DEBATE HELPS ALL MODES: +12pp for MP, +18pp for BB, +16pp for Hybrid — multi-perspective competition is universally beneficial",
+    "6. TOKEN COST TRADEOFF: Debate uses ~60% more tokens than Sequential, but achieves significantly higher resolve rates",
+    "7. SEQUENTIAL BB IS MOST EFFICIENT: 72,932 tokens/resolve — best cost-effectiveness ratio",
+    "8. HARD ISSUES REMAIN HARD: 0-20% resolve rate for hard issues across all configs — fundamental capability limitation",
+    "9. MEDIUM DIFFICULTY BENEFITS MOST: Debate + BB/Hybrid achieve 60% on medium issues (vs 20-40% for Sequential)"
+  ]
+}

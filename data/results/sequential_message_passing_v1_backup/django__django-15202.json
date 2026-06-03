@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-15202_cc811cba",
+  "issue_id": "django__django-15202",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 8874,
+  "total_output_tokens": 3510,
+  "total_latency_ms": 67897,
+  "final_patch": "--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -95,7 +95,7 @@\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n         try:\n             splitted_url = urlsplit(value)\n-        except (ValueError, ValidationError):\n+        except ValueError:\n             # urlsplit can raise a ValueError with some misformatted URLs.\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n         if not splitted_url.scheme and not splitted_url.netloc:\n@@ -113,7 +113,7 @@\n                 netloc = netloc.encode('idna').decode('ascii')  # IDN -> ACE\n             except UnicodeError:  # invalid domain part\n                 raise e\n-            # Validate the netloc by attempting to split it\n+            # Validate the netloc by attempting to split it (catches malformed IPv6 addresses)\n             try:\n                 url = urlunsplit((scheme, netloc, path, query, fragment))\n                 splitted_url = urlsplit(url)",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T04:22:25.978492+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 573,
+      "output_tokens": 468,
+      "latency_ms": 9711
+    },
+    {
+      "timestamp": "2026-02-14T04:22:31.391876+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1247,
+      "output_tokens": 345,
+      "latency_ms": 5412
+    },
+    {
+      "timestamp": "2026-02-14T04:22:34.801436+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 773,
+      "output_tokens": 127,
+      "latency_ms": 3408
+    },
+    {
+      "timestamp": "2026-02-14T04:22:40.808462+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 422,
+      "output_tokens": 291,
+      "latency_ms": 6005
+    },
+    {
+      "timestamp": "2026-02-14T04:22:59.037874+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2985,
+      "output_tokens": 1172,
+      "latency_ms": 18228
+    },
+    {
+      "timestamp": "2026-02-14T04:23:07.312564+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 926,
+      "output_tokens": 345,
+      "latency_ms": 8273
+    },
+    {
+      "timestamp": "2026-02-14T04:23:15.090324+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1123,
+      "output_tokens": 397,
+      "latency_ms": 7777
+    },
+    {
+      "timestamp": "2026-02-14T04:23:24.162765+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 825,
+      "output_tokens": 365,
+      "latency_ms": 9071
+    }
+  ],
+  "blackboard_final_state": null
+}

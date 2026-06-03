@@ -1,0 +1,52 @@
+{
+  "experiment_id": "seq_message_passing_django__django-13230_8f83b68f",
+  "issue_id": "django__django-13230",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 8677,
+  "total_output_tokens": 3226,
+  "total_latency_ms": 100295,
+  "final_patch": "--- a/django/contrib/syndication/views.py\n+++ b/django/contrib/syndication/views.py\n@@ -214,7 +214,8 @@\n                 author_link=author_link,\n                 categories=self._get_dynamic_attr('item_categories', item),\n                 item_copyright=self._get_dynamic_attr('item_copyright', item),\n+                comments=self._get_dynamic_attr('item_comments', item),\n                 **self.item_extra_kwargs(item)\n             )\n         return feed\n",
+  "apply_method": "patch_fuzz3",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T21:12:14.391657+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 505,
+      "output_tokens": 627,
+      "latency_ms": 12971
+    },
+    {
+      "timestamp": "2026-02-22T21:13:14.739501+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 7529,
+      "output_tokens": 2483,
+      "latency_ms": 59941
+    },
+    {
+      "timestamp": "2026-02-22T21:13:18.010419+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 643,
+      "output_tokens": 116,
+      "latency_ms": 3269
+    }
+  ],
+  "blackboard_final_state": null
+}

@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-15202_08b92545",
+  "issue_id": "django__django-15202",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 52579,
+  "total_output_tokens": 5790,
+  "total_latency_ms": 118373,
+  "final_patch": "--- a/django/core/validators.py\n+++ b/django/core/validators.py\n@@ -105,6 +105,12 @@\n     def __call__(self, value):\n         if not isinstance(value, str):\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n+        # Parse URL once and cache the result to avoid redundant parsing\n+        try:\n+            split_url = urlsplit(value)\n+        except ValueError:\n+            # urlsplit() can raise ValueError for malformed URLs like 'http://[::1]::1/'\n+            raise ValidationError(self.message, code=self.code, params={'value': value})\n         if self.unsafe_chars.intersection(value):\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n@@ -118,7 +124,7 @@\n             # Trivial case failed. Try for possible IDN domain\n             if value:\n                 try:\n-                    scheme, netloc, path, query, fragment = urlsplit(value)\n+                    scheme, netloc, path, query, fragment = split_url\n                 except ValueError:  # for example, \"Invalid IPv6 URL\"\n                     raise ValidationError(self.message, code=self.code, params={'value': value})\n                 try:\n@@ -130,7 +136,7 @@\n                 raise\n         else:\n             # Now verify IPv6 in the netloc part\n-            host_match = re.search(r'^\\[(.+)\\](?::\\d{1,5})?$', urlsplit(value).netloc)\n+            host_match = re.search(r'^\\[(.+)\\](?::\\d{1,5})?$', split_url.netloc)\n             if host_match:\n                 potential_ip = host_match[1]\n                 try:\n@@ -141,7 +147,9 @@\n         # The maximum length of a full host name is 253 characters per RFC 1034\n         # section 3.1. It's defined to be 255 bytes or less, but this includes\n         # one byte for the length of the name and one byte for the trailing dot\n-        # that's used to indicate absolute names in DNS.\n-        if len(urlsplit(value).hostname) > 253:\n+        # that's used to indicate absolute names in DNS. hostname can be None for\n+        # certain malformed URLs.\n+        if split_url.hostname and len(split_url.hostname) > 253:\n             raise ValidationError(self.message, code=self.code, params={'value': value})\n \n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:05:56.974958+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 608,
+      "output_tokens": 479,
+      "latency_ms": 9610
+    },
+    {
+      "timestamp": "2026-02-16T18:06:12.546251+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 15931,
+      "output_tokens": 871,
+      "latency_ms": 14727
+    },
+    {
+      "timestamp": "2026-02-16T18:06:20.224745+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 781,
+      "output_tokens": 356,
+      "latency_ms": 7677
+    },
+    {
+      "timestamp": "2026-02-16T18:06:40.292482+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 16148,
+      "output_tokens": 1353,
+      "latency_ms": 20066
+    },
+    {
+      "timestamp": "2026-02-16T18:06:50.688388+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1030,
+      "output_tokens": 381,
+      "latency_ms": 10395
+    },
+    {
+      "timestamp": "2026-02-16T18:07:16.128174+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 16432,
+      "output_tokens": 1830,
+      "latency_ms": 25439
+    },
+    {
+      "timestamp": "2026-02-16T18:07:26.743219+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1241,
+      "output_tokens": 399,
+      "latency_ms": 10614
+    },
+    {
+      "timestamp": "2026-02-16T18:07:45.736895+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15202",
+      "issue_id": "django__django-15202",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 121,
+      "latency_ms": 3039
+    }
+  ],
+  "blackboard_final_state": null
+}

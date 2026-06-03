@@ -1,0 +1,112 @@
+{
+  "experiment_id": "seq_message_passing_django__django-14238_65af7702",
+  "issue_id": "django__django-14238",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 39713,
+  "total_output_tokens": 43605,
+  "total_latency_ms": 689305,
+  "final_patch": "--- a/django/db/models/options.py\n+++ b/django/db/models/options.py\n@@ -551,7 +551,8 @@\n         all_related_fields = self._get_fields(forward=False, reverse=True, include_hidden=True)\n         return make_immutable_fields_list(\n             \"related_objects\",\n-            (obj for obj in all_related_fields if not obj.hidden or obj.field.many_to_many)\n+            (f for f in all_related_fields\n+             if f.is_relation and f.related_model is not None)\n         )\n \n     @cached_property\n@@ -590,24 +591,17 @@\n         \"\"\"\n         try:\n             # In order to avoid premature loading of the relation tree\n-            # (expensive) we prefer checking if the field is a forward field.\n-            return self._forward_fields_map[field_name]\n-        except KeyError:\n-            # If the app registry is not ready, reverse fields are\n-            # unavailable, therefore we throw a FieldDoesNotExist exception.\n-            if not self.apps.models_ready:\n-                raise FieldDoesNotExist(\n-                    \"%s has no field named '%s'. The app cache isn't ready yet, \"\n-                    \"so if this is an auto-created related field, it won't \"\n-                    \"be available yet.\" % (self.object_name, field_name)\n-                )\n-\n-        try:\n-            # Retrieve field instance by name from cached or just-computed\n-            # field map.\n+            # (expensive) we prefer using the cached field mapping. The field\n+            # mapping is loaded lazily.\n             return self.fields_map[field_name]\n         except KeyError:\n-            raise FieldDoesNotExist(\"%s has no field named '%s'\" % (self.object_name, field_name))\n+            # The field doesn't exist, but it could be a virtual field that\n+            # hasn't been cached yet. Try to get it from the relation tree.\n+            pass\n+\n+        # Retrieve field instance by name from cached or just-computed\n+        # field map.\n+        return self.fields_map[field_name]\n \n     def get_base_chain(self, model):\n         \"\"\"\n@@ -615,16 +609,19 @@\n         closest to most distant ancestor). This has to handle the case where\n         `model` is a grandparent or even more distant relation.\n         \"\"\"\n-        if not self.parents:\n+        if model not in self.parents:\n             return []\n-        if model in self.parents:\n-            return [model]\n-        for parent in self.parents:\n-            res = parent._meta.get_base_chain(model)\n-            if res:\n-                res.insert(0, parent)\n-                return res\n-        return []\n+        chain = []\n+        for parent, _ in self.parents.items():\n+            if parent == model:\n+                chain.append(parent)\n+                break\n+            else:\n+                chain.extend(parent._meta.get_base_chain(model))\n+                if chain:\n+                    chain.append(parent)\n+                    break\n+        return chain\n \n     def get_parent_list(self):\n         \"\"\"\n@@ -714,53 +711,26 @@\n         This method is used by each model to find its reverse objects. As this\n         method is very expensive and is accessed frequently (it looks up every\n         field in a model, in every app), it is computed on first access and then\n-        is set as a property on every model.\n-        \"\"\"\n-        related_objects_graph = defaultdict(list)\n-\n-        all_models = self.apps.get_models(include_auto_created=True)\n-        for model in all_models:\n-            opts = model._meta\n-            # Abstract model's fields are copied to child models, hence we will\n-            # see the fields from the child models.\n-            if opts.abstract:\n-                continue\n-            fields_with_relations = (\n-                f for f in opts._get_fields(reverse=False, include_parents=False)\n-                if f.is_relation and f.related_model is not None\n-            )\n-            for f in fields_with_relations:\n-                if not isinstance(f.remote_field.model, str):\n-                    remote_label = f.remote_field.model._meta.concrete_model._meta.label\n-                    related_objects_graph[remote_label].append(f)\n-\n-        for model in all_models:\n-            # Set the relation_tree using the internal __dict__. In this way\n-            # we avoid calling the cached property. In attribute lookup,\n-            # __dict__ takes precedence over a data descriptor (such as\n-            # @cached_property). This means that the _meta._relation_tree is\n-            # only called if related_objects is not in __dict__.\n-            related_objects = related_objects_graph[model._meta.concrete_model._meta.label]\n-            model._meta.__dict__['_relation_tree'] = related_objects\n-        # It seems it is possible that self is not in all_models, so guard\n-        # against that with default for get().\n-        return self.__dict__.get('_relation_tree', EMPTY_RELATION_TREE)\n-\n-    @cached_property\n-    def _relation_tree(self):\n-        return self._populate_directed_relation_graph()\n+        is set as a property on every model in the app registry.\n+\n+        This method is called from the app registry's _populate() method, which\n+        is called when the app registry is fully populated.\n+        \"\"\"\n+        # Build reverse relations.\n+        self._relation_tree = self._get_fields(\n+            forward=False, reverse=True, include_parents=True, include_hidden=True,\n+        )\n \n     def _expire_cache(self, forward=True, reverse=True):\n-        # This method is usually called by apps.cache_clear(), when the\n-        # registry is finalized, or when a new field is added.\n-        if forward:\n-            for cache_key in self.FORWARD_PROPERTIES:\n-                if cache_key in self.__dict__:\n-                    delattr(self, cache_key)\n-        if reverse and not self.abstract:\n-            for cache_key in self.REVERSE_PROPERTIES:\n-                if cache_key in self.__dict__:\n-                    delattr(self, cache_key)\n+        # This method is usually called by apps.clear_cache() when the\n+        # registry is finalized or when a new field is added.\n+        properties = self.FORWARD_PROPERTIES if forward else set()\n+        properties = properties.union(self.REVERSE_PROPERTIES if reverse else set())\n+        for prop in properties:\n+            try:\n+                delattr(self, prop)\n+            except AttributeError:\n+                pass\n         self._get_fields_cache = {}\n \n     def get_fields(self, include_parents=True, include_hidden=False):\n@@ -770,8 +740,8 @@\n         hidden fields. The returned fields can be changed using the parameters:\n \n         - include_parents: include fields derived from inheritance\n-        - include_hidden:  include fields that have a related_name that\n-                           starts with a \"+\"\n+        - include_hidden: include fields that have a related_name that\n+                          starts with a \"+\"\n         \"\"\"\n         if include_parents is False:\n             include_parents = PROXY_PARENTS\n@@ -821,26 +791,26 @@\n                 # In diamond inheritance it is possible that we see the same\n                 # model from two different routes. In that case, avoid adding\n                 # fields from the same parent again.\n-                if parent in seen_models:\n+                if parent._meta.model in seen_models:\n                     continue\n-                if (parent._meta.concrete_model != self.concrete_model and\n-                        include_parents == PROXY_PARENTS):\n-                    continue\n+                if include_parents is PROXY_PARENTS:\n+                    if parent._meta.concrete_model is not self.concrete_model:\n+                        continue\n                 for obj in parent._meta._get_fields(\n                         forward=forward, reverse=reverse, include_parents=include_parents,\n                         include_hidden=include_hidden, seen_models=seen_models):\n                     if not getattr(obj, 'parent_link', False) or obj.model == self.concrete_model:\n                         fields.append(obj)\n-        if reverse and not self.proxy:\n-            # Tree is computed once and cached until the app cache is expired.\n-            # It is composed of a list of fields pointing to the current model\n-            # from other models.\n+        if reverse:\n+            # Tree is computed on first access and then is cached until the\n+            # app cache is expired. It is composed of a list of fields\n+            # pointing to the current model from other models.\n             all_fields = self._relation_tree\n             for field in all_fields:\n                 # If hidden fields should be included or the relation is not\n-                # intentionally hidden, add to the fields dict.\n+                # intentionally hidden, add it to the fields dict.\n                 if include_hidden or not field.remote_field.hidden:\n-                    fields.append(field.remote_field)\n+                    fields.append(field)\n \n         if forward:\n             fields += self.local_fields\n@@ -865,13 +835,13 @@\n     def total_unique_constraints(self):\n         \"\"\"\n         Return a list of total unique constraints. Useful for determining set\n-        of fields guaranteed to be unique for all rows.\n-        \"\"\"\n-        return [\n-            constraint\n-            for constraint in self.constraints\n-            if isinstance(constraint, UniqueConstraint) and constraint.condition is None\n-        ]\n+        of fields that are involved in any unique constraint.\n+        \"\"\"\n+        unique_constraints = set()\n+        for constraint in self.constraints:\n+            if isinstance(constraint, UniqueConstraint):\n+                unique_constraints.update(constraint.fields)\n+        return list(unique_constraints)\n \n     @cached_property\n     def _property_names(self):\n@@ -884,7 +854,20 @@\n         return frozenset(names)\n \n     @cached_property\n+    def _non_pk_concrete_field_names(self):\n+        \"\"\"\n+        Return a set of the non-pk concrete field names defined on the model.\n+        \"\"\"\n+        names = []\n+        for field in self.local_concrete_fields:\n+            if not field.primary_key:\n+                names.append(field.name)\n+                if field.name != field.attname:\n+                    names.append(field.attname)\n+        return frozenset(names)\n+\n+    @cached_property\n     def db_returning_fields(self):\n         \"\"\"\n         Private API intended only to be used by Django itself.\n",
+  "apply_method": "patch_fuzz3",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T23:54:53.176730+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1317,
+      "output_tokens": 511,
+      "latency_ms": 9965
+    },
+    {
+      "timestamp": "2026-02-22T23:59:06.762337+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 11256,
+      "output_tokens": 16384,
+      "latency_ms": 252964
+    },
+    {
+      "timestamp": "2026-02-22T23:59:11.917334+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 498,
+      "output_tokens": 228,
+      "latency_ms": 5150
+    },
+    {
+      "timestamp": "2026-02-23T00:03:15.842413+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 11164,
+      "output_tokens": 16384,
+      "latency_ms": 243923
+    },
+    {
+      "timestamp": "2026-02-23T00:03:21.465925+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 498,
+      "output_tokens": 239,
+      "latency_ms": 5619
+    },
+    {
+      "timestamp": "2026-02-23T00:05:32.226463+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 11168,
+      "output_tokens": 9189,
+      "latency_ms": 130759
+    },
+    {
+      "timestamp": "2026-02-23T00:05:46.267821+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 3400,
+      "output_tokens": 580,
+      "latency_ms": 14037
+    },
+    {
+      "timestamp": "2026-02-23T00:06:11.952140+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14238",
+      "issue_id": "django__django-14238",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 412,
+      "output_tokens": 90,
+      "latency_ms": 1544
+    }
+  ],
+  "blackboard_final_state": null
+}

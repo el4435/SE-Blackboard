@@ -1,0 +1,87 @@
+{
+  "experiment_id": "deb_message_passing_sphinx-doc__sphinx-8713_d20fd86b",
+  "issue_id": "sphinx-doc__sphinx-8713",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 2,
+  "total_input_tokens": 13033,
+  "total_output_tokens": 3659,
+  "total_latency_ms": 70119,
+  "final_patch": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T00:03:35.559946+00:00",
+      "experiment_id": "debate_message_passing_sphinx-doc__sphinx-8713",
+      "issue_id": "sphinx-doc__sphinx-8713",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 888,
+      "output_tokens": 708,
+      "latency_ms": 11359
+    },
+    {
+      "timestamp": "2026-02-15T00:03:45.421124+00:00",
+      "experiment_id": "debate_message_passing_sphinx-doc__sphinx-8713",
+      "issue_id": "sphinx-doc__sphinx-8713",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3566,
+      "output_tokens": 733,
+      "latency_ms": 9859
+    },
+    {
+      "timestamp": "2026-02-15T00:03:54.825101+00:00",
+      "experiment_id": "debate_message_passing_sphinx-doc__sphinx-8713",
+      "issue_id": "sphinx-doc__sphinx-8713",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3566,
+      "output_tokens": 733,
+      "latency_ms": 9402
+    },
+    {
+      "timestamp": "2026-02-15T00:04:02.537983+00:00",
+      "experiment_id": "debate_message_passing_sphinx-doc__sphinx-8713",
+      "issue_id": "sphinx-doc__sphinx-8713",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1112,
+      "output_tokens": 336,
+      "latency_ms": 7711
+    },
+    {
+      "timestamp": "2026-02-15T00:04:31.063232+00:00",
+      "experiment_id": "debate_message_passing_sphinx-doc__sphinx-8713",
+      "issue_id": "sphinx-doc__sphinx-8713",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2973,
+      "output_tokens": 1018,
+      "latency_ms": 13515
+    },
+    {
+      "timestamp": "2026-02-15T00:04:34.318039+00:00",
+      "experiment_id": "debate_message_passing_sphinx-doc__sphinx-8713",
+      "issue_id": "sphinx-doc__sphinx-8713",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 928,
+      "output_tokens": 131,
+      "latency_ms": 3253
+    }
+  ],
+  "blackboard_final_state": null
+}

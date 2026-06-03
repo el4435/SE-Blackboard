@@ -17,7 +17,11 @@ from src.blackboard.schema import (
     TestResult,
 )
 from src.blackboard.board import Blackboard
+
+
+# ---------------------------------------------------------------------------
 # Fixtures
+# ---------------------------------------------------------------------------
 
 @pytest.fixture
 def sample_issue() -> IssueInfo:
@@ -76,7 +80,11 @@ def sample_test_result() -> TestResult:
         pass_count=42,
         fail_count=0,
     )
+
+
+# ---------------------------------------------------------------------------
 # Schema tests
+# ---------------------------------------------------------------------------
 
 class TestSchema:
     """Tests for Pydantic schema models."""
@@ -129,7 +137,11 @@ class TestSchema:
         assert restored.issue.instance_id == state.issue.instance_id
         assert len(restored.patches) == 1
         assert restored.patches[0].version == 1
+
+
+# ---------------------------------------------------------------------------
 # Blackboard tests
+# ---------------------------------------------------------------------------
 
 class TestBlackboard:
     """Tests for the Blackboard read/write manager."""

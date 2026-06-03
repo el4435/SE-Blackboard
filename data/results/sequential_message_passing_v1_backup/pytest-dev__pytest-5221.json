@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_pytest-dev__pytest-5221_92e47ec0",
+  "issue_id": "pytest-dev__pytest-5221",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 16347,
+  "total_output_tokens": 9406,
+  "total_latency_ms": 129949,
+  "final_patch": "--- a/src/_pytest/fixtures.py\n+++ b/src/_pytest/fixtures.py\n@@ -1,3 +1,10 @@\n # Mock content for src/_pytest/fixtures.py\n # This is a placeholder.\n \n+# Define scope ordering for sorting fixtures\n+SCOPE_ORDER = {\n+    \"function\": 0,\n+    \"class\": 1,\n+    \"module\": 2,\n+    \"package\": 3,\n+    \"session\": 4,\n+}\n--- a/src/_pytest/python.py\n+++ b/src/_pytest/python.py\n@@ -1,3 +1,6 @@\n # Mock content for src/_pytest/python.py\n # This is a placeholder.\n \n+# Import SCOPE_ORDER for fixture sorting\n+from _pytest.fixtures import SCOPE_ORDER\n+\n--- a/testing/python/test_fixtures.py\n+++ b/testing/python/test_fixtures.py\n@@ -0,0 +1,35 @@\n+\"\"\"Tests for fixture scope display functionality.\"\"\"\n+import pytest\n+\n+\n+def test_show_fixtures_with_scope(pytester):\n+    \"\"\"Test that --fixtures displays scope information for each fixture.\"\"\"\n+    pytester.makepyfile(\n+        \"\"\"\n+        import pytest\n+\n+        @pytest.fixture(scope=\"session\")\n+        def session_fix():\n+            '''A session-scoped fixture'''\n+            return \"session\"\n+\n+        @pytest.fixture(scope=\"module\")\n+        def module_fix():\n+            '''A module-scoped fixture'''\n+            return \"module\"\n+\n+        @pytest.fixture  # default scope is function\n+        def function_fix():\n+            '''A function-scoped fixture'''\n+            return \"function\"\n+\n+        def test_example(session_fix, module_fix, function_fix):\n+            pass\n+        \"\"\"\n+    )\n+    result = pytester.runpytest(\"--fixtures\")\n+    result.stdout.fnmatch_lines(\n+        [\n+            \"*session_fix*scope: session*\",\n+            \"*module_fix*scope: module*\",\n+            \"*function_fix*scope: function*\",\n+        ]\n+    )\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T04:38:13.452720+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 451,
+      "output_tokens": 474,
+      "latency_ms": 10586
+    },
+    {
+      "timestamp": "2026-02-14T04:38:18.622932+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1288,
+      "output_tokens": 361,
+      "latency_ms": 5169
+    },
+    {
+      "timestamp": "2026-02-14T04:38:28.312338+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 789,
+      "output_tokens": 448,
+      "latency_ms": 9688
+    },
+    {
+      "timestamp": "2026-02-14T04:39:16.150161+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 5067,
+      "output_tokens": 4542,
+      "latency_ms": 47837
+    },
+    {
+      "timestamp": "2026-02-14T04:39:29.789670+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2674,
+      "output_tokens": 543,
+      "latency_ms": 13638
+    },
+    {
+      "timestamp": "2026-02-14T04:40:03.475051+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 4863,
+      "output_tokens": 2689,
+      "latency_ms": 33684
+    },
+    {
+      "timestamp": "2026-02-14T04:40:12.814524+00:00",
+      "experiment_id": "sequential_message_passing_pytest-dev__pytest-5221",
+      "issue_id": "pytest-dev__pytest-5221",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1215,
+      "output_tokens": 349,
+      "latency_ms": 9338
+    }
+  ],
+  "blackboard_final_state": null
+}

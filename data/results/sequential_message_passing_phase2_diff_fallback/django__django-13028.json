@@ -1,0 +1,112 @@
+{
+  "experiment_id": "seq_message_passing_django__django-13028_2e19ab49",
+  "issue_id": "django__django-13028",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 46376,
+  "total_output_tokens": 5350,
+  "total_latency_ms": 123374,
+  "final_patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -23,6 +23,7 @@\n from django.db.models.aggregates import Count\n from django.db.models.constants import LOOKUP_SEP\n from django.db.models.expressions import BaseExpression, Col, F, OuterRef, Ref\n+from django.db.models import Model\n from django.db.models.fields import Field\n from django.db.models.fields.related_lookups import MultiColSource\n from django.db.models.lookups import Lookup",
+  "apply_method": "patch_fuzz3",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T22:40:14.294028+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 1388,
+      "output_tokens": 647,
+      "latency_ms": 13719
+    },
+    {
+      "timestamp": "2026-02-22T22:40:42.569677+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 15127,
+      "output_tokens": 1711,
+      "latency_ms": 27857
+    },
+    {
+      "timestamp": "2026-02-22T22:40:48.999784+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 703,
+      "output_tokens": 270,
+      "latency_ms": 6429
+    },
+    {
+      "timestamp": "2026-02-22T22:41:08.537234+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 13775,
+      "output_tokens": 1143,
+      "latency_ms": 19536
+    },
+    {
+      "timestamp": "2026-02-22T22:41:14.582597+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 731,
+      "output_tokens": 274,
+      "latency_ms": 6044
+    },
+    {
+      "timestamp": "2026-02-22T22:41:29.628197+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 13538,
+      "output_tokens": 869,
+      "latency_ms": 15044
+    },
+    {
+      "timestamp": "2026-02-22T22:41:38.345466+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 702,
+      "output_tokens": 342,
+      "latency_ms": 8716
+    },
+    {
+      "timestamp": "2026-02-22T22:42:03.537304+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13028",
+      "issue_id": "django__django-13028",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 412,
+      "output_tokens": 94,
+      "latency_ms": 1730
+    }
+  ],
+  "blackboard_final_state": null
+}

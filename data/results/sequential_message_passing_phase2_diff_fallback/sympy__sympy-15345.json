@@ -1,0 +1,52 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-15345_0f09d9a3",
+  "issue_id": "sympy__sympy-15345",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 2567,
+  "total_output_tokens": 1087,
+  "total_latency_ms": 40126,
+  "final_patch": "--- a/sympy/printing/mathematica.py\n+++ b/sympy/printing/mathematica.py\n@@ -113,5 +113,11 @@\n         return expr\n \n+    def _print_Max(self, expr):\n+        return 'Max[{}]'.format(', '.join(self._print(arg) for arg in expr.args))\n+\n+    def _print_Min(self, expr):\n+        return 'Min[{}]'.format(', '.join(self._print(arg) for arg in expr.args))\n+\n     def _print_list(self, expr):\n         return '{' + ', '.join(self.doprint(a) for a in expr) + '}'\n",
+  "apply_method": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T22:57:28.329457+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 516,
+      "output_tokens": 615,
+      "latency_ms": 11691
+    },
+    {
+      "timestamp": "2026-02-22T22:57:32.845635+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1326,
+      "output_tokens": 297,
+      "latency_ms": 4499
+    },
+    {
+      "timestamp": "2026-02-22T22:57:36.929206+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-15345",
+      "issue_id": "sympy__sympy-15345",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 725,
+      "output_tokens": 175,
+      "latency_ms": 4082
+    }
+  ],
+  "blackboard_final_state": null
+}

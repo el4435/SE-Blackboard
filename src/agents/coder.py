@@ -89,7 +89,11 @@ def truncate_context(context: str, max_chars: int = MAX_CONTEXT_CHARS) -> str:
     if len(context) <= max_chars:
         return context
     return context[:max_chars] + "\n\n... [truncated — context too long] ..."
+
+
+# ---------------------------------------------------------------------------
 # Whole-file rewrite helpers
+# ---------------------------------------------------------------------------
 
 # Maximum file line count for whole-file mode; beyond this, fall back to diff.
 WHOLE_FILE_MAX_LINES = 2000
@@ -281,7 +285,10 @@ class CoderAgent(BaseAgent):
         patch_dict["author"] = self.coder_label
         patch_dict["timestamp"] = datetime.now(timezone.utc)
         return patch_dict
+
+    # ------------------------------------------------------------------
     # Whole-file rewrite mode
+    # ------------------------------------------------------------------
 
     async def _execute_whole_file(self, context: str) -> dict[str, Any]:
         """Whole-file rewrite mode: Coder outputs complete file as free-form text.
@@ -361,7 +368,10 @@ class CoderAgent(BaseAgent):
             "author": self.coder_label,
             "timestamp": datetime.now(timezone.utc).isoformat(),
         }
+
+    # ------------------------------------------------------------------
     # Tool-use mode
+    # ------------------------------------------------------------------
 
     async def _execute_with_tools(self, context: str) -> dict[str, Any]:
         """Tool-use mode: Coder can read files, search code, and validate patches."""

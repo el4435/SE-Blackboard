@@ -1,0 +1,220 @@
+{
+  "experiment_id": "deb_hybrid_django__django-16379_150be0a1",
+  "issue_id": "django__django-16379",
+  "topology": "debate",
+  "communication": "hybrid",
+  "resolved": true,
+  "iterations": 2,
+  "total_input_tokens": 30381,
+  "total_output_tokens": 4703,
+  "total_latency_ms": 74106,
+  "final_patch": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -91,9 +91,13 @@\n \n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        # Use try-except instead of os.path.exists() to avoid race condition\n+        # where file could be deleted between check and open (TOCTOU)\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n+        except (FileNotFoundError, OSError):\n+            # File doesn't exist or can't be accessed\n+            pass\n         return False\n \n     def _cull(self):\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T03:13:04.749439+00:00",
+      "experiment_id": "debate_hybrid_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Deb-H",
+      "agent_role": "Planner",
+      "communication_mode": "hybrid",
+      "iteration": 0,
+      "input_tokens": 1311,
+      "output_tokens": 605,
+      "latency_ms": 9519
+    },
+    {
+      "timestamp": "2026-02-15T03:13:14.683045+00:00",
+      "experiment_id": "debate_hybrid_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Deb-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 5187,
+      "output_tokens": 686,
+      "latency_ms": 9932
+    },
+    {
+      "timestamp": "2026-02-15T03:13:24.141448+00:00",
+      "experiment_id": "debate_hybrid_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Deb-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 5187,
+      "output_tokens": 686,
+      "latency_ms": 9457
+    },
+    {
+      "timestamp": "2026-02-15T03:13:28.279588+00:00",
+      "experiment_id": "debate_hybrid_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Deb-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 2656,
+      "output_tokens": 167,
+      "latency_ms": 4136
+    },
+    {
+      "timestamp": "2026-02-15T03:13:35.024429+00:00",
+      "experiment_id": "debate_hybrid_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Deb-H",
+      "agent_role": "Tester",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 1537,
+      "output_tokens": 312,
+      "latency_ms": 6743
+    },
+    {
+      "timestamp": "2026-02-15T03:13:50.775313+00:00",
+      "experiment_id": "debate_hybrid_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Deb-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 2,
+      "input_tokens": 5479,
+      "output_tokens": 1107,
+      "latency_ms": 15750
+    },
+    {
+      "timestamp": "2026-02-15T03:14:04.837712+00:00",
+      "experiment_id": "debate_hybrid_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Deb-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 2,
+      "input_tokens": 5412,
+      "output_tokens": 974,
+      "latency_ms": 14061
+    },
+    {
+      "timestamp": "2026-02-15T03:14:09.334235+00:00",
+      "experiment_id": "debate_hybrid_django__django-16379",
+      "issue_id": "django__django-16379",
+      "config": "Deb-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 2,
+      "input_tokens": 3612,
+      "output_tokens": 166,
+      "latency_ms": 4495
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "django__django-16379",
+      "problem_statement": "FileBasedCache has_key is susceptible to race conditions\nDescription\n\t \n\t\t(last modified by Marti Raudsepp)\n\t \nI received the exception from Django's cache framework:\nFileNotFoundError: [Errno 2] No such file or directory: '/app/var/cache/d729e4cf4ba88cba5a0f48e0396ec48a.djcache'\n[...]\n File \"django/core/cache/backends/base.py\", line 229, in get_or_set\n\tself.add(key, default, timeout=timeout, version=version)\n File \"django/core/cache/backends/filebased.py\", line 26, in add\n\tif self.has_key(key, version):\n File \"django/core/cache/backends/filebased.py\", line 94, in has_key\n\twith open(fname, \"rb\") as f:\nThe code is:\n\tdef has_key(self, key, version=None):\n\t\tfname = self._key_to_file(key, version)\n\t\tif os.path.exists(fname):\n\t\t\twith open(fname, \"rb\") as f:\n\t\t\t\treturn not self._is_expired(f)\n\t\treturn False\nBetween the exists() check and open(), it's possible for the file to be deleted. In fact, the _is_expired() method itself deletes the file if it finds it to be expired. So if many threads race to read an expired cache at once, it's not that unlikely to hit this window.\n",
+      "repo": "django/django",
+      "base_commit": "1d0fa848e084cad62d0bb6bde3b51e4862558e57",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The `has_key` method in FileBasedCache has a classic Time-of-Check-Time-of-Use (TOCTOU) race condition. The code first checks if a file exists using `os.path.exists(fname)`, and then attempts to open it. Between these two operations, another thread or process can delete the file (especially if `_is_expired()` determines the cache entry is expired), causing a `FileNotFoundError` when trying to open the file.",
+      "relevant_files": [
+        "django/core/cache/backends/filebased.py"
+      ],
+      "relevant_functions": [
+        "FileBasedCache.has_key",
+        "FileBasedCache.add",
+        "FileBasedCache._is_expired"
+      ],
+      "fix_strategy": "1. Remove the `os.path.exists()` check in the `has_key` method.\n2. Wrap the `open()` call in a try-except block to catch `FileNotFoundError` (and potentially `OSError`).\n3. When a `FileNotFoundError` occurs, return `False` to indicate the key does not exist (or is no longer valid).\n4. This approach follows the EAFP (Easier to Ask for Forgiveness than Permission) principle, which is more Pythonic and handles race conditions better.\n5. Review other methods in the FileBasedCache class that might have similar race conditions (like `get`, `set`, `delete`) to ensure they handle file operations safely.\n6. The fix should be minimal and focused: replace the check-then-open pattern with a try-except pattern that treats missing files as non-existent cache entries.",
+      "confidence": 0.95,
+      "relevant_code": "## Source Code Context\n\n## File: django/core/cache/backends/filebased.py\n```python\n# Mock content for django/core/cache/backends/filebased.py\n# This is a placeholder.\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder_A",
+        "diff": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -91,9 +91,10 @@\n \n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n+        except FileNotFoundError:\n+            pass\n         return False\n",
+        "description": "Fix race condition in FileBasedCache.has_key method by replacing the os.path.exists() check with a try-except block that catches FileNotFoundError. This follows the EAFP (Easier to Ask for Forgiveness than Permission) principle and prevents the race condition where a file can be deleted between the existence check and the open() call.",
+        "timestamp": "2026-02-15T03:13:14.683325Z"
+      },
+      {
+        "version": 1,
+        "author": "Coder_B",
+        "diff": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -91,9 +91,10 @@\n \n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n+        except FileNotFoundError:\n+            pass\n         return False\n",
+        "description": "Fix race condition in FileBasedCache.has_key method by replacing the os.path.exists() check with a try-except block that catches FileNotFoundError. This follows the EAFP (Easier to Ask for Forgiveness than Permission) principle and prevents the race condition where a file can be deleted between the existence check and the open() call.",
+        "timestamp": "2026-02-15T03:13:24.141913Z"
+      },
+      {
+        "version": 2,
+        "author": "Coder_A",
+        "diff": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -91,9 +91,14 @@\n \n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n-            with open(fname, \"rb\") as f:\n-                return not self._is_expired(f)\n+        # Use try-except instead of os.path.exists() to avoid race condition\n+        # where file could be deleted between the existence check and open().\n+        # This is especially likely when multiple threads access an expired cache entry.\n+        try:\n+            with open(fname, \"rb\") as f:\n+                return not self._is_expired(f)\n+        except (FileNotFoundError, OSError):\n+            # File doesn't exist or cannot be accessed, treat as cache miss\n+            pass\n         return False\n \n     def _cull(self):",
+        "description": "Fix race condition in FileBasedCache.has_key method by replacing os.path.exists() check with try-except block. This prevents FileNotFoundError when the cache file is deleted between the existence check and file open operation. The fix catches both FileNotFoundError and OSError to handle various I/O errors gracefully, and includes explanatory comments for future maintainers.",
+        "timestamp": "2026-02-15T03:13:50.775640Z"
+      },
+      {
+        "version": 2,
+        "author": "Coder_B",
+        "diff": "--- a/django/core/cache/backends/filebased.py\n+++ b/django/core/cache/backends/filebased.py\n@@ -91,9 +91,13 @@\n \n     def has_key(self, key, version=None):\n         fname = self._key_to_file(key, version)\n-        if os.path.exists(fname):\n+        # Use try-except instead of os.path.exists() to avoid race condition\n+        # where file could be deleted between check and open (TOCTOU)\n+        try:\n             with open(fname, \"rb\") as f:\n                 return not self._is_expired(f)\n+        except (FileNotFoundError, OSError):\n+            # File doesn't exist or can't be accessed\n+            pass\n         return False\n \n     def _cull(self):\n",
+        "description": "Fix race condition in FileBasedCache.has_key by using try-except instead of os.path.exists check. This addresses the TOCTOU vulnerability where files can be deleted between the existence check and open call. Also catches OSError to handle other I/O errors gracefully.",
+        "timestamp": "2026-02-15T03:14:04.837992Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider catching OSError as a parent exception class instead of just FileNotFoundError to handle other potential I/O errors (e.g., PermissionError) that could occur during file access. This would make the code more robust.",
+          "Consider adding a comment explaining why the try-except pattern is used instead of os.path.exists() to document the race condition fix for future maintainers.",
+          "Review other methods in FileBasedCache (get, set, delete, etc.) to ensure they also handle similar race conditions appropriately."
+        ]
+      },
+      {
+        "patch_version": 2,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Both patches are functionally identical and correctly fix the race condition. Patch A has slightly more detailed comments explaining the scenario, while Patch B is more concise. Either would be acceptable.",
+          "Consider reviewing other methods in FileBasedCache (get, set, delete, etc.) for similar TOCTOU race conditions as mentioned in the fix strategy.",
+          "The catch of OSError in addition to FileNotFoundError is good defensive programming, as it handles other potential I/O errors (permissions, disk errors, etc.) gracefully."
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 1,
+        "passed": false,
+        "pass_count": 38,
+        "fail_count": 4,
+        "failing_tests": [
+          "test_ordered_result_set",
+          "test_union_query_column_mismatch"
+        ],
+        "error_traces": [
+          "AssertionError: Expected ordered result set",
+          "ValueError: Column mismatch in UNION query"
+        ]
+      },
+      {
+        "patch_version": 2,
+        "passed": true,
+        "pass_count": 42,
+        "fail_count": 0,
+        "failing_tests": [],
+        "error_traces": []
+      }
+    ],
+    "metadata": {
+      "status": "resolved",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-15T03:12:55.229004Z",
+      "end_time": null
+    }
+  }
+}

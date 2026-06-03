@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_django__django-14667_bb4e1332",
+  "issue_id": "django__django-14667",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 10292,
+  "total_output_tokens": 4873,
+  "total_latency_ms": 91805,
+  "final_patch": "--- a/django/db/models/sql/query.py\n+++ b/django/db/models/sql/query.py\n@@ -2155,12 +2155,22 @@\n             )\n \n         if existing == (None, True):\n+            # No existing deferred loading state, initialize with the new fields\n             self.deferred_loading = field_names, defer\n         else:\n             existing, existing_defer = existing\n             if defer:\n+                # Adding fields to defer\n                 if existing_defer:\n-                    self.deferred_loading = existing.union(field_names), True\n+                    # Already in defer mode: accumulate deferred fields\n+                    field_names = existing.union(field_names)\n                 else:\n+                    # Switching from only mode to defer mode:\n+                    # Replace the only strategy with a defer strategy for the specified fields\n                     field_names = existing.difference(field_names)\n-            self.deferred_loading = field_names, defer\n+                self.deferred_loading = field_names, True\n+            else:\n+                # Switching to only mode (defer=False):\n+                # Replace any existing strategy (defer or only) with only these fields\n+                self.deferred_loading = field_names, False",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T03:30:35.544840+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 675,
+      "output_tokens": 761,
+      "latency_ms": 15914
+    },
+    {
+      "timestamp": "2026-02-14T03:30:44.252924+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1552,
+      "output_tokens": 477,
+      "latency_ms": 8707
+    },
+    {
+      "timestamp": "2026-02-14T03:30:54.041194+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 905,
+      "output_tokens": 366,
+      "latency_ms": 9787
+    },
+    {
+      "timestamp": "2026-02-14T03:31:05.311122+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1156,
+      "output_tokens": 627,
+      "latency_ms": 11269
+    },
+    {
+      "timestamp": "2026-02-14T03:31:17.411587+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1055,
+      "output_tokens": 516,
+      "latency_ms": 12099
+    },
+    {
+      "timestamp": "2026-02-14T03:31:40.645401+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 4054,
+      "output_tokens": 1660,
+      "latency_ms": 23232
+    },
+    {
+      "timestamp": "2026-02-14T03:31:51.433976+00:00",
+      "experiment_id": "sequential_message_passing_django__django-14667",
+      "issue_id": "django__django-14667",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 895,
+      "output_tokens": 466,
+      "latency_ms": 10787
+    }
+  ],
+  "blackboard_final_state": null
+}

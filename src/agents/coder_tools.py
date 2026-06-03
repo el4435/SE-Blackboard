@@ -30,7 +30,10 @@ class CoderToolHandler:
         self.max_tool_calls: int = 15
         self.tool_trace: list[dict[str, Any]] = []
         self._validate_fail_count: int = 0
+
+    # ------------------------------------------------------------------
     # Tool definitions (Claude API format)
+    # ------------------------------------------------------------------
 
     def get_tool_definitions(self) -> list[dict[str, Any]]:
         """Return tool definitions in Claude API tool-use format."""
@@ -139,7 +142,10 @@ class CoderToolHandler:
                 },
             },
         ]
+
+    # ------------------------------------------------------------------
     # Tool execution
+    # ------------------------------------------------------------------
 
     async def handle_tool_call(self, tool_name: str, tool_input: dict[str, Any]) -> str:
         """Execute a single tool call and return the result string."""
@@ -179,7 +185,10 @@ class CoderToolHandler:
         if tool_name == "submit_patch":
             return "SUBMITTED"
         return f"Unknown tool: {tool_name}"
+
+    # ------------------------------------------------------------------
     # Individual tool implementations
+    # ------------------------------------------------------------------
 
     async def _read_file(self, tool_input: dict[str, Any]) -> str:
         content = await self.runner.get_file_content(
@@ -278,7 +287,10 @@ class CoderToolHandler:
         end = min(len(lines), tool_input["end_line"])
         numbered = [f"{i + 1:4d} | {lines[i]}" for i in range(start, end)]
         return "\n".join(numbered)
+
+    # ------------------------------------------------------------------
     # Trace helpers
+    # ------------------------------------------------------------------
 
     @staticmethod
     def _summarize_input(tool_name: str, tool_input: dict[str, Any]) -> str:

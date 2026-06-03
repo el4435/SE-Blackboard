@@ -1,0 +1,284 @@
+{
+  "experiment_id": "deb_blackboard_sympy__sympy-21171_1b6b1dbe",
+  "issue_id": "sympy__sympy-21171",
+  "topology": "debate",
+  "communication": "blackboard",
+  "resolved": true,
+  "iterations": 3,
+  "total_input_tokens": 91903,
+  "total_output_tokens": 7203,
+  "total_latency_ms": 144107,
+  "final_patch": "--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -2358,7 +2358,7 @@ class LatexPrinter(Printer):\n             return r\"\\left\\langle %s\\right\\rangle\" % \",\".join(\n                 [self._print(arg) for arg in expr.args])\n \n-    def _print_SingularityFunction(self, expr):\n+    def _print_SingularityFunction(self, expr, exp=None):\n         shift = self._print(expr.args[0] - expr.args[1])\n         power = self._print(expr.args[2])\n         tex = r\"{\\left\\langle %s \\right\\rangle}^{%s}\" % (shift, power)\n-        return tex\n+        return tex if exp is None else r\"\\left(%s\\right)^{%s}\" % (tex, exp)",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T01:09:15.283838+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Planner",
+      "communication_mode": "blackboard",
+      "iteration": 0,
+      "input_tokens": 8369,
+      "output_tokens": 1232,
+      "latency_ms": 20382
+    },
+    {
+      "timestamp": "2026-02-15T01:09:27.819911+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 9355,
+      "output_tokens": 902,
+      "latency_ms": 12534
+    },
+    {
+      "timestamp": "2026-02-15T01:09:40.034614+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 9312,
+      "output_tokens": 825,
+      "latency_ms": 12213
+    },
+    {
+      "timestamp": "2026-02-15T01:09:53.120379+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 10466,
+      "output_tokens": 630,
+      "latency_ms": 13084
+    },
+    {
+      "timestamp": "2026-02-15T01:10:06.400867+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Tester",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 8732,
+      "output_tokens": 584,
+      "latency_ms": 13279
+    },
+    {
+      "timestamp": "2026-02-15T01:10:19.911407+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 9755,
+      "output_tokens": 912,
+      "latency_ms": 13509
+    },
+    {
+      "timestamp": "2026-02-15T01:10:37.426027+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 5206,
+      "output_tokens": 102,
+      "latency_ms": 3839
+    },
+    {
+      "timestamp": "2026-02-15T01:10:50.803394+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Tester",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 8887,
+      "output_tokens": 626,
+      "latency_ms": 13376
+    },
+    {
+      "timestamp": "2026-02-15T01:10:57.934905+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 4492,
+      "output_tokens": 405,
+      "latency_ms": 7130
+    },
+    {
+      "timestamp": "2026-02-15T01:11:04.545639+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 4492,
+      "output_tokens": 380,
+      "latency_ms": 6609
+    },
+    {
+      "timestamp": "2026-02-15T01:11:19.006974+00:00",
+      "experiment_id": "debate_blackboard_sympy__sympy-21171",
+      "issue_id": "sympy__sympy-21171",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 12837,
+      "output_tokens": 605,
+      "latency_ms": 14460
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "sympy__sympy-21171",
+      "problem_statement": "_print_SingularityFunction() got an unexpected keyword argument 'exp'\nOn a Jupyter Notebook cell, type the following:\r\n\r\n```python\r\nfrom sympy import *\r\nfrom sympy.physics.continuum_mechanics import Beam\r\n# Young's modulus\r\nE = symbols(\"E\")\r\n# length of the beam\r\nL = symbols(\"L\")\r\n# concentrated load at the end tip of the beam\r\nF = symbols(\"F\")\r\n# square cross section\r\nB, H = symbols(\"B, H\")\r\nI = B * H**3 / 12\r\n# numerical values (material: steel)\r\nd = {B: 1e-02, H: 1e-02, E: 210e09, L: 0.2, F: 100}\r\n\r\nb2 = Beam(L, E, I)\r\nb2.apply_load(-F, L / 2, -1)\r\nb2.apply_support(0, \"fixed\")\r\nR0, M0 = symbols(\"R_0, M_0\")\r\nb2.solve_for_reaction_loads(R0, M0)\r\n```\r\n\r\nThen:\r\n\r\n```\r\nb2.shear_force()\r\n```\r\n\r\nThe following error appears:\r\n```\r\n---------------------------------------------------------------------------\r\nTypeError                                 Traceback (most recent call last)\r\n/usr/local/lib/python3.8/dist-packages/IPython/core/formatters.py in __call__(self, obj)\r\n    343             method = get_real_method(obj, self.print_method)\r\n    344             if method is not None:\r\n--> 345                 return method()\r\n    346             return None\r\n    347         else:\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/interactive/printing.py in _print_latex_png(o)\r\n    184         \"\"\"\r\n    185         if _can_print(o):\r\n--> 186             s = latex(o, mode=latex_mode, **settings)\r\n    187             if latex_mode == 'plain':\r\n    188                 s = '$\\\\displaystyle %s$' % s\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/printer.py in __call__(self, *args, **kwargs)\r\n    371 \r\n    372     def __call__(self, *args, **kwargs):\r\n--> 373         return self.__wrapped__(*args, **kwargs)\r\n    374 \r\n    375     @property\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in latex(expr, **settings)\r\n   2913 \r\n   2914     \"\"\"\r\n-> 2915     return LatexPrinter(settings).doprint(expr)\r\n   2916 \r\n   2917 \r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in doprint(self, expr)\r\n    252 \r\n    253     def doprint(self, expr):\r\n--> 254         tex = Printer.doprint(self, expr)\r\n    255 \r\n    256         if self._settings['mode'] == 'plain':\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/printer.py in doprint(self, expr)\r\n    289     def doprint(self, expr):\r\n    290         \"\"\"Returns printer's representation for expr (as a string)\"\"\"\r\n--> 291         return self._str(self._print(expr))\r\n    292 \r\n    293     def _print(self, expr, **kwargs):\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/printer.py in _print(self, expr, **kwargs)\r\n    327                 printmethod = '_print_' + cls.__name__\r\n    328                 if hasattr(self, printmethod):\r\n--> 329                     return getattr(self, printmethod)(expr, **kwargs)\r\n    330             # Unknown object, fall back to the emptyPrinter.\r\n    331             return self.emptyPrinter(expr)\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in _print_Add(self, expr, order)\r\n    381             else:\r\n    382                 tex += \" + \"\r\n--> 383             term_tex = self._print(term)\r\n    384             if self._needs_add_brackets(term):\r\n    385                 term_tex = r\"\\left(%s\\right)\" % term_tex\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/printer.py in _print(self, expr, **kwargs)\r\n    327                 printmethod = '_print_' + cls.__name__\r\n    328                 if hasattr(self, printmethod):\r\n--> 329                     return getattr(self, printmethod)(expr, **kwargs)\r\n    330             # Unknown object, fall back to the emptyPrinter.\r\n    331             return self.emptyPrinter(expr)\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in _print_Mul(self, expr)\r\n    565             # use the original expression here, since fraction() may have\r\n    566             # altered it when producing numer and denom\r\n--> 567             tex += convert(expr)\r\n    568 \r\n    569         else:\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in convert(expr)\r\n    517                                isinstance(x.base, Quantity)))\r\n    518 \r\n--> 519                 return convert_args(args)\r\n    520 \r\n    521         def convert_args(args):\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in convert_args(args)\r\n    523 \r\n    524                 for i, term in enumerate(args):\r\n--> 525                     term_tex = self._print(term)\r\n    526 \r\n    527                     if self._needs_mul_brackets(term, first=(i == 0),\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/printer.py in _print(self, expr, **kwargs)\r\n    327                 printmethod = '_print_' + cls.__name__\r\n    328                 if hasattr(self, printmethod):\r\n--> 329                     return getattr(self, printmethod)(expr, **kwargs)\r\n    330             # Unknown object, fall back to the emptyPrinter.\r\n    331             return self.emptyPrinter(expr)\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in _print_Add(self, expr, order)\r\n    381             else:\r\n    382                 tex += \" + \"\r\n--> 383             term_tex = self._print(term)\r\n    384             if self._needs_add_brackets(term):\r\n    385                 term_tex = r\"\\left(%s\\right)\" % term_tex\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/printer.py in _print(self, expr, **kwargs)\r\n    327                 printmethod = '_print_' + cls.__name__\r\n    328                 if hasattr(self, printmethod):\r\n--> 329                     return getattr(self, printmethod)(expr, **kwargs)\r\n    330             # Unknown object, fall back to the emptyPrinter.\r\n    331             return self.emptyPrinter(expr)\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in _print_Mul(self, expr)\r\n    569         else:\r\n    570             snumer = convert(numer)\r\n--> 571             sdenom = convert(denom)\r\n    572             ldenom = len(sdenom.split())\r\n    573             ratio = self._settings['long_frac_ratio']\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in convert(expr)\r\n    505         def convert(expr):\r\n    506             if not expr.is_Mul:\r\n--> 507                 return str(self._print(expr))\r\n    508             else:\r\n    509                 if self.order not in ('old', 'none'):\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/printer.py in _print(self, expr, **kwargs)\r\n    327                 printmethod = '_print_' + cls.__name__\r\n    328                 if hasattr(self, printmethod):\r\n--> 329                     return getattr(self, printmethod)(expr, **kwargs)\r\n    330             # Unknown object, fall back to the emptyPrinter.\r\n    331             return self.emptyPrinter(expr)\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in _print_Add(self, expr, order)\r\n    381             else:\r\n    382                 tex += \" + \"\r\n--> 383             term_tex = self._print(term)\r\n    384             if self._needs_add_brackets(term):\r\n    385                 term_tex = r\"\\left(%s\\right)\" % term_tex\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/printer.py in _print(self, expr, **kwargs)\r\n    327                 printmethod = '_print_' + cls.__name__\r\n    328                 if hasattr(self, printmethod):\r\n--> 329                     return getattr(self, printmethod)(expr, **kwargs)\r\n    330             # Unknown object, fall back to the emptyPrinter.\r\n    331             return self.emptyPrinter(expr)\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/latex.py in _print_Pow(self, expr)\r\n    649         else:\r\n    650             if expr.base.is_Function:\r\n--> 651                 return self._print(expr.base, exp=self._print(expr.exp))\r\n    652             else:\r\n    653                 tex = r\"%s^{%s}\"\r\n\r\n/usr/local/lib/python3.8/dist-packages/sympy/printing/printer.py in _print(self, expr, **kwargs)\r\n    327                 printmethod = '_print_' + cls.__name__\r\n    328                 if hasattr(self, printmethod):\r\n--> 329                     return getattr(self, printmethod)(expr, **kwargs)\r\n    330             # Unknown object, fall back to the emptyPrinter.\r\n    331             return self.emptyPrinter(expr)\r\n\r\nTypeError: _print_SingularityFunction() got an unexpected keyword argument 'exp'\r\n```\n",
+      "repo": "sympy/sympy",
+      "base_commit": "aa22709cb7df2d7503803d4b2c0baa7aa21440b6",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The _print_SingularityFunction() method in the LaTeX printer does not accept an 'exp' keyword argument, but _print_Pow() tries to pass this argument when printing a SingularityFunction raised to a power. This happens because _print_Pow checks if expr.base.is_Function and calls self._print(expr.base, exp=...), expecting the function's print method to handle the exponent formatting.",
+      "relevant_files": [
+        "sympy/printing/latex.py"
+      ],
+      "relevant_functions": [
+        "sympy.printing.latex.LatexPrinter._print_SingularityFunction",
+        "sympy.printing.latex.LatexPrinter._print_Pow"
+      ],
+      "fix_strategy": "1. Locate the _print_SingularityFunction method in sympy/printing/latex.py\n2. Add an optional 'exp' parameter to the method signature (e.g., def _print_SingularityFunction(self, expr, exp=None))\n3. Modify the method body to handle the case when exp is provided:\n   - If exp is None, return the normal SingularityFunction representation\n   - If exp is provided, format the output to include the exponent (e.g., wrap the function in parentheses and append ^{exp})\n4. Follow the pattern used by other function printers that accept the exp parameter (like _print_Function)\n5. Test with the provided example to ensure SingularityFunction raised to powers prints correctly",
+      "confidence": 0.95,
+      "relevant_code": "## Source Code Context\n\n## File: sympy/printing/latex.py\n```python\n# Mock content for sympy/printing/latex.py\n# This is a placeholder.\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder_A",
+        "diff": "--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -2185,7 +2185,10 @@\n             tex += r\"\\right)\"\n         return tex\n \n-    def _print_SingularityFunction(self, expr):\n+    def _print_SingularityFunction(self, expr, exp=None):\n         shift = self._print(expr.args[0] - expr.args[1])\n         power = self._print(expr.args[2])\n         tex = r\"{\\langle %s \\rangle}^{%s}\" % (shift, power)\n+        if exp is not None:\n+            tex = r\"\\left(%s\\right)^{%s}\" % (tex, exp)\n         return tex",
+        "description": "Fix _print_SingularityFunction() to accept optional 'exp' keyword argument. When a SingularityFunction is raised to a power, the _print_Pow() method passes an 'exp' argument to format the exponent. This patch adds the exp parameter to _print_SingularityFunction() and wraps the output in parentheses with the exponent when exp is provided.",
+        "timestamp": "2026-02-15T01:09:27.820216Z"
+      },
+      {
+        "version": 1,
+        "author": "Coder_B",
+        "diff": "--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -2185,7 +2185,7 @@\n             tex += r\"\\right)\"\n         return tex\n \n-    def _print_SingularityFunction(self, expr):\n+    def _print_SingularityFunction(self, expr, exp=None):\n         shift = self._print(expr.args[0] - expr.args[1])\n         power = self._print(expr.args[2])\n         tex = r\"{\\left\\langle %s \\right\\rangle}^{%s}\" % (shift, power)\n-        return tex\n+        return tex if exp is None else r\"\\left(%s\\right)^{%s}\" % (tex, exp)\n",
+        "description": "Add optional 'exp' parameter to _print_SingularityFunction() method to handle SingularityFunction raised to a power. When exp is provided, wrap the singularity function in parentheses and append the exponent.",
+        "timestamp": "2026-02-15T01:09:40.035221Z"
+      },
+      {
+        "version": 2,
+        "author": "Coder_A",
+        "diff": "--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -2157,7 +2157,10 @@\n             name = r'\\left\\langle %s \\right\\rangle' % name\n         return name\n \n-    def _print_SingularityFunction(self, expr):\n+    def _print_SingularityFunction(self, expr, exp=None):\n         shift = self._print(expr.args[0] - expr.args[1])\n         power = self._print(expr.args[2])\n         tex = r\"{\\left\\langle %s \\right\\rangle}^{%s}\" % (shift, power)\n+        if exp is not None:\n+            tex = r\"\\left(%s\\right)^{%s}\" % (tex, exp)\n         return tex",
+        "description": "Fix _print_SingularityFunction to accept optional 'exp' parameter. When a SingularityFunction is raised to a power, the _print_Pow method passes an 'exp' argument to format the exponent. This patch adds the exp parameter to _print_SingularityFunction and wraps the output with the exponent when provided, following the pattern used by other function printers in the LaTeX printer.",
+        "timestamp": "2026-02-15T01:10:19.911689Z"
+      },
+      {
+        "version": 3,
+        "author": "Coder_A",
+        "diff": "--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -2358,7 +2358,7 @@ class LatexPrinter(Printer):\n             return r\"\\left\\langle %s\\right\\rangle\" % \",\".join(\n                 [self._print(arg) for arg in expr.args])\n \n-    def _print_SingularityFunction(self, expr):\n+    def _print_SingularityFunction(self, expr, exp=None):\n         shift = self._print(expr.args[0] - expr.args[1])\n         power = self._print(expr.args[2])\n         tex = r\"{\\left\\langle %s \\right\\rangle}^{%s}\" % (shift, power)\n-        return tex\n+        return tex if exp is None else r\"\\left(%s\\right)^{%s}\" % (tex, exp)",
+        "description": "Fix _print_SingularityFunction to accept optional 'exp' parameter. When a SingularityFunction is raised to a power, _print_Pow passes an 'exp' argument to format the exponent. This patch adds the exp parameter to _print_SingularityFunction and wraps the output in parentheses with the exponent when exp is provided, following the pattern used by other function printers in the LaTeX printer.",
+        "timestamp": "2026-02-15T01:10:57.935184Z"
+      },
+      {
+        "version": 3,
+        "author": "Coder_B",
+        "diff": "--- a/sympy/printing/latex.py\n+++ b/sympy/printing/latex.py\n@@ -2358,7 +2358,7 @@ class LatexPrinter(Printer):\n \n         return r\"\\left\\langle %s\\right\\rangle\" % tex\n \n-    def _print_SingularityFunction(self, expr):\n+    def _print_SingularityFunction(self, expr, exp=None):\n         shift = self._print(expr.args[0] - expr.args[1])\n         power = self._print(expr.args[2])\n         tex = r\"{\\left\\langle %s \\right\\rangle}^{%s}\" % (shift, power)\n-        return tex\n+        return tex if exp is None else r\"\\left(%s\\right)^{%s}\" % (tex, exp)",
+        "description": "Fix _print_SingularityFunction to accept optional 'exp' keyword argument. When a SingularityFunction is raised to a power, _print_Pow passes the exponent via the 'exp' parameter. This patch adds the exp parameter to the method signature and wraps the output in parentheses with the exponent when exp is provided, following the pattern used by other function printers in the codebase.",
+        "timestamp": "2026-02-15T01:11:04.545924Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider adding a test case to verify that SingularityFunction raised to a power prints correctly",
+          "Verify that the LaTeX output matches expected mathematical notation for nested exponents"
+        ]
+      },
+      {
+        "patch_version": 2,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider adding a test case to verify that SingularityFunction raised to a power renders correctly in LaTeX format",
+          "The fix follows the established pattern in the codebase for handling exponents in function printing"
+        ]
+      },
+      {
+        "patch_version": 3,
+        "author": "Reviewer",
+        "verdict": "approve",
+        "issues": [],
+        "suggestions": [
+          "Consider adding a test case to verify that SingularityFunction raised to a power prints correctly in LaTeX format",
+          "Verify that the fix works with the original problem statement code example"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 1,
+        "passed": false,
+        "pass_count": 38,
+        "fail_count": 4,
+        "failing_tests": [
+          "Unknown test - AssertionError",
+          "Unknown test - ValueError"
+        ],
+        "error_traces": [
+          "AssertionError: Expected ordered result set",
+          "ValueError: Column mismatch in UNION query"
+        ]
+      },
+      {
+        "patch_version": 2,
+        "passed": false,
+        "pass_count": 38,
+        "fail_count": 4,
+        "failing_tests": [
+          "test_unknown_1",
+          "test_unknown_2"
+        ],
+        "error_traces": [
+          "AssertionError: Expected ordered result set",
+          "ValueError: Column mismatch in UNION query"
+        ]
+      },
+      {
+        "patch_version": 3,
+        "passed": true,
+        "pass_count": 42,
+        "fail_count": 0,
+        "failing_tests": [],
+        "error_traces": []
+      }
+    ],
+    "metadata": {
+      "status": "resolved",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-15T01:08:54.900347Z",
+      "end_time": null
+    }
+  }
+}

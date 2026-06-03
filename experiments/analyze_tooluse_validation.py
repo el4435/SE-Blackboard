@@ -133,7 +133,11 @@ def get_tool_stats(data: dict[str, Any]) -> dict[str, Any]:
         "validate_calls": validate_calls,
         "validate_success": validate_success,
     }
+
+
+# ------------------------------------------------------------------
 # Display
+# ------------------------------------------------------------------
 
 def print_resolve_comparison(
     mp_base: dict[str, dict], bb_base: dict[str, dict],

@@ -39,7 +39,11 @@ console = Console()
 RESULTS_DIR = Path("data/results")
 ISSUES_FILE = Path("data/selected_issues.json")
 LOGS_DIR = Path("data/logs")
+
+
+# ------------------------------------------------------------------
 # Loading
+# ------------------------------------------------------------------
 
 def load_all_results() -> dict[str, list[ExperimentResult]]:
     """Load all results grouped by config name (topology_communication)."""
@@ -70,7 +74,11 @@ def load_issue_metadata() -> dict[str, dict[str, Any]]:
         return {}
     data = json.loads(ISSUES_FILE.read_text(encoding="utf-8"))
     return {item["instance_id"]: item for item in data}
+
+
+# ------------------------------------------------------------------
 # Display: Overall summary
+# ------------------------------------------------------------------
 
 def print_summary_table(grouped: dict[str, list[ExperimentResult]]) -> None:
     """Print a rich table summarizing all configurations."""
@@ -105,7 +113,11 @@ def print_summary_table(grouped: dict[str, list[ExperimentResult]]) -> None:
         )
 
     console.print(table)
+
+
+# ------------------------------------------------------------------
 # Display: Per-difficulty breakdown
+# ------------------------------------------------------------------
 
 def print_difficulty_table(
     results: list[ExperimentResult],
@@ -145,7 +157,11 @@ def print_difficulty_table(
         )
 
     console.print(table)
+
+
+# ------------------------------------------------------------------
 # Display: Per-repo breakdown
+# ------------------------------------------------------------------
 
 def print_repo_table(
     results: list[ExperimentResult],
@@ -177,7 +193,11 @@ def print_repo_table(
         )
 
     console.print(table)
+
+
+# ------------------------------------------------------------------
 # Display: Failure analysis
+# ------------------------------------------------------------------
 
 def classify_failure(result: ExperimentResult) -> str:
     """Classify why a result failed."""
@@ -240,7 +260,11 @@ def print_failure_analysis(
         table.add_row(label, str(len(issue_ids)), ids_str)
 
     console.print(table)
+
+
+# ------------------------------------------------------------------
 # Display: Per-issue table
+# ------------------------------------------------------------------
 
 def print_per_issue_table(grouped: dict[str, list[ExperimentResult]]) -> None:
     """Print a per-issue comparison across configs."""
@@ -272,7 +296,11 @@ def print_per_issue_table(grouped: dict[str, list[ExperimentResult]]) -> None:
         table.add_row(*row)
 
     console.print(table)
+
+
+# ------------------------------------------------------------------
 # Summary JSON generation
+# ------------------------------------------------------------------
 
 def generate_summary(
     config_name: str,
@@ -368,7 +396,11 @@ def save_summary(config_name: str, summary: dict[str, Any]) -> Path:
     path = d / "_summary.json"
     path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     return path
+
+
+# ------------------------------------------------------------------
 # Log consolidation
+# ------------------------------------------------------------------
 
 def consolidate_logs(config_name: str, results: list[ExperimentResult]) -> Path:
     """Consolidate all agent traces into a single JSONL log file."""
@@ -387,7 +419,11 @@ def consolidate_logs(config_name: str, results: list[ExperimentResult]) -> Path:
                 f.write(json.dumps(entry, default=str, ensure_ascii=False) + "\n")
 
     return log_path
+
+
+# ------------------------------------------------------------------
 # CLI and main
+# ------------------------------------------------------------------
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Analyze SE-Blackboard experiment results")

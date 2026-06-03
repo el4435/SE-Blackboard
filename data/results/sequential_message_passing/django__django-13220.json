@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_django__django-13220_935f649b",
+  "issue_id": "django__django-13220",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 31045,
+  "total_output_tokens": 12971,
+  "total_latency_ms": 180530,
+  "final_patch": "--- a/django/core/exceptions.py\n+++ b/django/core/exceptions.py\n@@ -195,6 +195,39 @@\n     def __repr__(self):\n         return 'ValidationError(%s)' % self\n \n+    def __eq__(self, other):\n+        if not isinstance(other, ValidationError):\n+            return NotImplemented\n+        \n+        # Handle case where both have error_dict\n+        if hasattr(self, 'error_dict') and hasattr(other, 'error_dict'):\n+            if self.error_dict.keys() != other.error_dict.keys():\n+                return False\n+            for field in self.error_dict:\n+                if list(self.error_dict[field]) != list(other.error_dict[field]):\n+                    return False\n+            return True\n+        \n+        # Handle case where both have error_list (but not error_dict)\n+        if hasattr(self, 'error_list') and hasattr(other, 'error_list'):\n+            if not hasattr(self, 'error_dict') and not hasattr(other, 'error_dict'):\n+                # For single message errors, compare message, code, and params\n+                if len(self.error_list) == 1 and len(other.error_list) == 1:\n+                    self_err = self.error_list[0]\n+                    other_err = other.error_list[0]\n+                    return (\n+                        self_err.message == other_err.message and\n+                        getattr(self_err, 'code', None) == getattr(other_err, 'code', None) and\n+                        getattr(self_err, 'params', None) == getattr(other_err, 'params', None)\n+                    )\n+                # For multiple errors, compare string representations\n+                return list(self) == list(other)\n+        \n+        return False\n+    \n+    def __hash__(self):\n+        raise TypeError(\"unhashable type: 'ValidationError'\")\n+\n \n class EmptyResultSet(Exception):\n     \"\"\"A database query predicate is impossible.\"\"\"\n--- a/tests/test_exceptions/test_validation_error.py\n+++ b/tests/test_exceptions/test_validation_error.py\n@@ -14,3 +14,60 @@\n         message_dict['field2'] = ['E3', 'E4']\n         exception = ValidationError(message_dict)\n         self.assertEqual(sorted(exception.messages), ['E1', 'E2', 'E3', 'E4'])\n+\n+    def test_equality_single_message(self):\n+        error1 = ValidationError('Error message', code='invalid')\n+        error2 = ValidationError('Error message', code='invalid')\n+        self.assertEqual(error1, error2)\n+\n+    def test_equality_single_message_different_code(self):\n+        error1 = ValidationError('Error message', code='invalid')\n+        error2 = ValidationError('Error message', code='required')\n+        self.assertNotEqual(error1, error2)\n+\n+    def test_equality_single_message_with_params(self):\n+        error1 = ValidationError('Error %(value)s', code='invalid', params={'value': 'test'})\n+        error2 = ValidationError('Error %(value)s', code='invalid', params={'value': 'test'})\n+        self.assertEqual(error1, error2)\n+\n+    def test_equality_single_message_different_params(self):\n+        error1 = ValidationError('Error %(value)s', code='invalid', params={'value': 'test1'})\n+        error2 = ValidationError('Error %(value)s', code='invalid', params={'value': 'test2'})\n+        self.assertNotEqual(error1, error2)\n+\n+    def test_equality_list_of_errors(self):\n+        error1 = ValidationError(['Error 1', 'Error 2'])\n+        error2 = ValidationError(['Error 1', 'Error 2'])\n+        self.assertEqual(error1, error2)\n+\n+    def test_equality_list_of_errors_different_order(self):\n+        error1 = ValidationError(['Error 1', 'Error 2'])\n+        error2 = ValidationError(['Error 2', 'Error 1'])\n+        self.assertNotEqual(error1, error2)\n+\n+    def test_equality_dict_of_errors(self):\n+        error1 = ValidationError({'field1': ['Error 1'], 'field2': ['Error 2']})\n+        error2 = ValidationError({'field1': ['Error 1'], 'field2': ['Error 2']})\n+        self.assertEqual(error1, error2)\n+\n+    def test_equality_dict_of_errors_different_fields(self):\n+        error1 = ValidationError({'field1': ['Error 1']})\n+        error2 = ValidationError({'field2': ['Error 1']})\n+        self.assertNotEqual(error1, error2)\n+\n+    def test_equality_different_types(self):\n+        error1 = ValidationError('Error message')\n+        error2 = ValidationError(['Error message'])\n+        self.assertNotEqual(error1, error2)\n+\n+    def test_equality_with_non_validation_error(self):\n+        error = ValidationError('Error message')\n+        self.assertFalse(error == 'Error message')\n+        self.assertTrue(error != 'Error message')\n+\n+    def test_unhashable(self):\n+        error = ValidationError('Error message')\n+        with self.assertRaises(TypeError) as cm:\n+            hash(error)\n+        self.assertIn('unhashable', str(cm.exception))\n+        self.assertIn('ValidationError', str(cm.exception))\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T18:37:36.650848+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 568,
+      "output_tokens": 731,
+      "latency_ms": 14118
+    },
+    {
+      "timestamp": "2026-02-16T18:38:04.269615+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 7828,
+      "output_tokens": 2702,
+      "latency_ms": 26767
+    },
+    {
+      "timestamp": "2026-02-16T18:38:14.489240+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1725,
+      "output_tokens": 425,
+      "latency_ms": 10218
+    },
+    {
+      "timestamp": "2026-02-16T18:38:57.763599+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 8065,
+      "output_tokens": 4405,
+      "latency_ms": 43273
+    },
+    {
+      "timestamp": "2026-02-16T18:39:08.962925+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 2577,
+      "output_tokens": 478,
+      "latency_ms": 11198
+    },
+    {
+      "timestamp": "2026-02-16T18:39:43.560263+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 7726,
+      "output_tokens": 3527,
+      "latency_ms": 34596
+    },
+    {
+      "timestamp": "2026-02-16T18:39:55.569706+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 2144,
+      "output_tokens": 492,
+      "latency_ms": 12008
+    },
+    {
+      "timestamp": "2026-02-16T18:40:23.060868+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13220",
+      "issue_id": "django__django-13220",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 412,
+      "output_tokens": 211,
+      "latency_ms": 5024
+    }
+  ],
+  "blackboard_final_state": null
+}

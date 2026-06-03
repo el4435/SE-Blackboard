@@ -25,7 +25,11 @@ from src.communication.message_passing import MessagePassingCommunication
 from src.communication.blackboard_comm import BlackboardCommunication
 from src.communication.hybrid_comm import HybridCommunication
 from src.utils.logger import ExperimentLogger
+
+
+# ---------------------------------------------------------------------------
 # Mock LLM Client
+# ---------------------------------------------------------------------------
 
 class MockLLMClient:
     """Mock LLM client that returns pre-configured structured responses."""
@@ -116,7 +120,11 @@ class MockLLMClient:
     def reset_token_counts(self) -> None:
         self.cumulative_input_tokens = 0
         self.cumulative_output_tokens = 0
+
+
+# ---------------------------------------------------------------------------
 # Fixtures
+# ---------------------------------------------------------------------------
 
 @pytest.fixture
 def mock_llm() -> MockLLMClient:
@@ -151,7 +159,11 @@ def _make_agent(agent_cls, mock_llm, mock_logger, **extra):
     agent.communication_mode = "message_passing"
     agent.current_iteration = 0
     return agent
+
+
+# ---------------------------------------------------------------------------
 # PlannerAgent tests
+# ---------------------------------------------------------------------------
 
 class TestPlannerAgent:
     @pytest.mark.asyncio
@@ -183,7 +195,11 @@ class TestPlannerAgent:
         assert entries[0]["agent_role"] == "Planner"
         assert entries[0]["input_tokens"] == 100
         assert entries[0]["output_tokens"] == 50
+
+
+# ---------------------------------------------------------------------------
 # CoderAgent tests
+# ---------------------------------------------------------------------------
 
 class TestCoderAgent:
     @pytest.mark.asyncio
@@ -212,7 +228,11 @@ class TestCoderAgent:
         result = await coder.execute("Fix the bug")
         patch = Patch.model_validate(result)
         assert patch.diff != ""
+
+
+# ---------------------------------------------------------------------------
 # ReviewerAgent tests
+# ---------------------------------------------------------------------------
 
 class TestReviewerAgent:
     @pytest.mark.asyncio
@@ -232,7 +252,11 @@ class TestReviewerAgent:
         result = await reviewer.execute("Review this patch")
         review = Review.model_validate(result)
         assert review.verdict == "approve"
+
+
+# ---------------------------------------------------------------------------
 # TesterAgent tests
+# ---------------------------------------------------------------------------
 
 class TestTesterAgent:
     @pytest.mark.asyncio
@@ -288,7 +312,11 @@ class TestTesterAgent:
         assert result["passed"] is True
         assert result["pass_count"] == 10
         mock_runner.run_tests.assert_awaited_once()
+
+
+# ---------------------------------------------------------------------------
 # Communication mode tests
+# ---------------------------------------------------------------------------
 
 class TestMessagePassingCommunication:
     @pytest.mark.asyncio
@@ -397,7 +425,11 @@ class TestHybridCommunication:
         # Also wrote to blackboard
         state = board.get_state()
         assert state.analysis.root_cause != ""
+
+
+# ---------------------------------------------------------------------------
 # Prompt template tests
+# ---------------------------------------------------------------------------
 
 class TestPromptTemplates:
     def test_get_message_passing_section(self, mock_llm, mock_logger) -> None:

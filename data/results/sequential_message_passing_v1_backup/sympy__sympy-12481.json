@@ -1,0 +1,111 @@
+{
+  "experiment_id": "seq_message_passing_sympy__sympy-12481_3b950a3f",
+  "issue_id": "sympy__sympy-12481",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 10191,
+  "total_output_tokens": 4684,
+  "total_latency_ms": 84402,
+  "final_patch": "--- a/sympy/combinatorics/permutations.py\n+++ b/sympy/combinatorics/permutations.py\n@@ -850,6 +850,16 @@\n                 raise ValueError(\"Cycles must have at least 2 elements.\")\n             if any(i < 0 or i >= size for i in c):\n                 raise ValueError(\"Cycle elements must be in range [0, %d).\" % size)\n+            # Check for duplicate elements within a cycle\n+            if len(c) != len(set(c)):\n+                raise ValueError(\"Cycle elements must be unique.\")\n+        \n+        # Check for duplicate elements across cycles\n+        all_elements = []\n+        for c in args:\n+            all_elements.extend(c)\n+        if len(all_elements) != len(set(all_elements)):\n+            raise ValueError(\"Cycles must be disjoint (no shared elements).\")\n \n         # Apply cycles sequentially to allow overlapping cycles\n         # Each cycle is applied as a composition on top of previous cycles\n@@ -857,10 +867,6 @@\n         for c in args:\n             if len(c) > 1:\n                 old_a = a[:]\n-                # Check for duplicate elements\n-                if len(c) != len(set(c)):\n-                    raise ValueError(\"Cycle elements must be unique.\")\n-                \n                 # Apply cycle: (c[0] c[1] ... c[n-1]) means c[0]->c[1], c[1]->c[2], ..., c[n-1]->c[0]\n                 for i in range(len(c) - 1):\n                     a[c[i]] = old_a[c[i + 1]]\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T04:28:12.080181+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 501,
+      "output_tokens": 486,
+      "latency_ms": 10714
+    },
+    {
+      "timestamp": "2026-02-14T04:28:34.344519+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3868,
+      "output_tokens": 1625,
+      "latency_ms": 22263
+    },
+    {
+      "timestamp": "2026-02-14T04:28:44.580233+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 914,
+      "output_tokens": 401,
+      "latency_ms": 10234
+    },
+    {
+      "timestamp": "2026-02-14T04:28:54.253285+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1154,
+      "output_tokens": 613,
+      "latency_ms": 9672
+    },
+    {
+      "timestamp": "2026-02-14T04:29:05.094516+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1041,
+      "output_tokens": 490,
+      "latency_ms": 10840
+    },
+    {
+      "timestamp": "2026-02-14T04:29:15.558463+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1255,
+      "output_tokens": 608,
+      "latency_ms": 10463
+    },
+    {
+      "timestamp": "2026-02-14T04:29:19.906662+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1036,
+      "output_tokens": 170,
+      "latency_ms": 4347
+    },
+    {
+      "timestamp": "2026-02-14T04:29:25.767120+00:00",
+      "experiment_id": "sequential_message_passing_sympy__sympy-12481",
+      "issue_id": "sympy__sympy-12481",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 422,
+      "output_tokens": 291,
+      "latency_ms": 5852
+    }
+  ],
+  "blackboard_final_state": null
+}

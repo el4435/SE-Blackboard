@@ -1,0 +1,99 @@
+{
+  "experiment_id": "deb_message_passing_pylint-dev__pylint-5859_00035daa",
+  "issue_id": "pylint-dev__pylint-5859",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 2,
+  "total_input_tokens": 15201,
+  "total_output_tokens": 4901,
+  "total_latency_ms": 89059,
+  "final_patch": "--- a/pylint/checkers/misc.py\n+++ b/pylint/checkers/misc.py\n@@ -87,7 +87,7 @@\n     def open(self):\n         \"\"\"inspect the source file to find messages matching the notes regexp\"\"\"\n         notes = \"|\".join(re.escape(note) for note in self.config.notes)\n-        self._fixme_pattern = re.compile(f\"#\\\\s*({notes})\\\\b\", re.I)\n+        self._fixme_pattern = re.compile(f\"#\\\\s*({notes})(?!\\\\w)\", re.I)\n \n     def _check_encoding(\n         self, lineno: int, line: bytes, file_encoding: str\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T23:23:34.396349+00:00",
+      "experiment_id": "debate_message_passing_pylint-dev__pylint-5859",
+      "issue_id": "pylint-dev__pylint-5859",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 756,
+      "output_tokens": 546,
+      "latency_ms": 11716
+    },
+    {
+      "timestamp": "2026-02-14T23:23:48.762845+00:00",
+      "experiment_id": "debate_message_passing_pylint-dev__pylint-5859",
+      "issue_id": "pylint-dev__pylint-5859",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3547,
+      "output_tokens": 1080,
+      "latency_ms": 14365
+    },
+    {
+      "timestamp": "2026-02-14T23:24:03.808695+00:00",
+      "experiment_id": "debate_message_passing_pylint-dev__pylint-5859",
+      "issue_id": "pylint-dev__pylint-5859",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3521,
+      "output_tokens": 1026,
+      "latency_ms": 15044
+    },
+    {
+      "timestamp": "2026-02-14T23:24:31.281012+00:00",
+      "experiment_id": "debate_message_passing_pylint-dev__pylint-5859",
+      "issue_id": "pylint-dev__pylint-5859",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3836,
+      "output_tokens": 1285,
+      "latency_ms": 27471
+    },
+    {
+      "timestamp": "2026-02-14T23:24:38.542731+00:00",
+      "experiment_id": "debate_message_passing_pylint-dev__pylint-5859",
+      "issue_id": "pylint-dev__pylint-5859",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1184,
+      "output_tokens": 337,
+      "latency_ms": 7260
+    },
+    {
+      "timestamp": "2026-02-14T23:24:46.323265+00:00",
+      "experiment_id": "debate_message_passing_pylint-dev__pylint-5859",
+      "issue_id": "pylint-dev__pylint-5859",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1184,
+      "output_tokens": 388,
+      "latency_ms": 7779
+    },
+    {
+      "timestamp": "2026-02-14T23:24:51.737228+00:00",
+      "experiment_id": "debate_message_passing_pylint-dev__pylint-5859",
+      "issue_id": "pylint-dev__pylint-5859",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1173,
+      "output_tokens": 239,
+      "latency_ms": 5413
+    }
+  ],
+  "blackboard_final_state": null
+}

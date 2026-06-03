@@ -1,0 +1,63 @@
+{
+  "experiment_id": "deb_message_passing_django__django-12908_0d964a7d",
+  "issue_id": "django__django-12908",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 9257,
+  "total_output_tokens": 2414,
+  "total_latency_ms": 40233,
+  "final_patch": "--- a/django/db/models/query.py\n+++ b/django/db/models/query.py\n@@ -1,1 +1,2 @@\n+from django.db.utils import NotSupportedError\n # Mock content for django/db/models/query.py\n@@ -3,0 +4,7 @@\n+class QuerySet:\n+    def distinct(self, *field_names):\n+        if self.query.combinator:\n+            raise NotSupportedError(\n+                'Calling distinct() after %s() is not supported.' % (\n+                    self.query.combinator,\n+                )\n+            )\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T22:50:27.028824+00:00",
+      "experiment_id": "debate_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 822,
+      "output_tokens": 656,
+      "latency_ms": 13039
+    },
+    {
+      "timestamp": "2026-02-14T22:50:37.679873+00:00",
+      "experiment_id": "debate_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3657,
+      "output_tokens": 781,
+      "latency_ms": 10649
+    },
+    {
+      "timestamp": "2026-02-14T22:50:48.235015+00:00",
+      "experiment_id": "debate_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 3694,
+      "output_tokens": 748,
+      "latency_ms": 10553
+    },
+    {
+      "timestamp": "2026-02-14T22:50:54.221453+00:00",
+      "experiment_id": "debate_message_passing_django__django-12908",
+      "issue_id": "django__django-12908",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1084,
+      "output_tokens": 229,
+      "latency_ms": 5985
+    }
+  ],
+  "blackboard_final_state": null
+}

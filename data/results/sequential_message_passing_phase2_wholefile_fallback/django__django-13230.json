@@ -1,0 +1,52 @@
+{
+  "experiment_id": "seq_message_passing_django__django-13230_3646109a",
+  "issue_id": "django__django-13230",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 8745,
+  "total_output_tokens": 3083,
+  "total_latency_ms": 75717,
+  "final_patch": "--- a/django/contrib/syndication/views.py\n+++ b/django/contrib/syndication/views.py\n@@ -199,6 +199,8 @@\n             if updateddate and is_naive(updateddate):\n                 updateddate = make_aware(updateddate, tz)\n \n+            comments = self._get_dynamic_attr('item_comments', item)\n+\n             feed.add_item(\n                 title=title,\n                 link=link,\n@@ -214,7 +216,8 @@\n                 author_link=author_link,\n                 categories=self._get_dynamic_attr('item_categories', item),\n                 item_copyright=self._get_dynamic_attr('item_copyright', item),\n+                comments=comments,\n                 **self.item_extra_kwargs(item)\n             )\n         return feed\n",
+  "apply_method": "patch_fuzz3",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-22T23:40:01.141156+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 505,
+      "output_tokens": 609,
+      "latency_ms": 12647
+    },
+    {
+      "timestamp": "2026-02-22T23:40:36.090551+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 7511,
+      "output_tokens": 2349,
+      "latency_ms": 34580
+    },
+    {
+      "timestamp": "2026-02-22T23:40:39.159754+00:00",
+      "experiment_id": "sequential_message_passing_django__django-13230",
+      "issue_id": "django__django-13230",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 729,
+      "output_tokens": 125,
+      "latency_ms": 3066
+    }
+  ],
+  "blackboard_final_state": null
+}

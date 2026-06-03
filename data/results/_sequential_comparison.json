@@ -1,0 +1,291 @@
+{
+  "title": "Sequential Pipeline - Three Communication Modes Fair Comparison",
+  "description": "All three configs run on the same codebase with improved code context retrieval. 50 SWE-bench Lite issues (20 easy, 20 medium, 10 hard).",
+  "generated_at": "2026-02-14",
+  "codebase_version": "v2 (with smart code context retrieval, function region extraction, grep fallback)",
+
+  "overall_comparison": {
+    "A-Seq (Message Passing)": {
+      "config": "sequential_message_passing",
+      "resolved": 6,
+      "total": 50,
+      "resolve_rate": 12.0,
+      "avg_tokens": 18189,
+      "avg_latency_s": 111.8,
+      "avg_iterations": 2.8,
+      "total_input_tokens": 605988,
+      "total_output_tokens": 303455
+    },
+    "B-Seq (Blackboard)": {
+      "config": "sequential_blackboard",
+      "resolved": 16,
+      "total": 50,
+      "resolve_rate": 32.0,
+      "avg_tokens": 23338,
+      "avg_latency_s": 92.1,
+      "avg_iterations": 2.6,
+      "total_input_tokens": 904746,
+      "total_output_tokens": 262160
+    },
+    "C-Seq (Hybrid)": {
+      "config": "sequential_hybrid",
+      "resolved": 17,
+      "total": 50,
+      "resolve_rate": 34.0,
+      "avg_tokens": 29149,
+      "avg_latency_s": 96.7,
+      "avg_iterations": 2.7,
+      "total_input_tokens": 1199358,
+      "total_output_tokens": 258068
+    }
+  },
+
+  "difficulty_breakdown": {
+    "easy": {
+      "count": 20,
+      "A-Seq": {"resolved": 2, "rate": 10.0, "avg_tokens": 17120},
+      "B-Seq": {"resolved": 8, "rate": 40.0, "avg_tokens": 24328},
+      "C-Seq": {"resolved": 9, "rate": 45.0, "avg_tokens": 29766}
+    },
+    "medium": {
+      "count": 20,
+      "A-Seq": {"resolved": 4, "rate": 20.0, "avg_tokens": 15500},
+      "B-Seq": {"resolved": 7, "rate": 35.0, "avg_tokens": 21329},
+      "C-Seq": {"resolved": 8, "rate": 40.0, "avg_tokens": 24975}
+    },
+    "hard": {
+      "count": 10,
+      "A-Seq": {"resolved": 0, "rate": 0.0, "avg_tokens": 25705},
+      "B-Seq": {"resolved": 1, "rate": 10.0, "avg_tokens": 25377},
+      "C-Seq": {"resolved": 0, "rate": 0.0, "avg_tokens": 36262}
+    }
+  },
+
+  "repository_breakdown": {
+    "django/django": {
+      "count": 22,
+      "A-Seq": {"resolved": 3, "rate": 13.6},
+      "B-Seq": {"resolved": 7, "rate": 31.8},
+      "C-Seq": {"resolved": 9, "rate": 40.9}
+    },
+    "sympy/sympy": {
+      "count": 16,
+      "A-Seq": {"resolved": 1, "rate": 6.2},
+      "B-Seq": {"resolved": 7, "rate": 43.8},
+      "C-Seq": {"resolved": 4, "rate": 25.0}
+    },
+    "sphinx-doc/sphinx": {
+      "count": 4,
+      "A-Seq": {"resolved": 1, "rate": 25.0},
+      "B-Seq": {"resolved": 1, "rate": 25.0},
+      "C-Seq": {"resolved": 2, "rate": 50.0}
+    },
+    "pytest-dev/pytest": {
+      "count": 3,
+      "A-Seq": {"resolved": 0, "rate": 0.0},
+      "B-Seq": {"resolved": 1, "rate": 33.3},
+      "C-Seq": {"resolved": 2, "rate": 66.7}
+    },
+    "astropy/astropy": {
+      "count": 2,
+      "A-Seq": {"resolved": 0, "rate": 0.0},
+      "B-Seq": {"resolved": 0, "rate": 0.0},
+      "C-Seq": {"resolved": 0, "rate": 0.0}
+    },
+    "pallets/flask": {
+      "count": 1,
+      "A-Seq": {"resolved": 0, "rate": 0.0},
+      "B-Seq": {"resolved": 0, "rate": 0.0},
+      "C-Seq": {"resolved": 0, "rate": 0.0}
+    },
+    "pydata/xarray": {
+      "count": 1,
+      "A-Seq": {"resolved": 0, "rate": 0.0},
+      "B-Seq": {"resolved": 0, "rate": 0.0},
+      "C-Seq": {"resolved": 0, "rate": 0.0}
+    },
+    "pylint-dev/pylint": {
+      "count": 1,
+      "A-Seq": {"resolved": 1, "rate": 100.0},
+      "B-Seq": {"resolved": 0, "rate": 0.0},
+      "C-Seq": {"resolved": 0, "rate": 0.0}
+    }
+  },
+
+  "issue_level_paired_analysis": {
+    "all_three_succeed": {
+      "count": 3,
+      "issues": [
+        "django__django-15202",
+        "django__django-15347",
+        "sphinx-doc__sphinx-8713"
+      ],
+      "interpretation": "Baseline issues solvable regardless of communication architecture"
+    },
+    "only_MP_succeed": {
+      "count": 1,
+      "issues": [
+        "pylint-dev__pylint-5859"
+      ],
+      "interpretation": "Rare cases where message-passing simplicity outperforms structured communication (possible noise from stochastic LLM)"
+    },
+    "only_BB_succeed": {
+      "count": 4,
+      "issues": [
+        "django__django-16379",
+        "django__django-17051",
+        "sympy__sympy-15346",
+        "sympy__sympy-18835"
+      ],
+      "interpretation": "Issues where structured blackboard state (without NL noise) was essential"
+    },
+    "only_Hybrid_succeed": {
+      "count": 7,
+      "issues": [
+        "django__django-12908",
+        "django__django-12915",
+        "django__django-13321",
+        "django__django-14155",
+        "django__django-15213",
+        "pytest-dev__pytest-11143",
+        "sphinx-doc__sphinx-7738"
+      ],
+      "interpretation": "Issues where combining structured BB state with NL reasoning context provided unique advantage"
+    },
+    "BB_and_Hybrid_but_not_MP": {
+      "count": 7,
+      "issues": [
+        "django__django-11620",
+        "django__django-13028",
+        "pytest-dev__pytest-5221",
+        "sympy__sympy-13971",
+        "sympy__sympy-15345",
+        "sympy__sympy-21171",
+        "sympy__sympy-24909"
+      ],
+      "interpretation": "Issues where structured state access (BB component) was the key differentiator vs pure message passing"
+    },
+    "MP_and_BB_but_not_Hybrid": {
+      "count": 2,
+      "issues": [
+        "django__django-16229",
+        "sympy__sympy-18698"
+      ],
+      "interpretation": "Issues where Hybrid's extra context may have caused noise or confusion"
+    },
+    "MP_and_Hybrid_but_not_BB": {
+      "count": 0,
+      "issues": [],
+      "interpretation": "No issues resolved by both MP and Hybrid but not BB"
+    },
+    "all_three_fail": {
+      "count": 26,
+      "issues": [
+        "astropy__astropy-14182",
+        "astropy__astropy-14995",
+        "django__django-11179",
+        "django__django-11564",
+        "django__django-12700",
+        "django__django-13220",
+        "django__django-13230",
+        "django__django-14238",
+        "django__django-14667",
+        "django__django-15388",
+        "django__django-16408",
+        "django__django-16820",
+        "pallets__flask-4045",
+        "pydata__xarray-3364",
+        "pytest-dev__pytest-5495",
+        "sphinx-doc__sphinx-10325",
+        "sphinx-doc__sphinx-10451",
+        "sympy__sympy-12481",
+        "sympy__sympy-13895",
+        "sympy__sympy-14024",
+        "sympy__sympy-14396",
+        "sympy__sympy-15346",
+        "sympy__sympy-18057",
+        "sympy__sympy-19254",
+        "sympy__sympy-20049",
+        "sympy__sympy-20639",
+        "sympy__sympy-24213"
+      ],
+      "interpretation": "Issues beyond the capability of this pipeline regardless of communication mode (52% of total)"
+    },
+    "summary": {
+      "unique_resolved_by_any": 24,
+      "unique_resolved_rate": 48.0,
+      "issues_where_comm_mode_matters": 21,
+      "comm_mode_impact_rate": 42.0
+    }
+  },
+
+  "contribution_decomposition": {
+    "description": "Separating the effect of code improvements from communication architecture changes",
+    "baseline": {
+      "label": "A-Seq v1 (Day 2, old code)",
+      "resolve_rate": 8.0,
+      "resolved": 4,
+      "avg_tokens": 18205
+    },
+    "code_improvement_effect": {
+      "label": "A-Seq v1 -> A-Seq v2 (same comm mode, improved code)",
+      "before": 8.0,
+      "after": 12.0,
+      "delta_pp": 4.0,
+      "delta_relative_pct": 50.0,
+      "explanation": "Code context retrieval (smart truncation, grep fallback) improved resolve rate by +4pp even without changing communication architecture"
+    },
+    "pure_blackboard_effect": {
+      "label": "A-Seq v2 -> B-Seq (same code, MP -> Blackboard)",
+      "before": 12.0,
+      "after": 32.0,
+      "delta_pp": 20.0,
+      "delta_relative_pct": 166.7,
+      "explanation": "Switching from message-passing to blackboard communication added +20pp resolve rate. This is the pure architectural effect of structured shared state."
+    },
+    "pure_hybrid_effect": {
+      "label": "A-Seq v2 -> C-Seq (same code, MP -> Hybrid)",
+      "before": 12.0,
+      "after": 34.0,
+      "delta_pp": 22.0,
+      "delta_relative_pct": 183.3,
+      "explanation": "Switching from message-passing to hybrid communication added +22pp resolve rate. Hybrid combines BB structured state with NL context from previous agents."
+    },
+    "hybrid_vs_blackboard": {
+      "label": "B-Seq -> C-Seq (Blackboard -> Hybrid)",
+      "before": 32.0,
+      "after": 34.0,
+      "delta_pp": 2.0,
+      "delta_relative_pct": 6.25,
+      "explanation": "Hybrid marginally outperforms pure Blackboard (+2pp), suggesting NL context provides small additional benefit on top of structured state."
+    },
+    "attribution_table": {
+      "total_improvement_from_v1_baseline": {
+        "B-Seq": {"total_delta_pp": 24.0, "code_contribution_pp": 4.0, "code_contribution_pct": 16.7, "arch_contribution_pp": 20.0, "arch_contribution_pct": 83.3},
+        "C-Seq": {"total_delta_pp": 26.0, "code_contribution_pp": 4.0, "code_contribution_pct": 15.4, "arch_contribution_pp": 22.0, "arch_contribution_pct": 84.6}
+      },
+      "interpretation": "For both B-Seq and C-Seq, ~83-85% of the total improvement over the Day 2 baseline comes from the communication architecture change, while only ~15-17% comes from code improvements. This validates that communication architecture is the dominant factor."
+    }
+  },
+
+  "token_efficiency_analysis": {
+    "tokens_per_resolved_issue": {
+      "A-Seq": {"total_tokens": 909443, "resolved": 6, "tokens_per_resolve": 151574},
+      "B-Seq": {"total_tokens": 1166906, "resolved": 16, "tokens_per_resolve": 72932},
+      "C-Seq": {"total_tokens": 1457426, "resolved": 17, "tokens_per_resolve": 85731}
+    },
+    "interpretation": "Despite higher total token cost, B-Seq and C-Seq are 2x more token-efficient per resolved issue. B-Seq is the most efficient (72,932 tokens/resolve vs 151,574 for A-Seq)."
+  },
+
+  "key_findings": [
+    "1. Blackboard communication dramatically outperforms message-passing (+20pp pure architectural effect)",
+    "2. Hybrid slightly outperforms pure Blackboard (+2pp), but the difference is small",
+    "3. Communication architecture accounts for 83-85% of the improvement over baseline; code changes account for 15-17%",
+    "4. No config can solve hard issues consistently (0-10% resolve rate for hard difficulty)",
+    "5. 52% of issues (26/50) are unsolvable by any communication mode — these represent fundamental capability limits",
+    "6. 42% of issues (21/50) show different outcomes depending on communication mode — this is where architecture matters",
+    "7. Hybrid uniquely solves 7 issues that neither MP nor BB can solve, suggesting the NL+structured combination provides genuine value",
+    "8. BB uniquely solves 4 issues, suggesting pure structured state is sometimes better than noisy hybrid context",
+    "9. B-Seq is the most token-efficient per resolved issue (72,932 tokens vs 85,731 for C-Seq and 151,574 for A-Seq)"
+  ]
+}

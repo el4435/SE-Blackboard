@@ -1,0 +1,233 @@
+{
+  "n_empty_patch_hybrid_runs": 18,
+  "category_distribution": {
+    "no_coder_output": 18
+  },
+  "coder_input_tokens_mean_empty": 0,
+  "coder_input_tokens_mean_nonempty": 11775.6,
+  "context_overhead_ratio": 0.0,
+  "cases": [
+    {
+      "issue_id": "astropy__astropy-14182",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "astropy__astropy-14995",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "pylint-dev__pylint-5859",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "pytest-dev__pytest-5221",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-12481",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-13895",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-13971",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-14396",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-15345",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-15346",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-18057",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-18698",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-19254",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-20639",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-21171",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    },
+    {
+      "issue_id": "sympy__sympy-24213",
+      "iterations": 3,
+      "resolved": false,
+      "coder_input_tokens": 0,
+      "n_patch_versions": 0,
+      "n_reviews": 3,
+      "category": "no_coder_output",
+      "notes": "blackboard_final_state.patches is empty: the Coder never produced a patch object."
+    }
+  ],
+  "comparison_resolved_same_issue": {
+    "bb": {
+      "astropy__astropy-14182": false,
+      "astropy__astropy-14995": false,
+      "pylint-dev__pylint-5859": false,
+      "pytest-dev__pytest-5221": false,
+      "sphinx-doc__sphinx-10451": false,
+      "sphinx-doc__sphinx-7738": false,
+      "sympy__sympy-12481": false,
+      "sympy__sympy-13895": false,
+      "sympy__sympy-13971": false,
+      "sympy__sympy-14396": false,
+      "sympy__sympy-15345": false,
+      "sympy__sympy-15346": false,
+      "sympy__sympy-18057": false,
+      "sympy__sympy-18698": false,
+      "sympy__sympy-19254": false,
+      "sympy__sympy-20639": false,
+      "sympy__sympy-21171": false,
+      "sympy__sympy-24213": false
+    },
+    "mp": {
+      "astropy__astropy-14182": false,
+      "astropy__astropy-14995": false,
+      "pylint-dev__pylint-5859": false,
+      "pytest-dev__pytest-5221": false,
+      "sphinx-doc__sphinx-10451": false,
+      "sphinx-doc__sphinx-7738": false,
+      "sympy__sympy-12481": false,
+      "sympy__sympy-13895": false,
+      "sympy__sympy-13971": false,
+      "sympy__sympy-14396": false,
+      "sympy__sympy-15345": false,
+      "sympy__sympy-15346": false,
+      "sympy__sympy-18057": false,
+      "sympy__sympy-18698": false,
+      "sympy__sympy-19254": false,
+      "sympy__sympy-20639": false,
+      "sympy__sympy-21171": false,
+      "sympy__sympy-24213": false
+    }
+  }
+}

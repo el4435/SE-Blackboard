@@ -1,0 +1,51 @@
+{
+  "experiment_id": "seq_message_passing_django__django-15347_56fb5c43",
+  "issue_id": "django__django-15347",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 10891,
+  "total_output_tokens": 1257,
+  "total_latency_ms": 46099,
+  "final_patch": "--- a/django/contrib/messages/storage/cookie.py\n+++ b/django/contrib/messages/storage/cookie.py\n@@ -19,7 +19,7 @@\n             is_safedata = 1 if isinstance(obj.message, SafeData) else 0\n             message = [self.message_key, is_safedata, obj.level, obj.message]\n-            if obj.extra_tags:\n+            if obj.extra_tags is not None:\n                 message.append(obj.extra_tags)\n             return message\n         return super().default(obj)",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T17:22:45.634762+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 767,
+      "output_tokens": 539,
+      "latency_ms": 11020
+    },
+    {
+      "timestamp": "2026-02-16T17:22:55.989030+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 9442,
+      "output_tokens": 608,
+      "latency_ms": 9406
+    },
+    {
+      "timestamp": "2026-02-16T17:22:58.767354+00:00",
+      "experiment_id": "sequential_message_passing_django__django-15347",
+      "issue_id": "django__django-15347",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 682,
+      "output_tokens": 110,
+      "latency_ms": 2777
+    }
+  ],
+  "blackboard_final_state": null
+}

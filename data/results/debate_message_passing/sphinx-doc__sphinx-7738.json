@@ -1,0 +1,63 @@
+{
+  "experiment_id": "deb_message_passing_sphinx-doc__sphinx-7738_963eda24",
+  "issue_id": "sphinx-doc__sphinx-7738",
+  "topology": "debate",
+  "communication": "message_passing",
+  "resolved": true,
+  "iterations": 1,
+  "total_input_tokens": 11951,
+  "total_output_tokens": 3908,
+  "total_latency_ms": 67204,
+  "final_patch": "--- a/sphinx/ext/napoleon/docstring.py\n+++ b/sphinx/ext/napoleon/docstring.py\n@@ -156,10 +156,7 @@\n def _escape_args_and_kwargs(name: str) -> str:\n     \"\"\"\n     if name[:2] == '**':\n         return r'\\*\\*' + name[2:]\n     elif name[:1] == '*':\n         return r'\\*' + name[1:]\n-    elif name.endswith('_'):\n-        return name[:-1] + r'\\_'\n     else:\n         return name",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T23:22:28.194850+00:00",
+      "experiment_id": "debate_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Deb-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 754,
+      "output_tokens": 661,
+      "latency_ms": 12942
+    },
+    {
+      "timestamp": "2026-02-14T23:22:48.337874+00:00",
+      "experiment_id": "debate_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 4240,
+      "output_tokens": 1370,
+      "latency_ms": 20141
+    },
+    {
+      "timestamp": "2026-02-14T23:23:09.315519+00:00",
+      "experiment_id": "debate_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Deb-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 4205,
+      "output_tokens": 1333,
+      "latency_ms": 20976
+    },
+    {
+      "timestamp": "2026-02-14T23:23:22.454887+00:00",
+      "experiment_id": "debate_message_passing_sphinx-doc__sphinx-7738",
+      "issue_id": "sphinx-doc__sphinx-7738",
+      "config": "Deb-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 2752,
+      "output_tokens": 544,
+      "latency_ms": 13138
+    }
+  ],
+  "blackboard_final_state": null
+}

@@ -32,7 +32,7 @@ def main():
     from swebench.harness.test_spec.test_spec import make_test_spec
     from swebench.harness.docker_build import build_env_images
 
-    issues_path = str(Path(__file__).resolve().parent.parent / "data" / "selected_issues.json")
+    issues_path = "E:/SE-Blackboard/data/selected_issues.json"
     with open(issues_path, "r", encoding="utf-8") as f:
         issues = json.load(f)
 

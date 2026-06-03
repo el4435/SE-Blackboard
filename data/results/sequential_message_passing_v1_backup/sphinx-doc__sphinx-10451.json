@@ -1,0 +1,99 @@
+{
+  "experiment_id": "seq_message_passing_sphinx-doc__sphinx-10451_372526fa",
+  "issue_id": "sphinx-doc__sphinx-10451",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 11843,
+  "total_output_tokens": 6250,
+  "total_latency_ms": 109061,
+  "final_patch": "--- a/sphinx/ext/autodoc/typehints.py\n+++ b/sphinx/ext/autodoc/typehints.py\n@@ -375,7 +375,8 @@\n \n     for arg in doc['params']:\n         name = arg['param']\n-        if name not in sig_params:\n+        normalized_name = name.lstrip('*')\n+        if normalized_name in sig_params:\n             param_name = name\n \n         if name in arguments:\n@@ -400,11 +401,11 @@\n             annotation = sig_params[normalized_name].annotation\n             if annotation is not Parameter.empty:\n                 if normalized_name in arguments:\n                     arg = arguments[normalized_name]\n+                    arg['type'] = annotation\n                 elif name not in arguments:\n                     arg = arguments.setdefault(normalized_name, {})\n-                    arg = arguments.setdefault(name, {})\n                     arg['type'] = annotation\n+                    arg['param_name'] = param_name\n \n     for name, annotation in annotations.items():\n         if name in ('return', 'returns'):",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-14T04:58:29.958410+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 862,
+      "output_tokens": 513,
+      "latency_ms": 11656
+    },
+    {
+      "timestamp": "2026-02-14T04:59:05.293890+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 4618,
+      "output_tokens": 2798,
+      "latency_ms": 35334
+    },
+    {
+      "timestamp": "2026-02-14T04:59:19.701739+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 1473,
+      "output_tokens": 553,
+      "latency_ms": 14405
+    },
+    {
+      "timestamp": "2026-02-14T04:59:34.182544+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1347,
+      "output_tokens": 898,
+      "latency_ms": 14479
+    },
+    {
+      "timestamp": "2026-02-14T04:59:46.816167+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 1326,
+      "output_tokens": 542,
+      "latency_ms": 12632
+    },
+    {
+      "timestamp": "2026-02-14T04:59:55.845376+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 1336,
+      "output_tokens": 453,
+      "latency_ms": 9028
+    },
+    {
+      "timestamp": "2026-02-14T05:00:07.360819+00:00",
+      "experiment_id": "sequential_message_passing_sphinx-doc__sphinx-10451",
+      "issue_id": "sphinx-doc__sphinx-10451",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 881,
+      "output_tokens": 493,
+      "latency_ms": 11514
+    }
+  ],
+  "blackboard_final_state": null
+}

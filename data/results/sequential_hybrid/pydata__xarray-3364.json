@@ -1,0 +1,209 @@
+{
+  "experiment_id": "seq_hybrid_pydata__xarray-3364_cf4db02e",
+  "issue_id": "pydata__xarray-3364",
+  "topology": "sequential",
+  "communication": "hybrid",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 17582,
+  "total_output_tokens": 5923,
+  "total_latency_ms": 184606,
+  "final_patch": "--- a/xarray/core/concat.py\n+++ b/xarray/core/concat.py\n@@ -8,7 +8,7 @@\n \n def concat(\n     objs, dim, data_vars='all', coords='different', compat='equals',\n-    positions=None, indexers=None, mode=None, concat_over=None\n+    positions=None, indexers=None, mode=None, concat_over=None, join='outer'\n ):\n     \"\"\"Concatenate xarray objects along a new or existing dimension.\n \n@@ -56,6 +56,11 @@\n         Deprecated.\n     concat_over : None or str or list of str, optional\n         Deprecated.\n+    join : {'outer', 'inner'}, optional\n+        How to handle variables that are not present in all datasets.\n+        - 'outer': take the union of all variables (default)\n+        - 'inner': take the intersection of all variables\n+        Similar to pandas.concat behavior.\n \n     Returns\n     -------\n@@ -100,7 +105,7 @@\n         return _dataarray_concat(\n             objs, dim=dim, data_vars=data_vars, coords=coords,\n             compat=compat, positions=positions, indexers=indexers,\n-            mode=mode, concat_over=concat_over)\n+            mode=mode, concat_over=concat_over, join=join)\n     elif isinstance(first_obj, Dataset):\n         return _dataset_concat(\n             objs, dim=dim, data_vars=data_vars, coords=coords,\n@@ -108,7 +113,7 @@\n             mode=mode, concat_over=concat_over)\n     else:\n         raise TypeError(\n-            'can only concatenate xarray Dataset and DataArray '\n+            'can only concatenate xarray Dataset and DataArray objects, '\n             'got %s' % type(first_obj))\n \n \n@@ -196,7 +201,7 @@\n \n def _dataset_concat(\n     datasets, dim, data_vars, coords, compat, positions, indexers, mode,\n-    concat_over\n+    concat_over, join='outer'\n ):\n     \"\"\"\n     Concatenate a sequence of datasets along a new or existing dimension\n@@ -217,6 +222,41 @@\n     concat_over_existing_dim = (dim in datasets[0].dims)\n     concat_dim_lengths = [ds.dims.get(dim, 1) for ds in datasets]\n \n+    # Handle join parameter for variables\n+    if join not in ['inner', 'outer']:\n+        raise ValueError(\"join must be either 'inner' or 'outer'\")\n+    \n+    if join == 'inner':\n+        # Keep only variables present in all datasets\n+        common_vars = set(datasets[0].data_vars.keys())\n+        for ds in datasets[1:]:\n+            common_vars &= set(ds.data_vars.keys())\n+        \n+        # Filter datasets to only include common variables\n+        datasets = [ds[list(common_vars)] for ds in datasets]\n+    \n+    elif join == 'outer':\n+        # Collect all variables across all datasets\n+        all_vars = set()\n+        for ds in datasets:\n+            all_vars.update(ds.data_vars.keys())\n+        \n+        # Add missing variables filled with NaN to each dataset\n+        import numpy as np\n+        filled_datasets = []\n+        for ds in datasets:\n+            missing_vars = all_vars - set(ds.data_vars.keys())\n+            if missing_vars:\n+                ds = ds.copy()\n+                for var in missing_vars:\n+                    # Find the variable in another dataset to get shape info\n+                    for other_ds in datasets:\n+                        if var in other_ds.data_vars:\n+                            nan_data = np.full(other_ds[var].shape, np.nan, dtype=other_ds[var].dtype)\n+                            ds[var] = (other_ds[var].dims, nan_data)\n+                            break\n+            filled_datasets.append(ds)\n+        datasets = filled_datasets\n+    \n     # Determine which variables to concatenate\n     concat_over, equals, concat_dim_lengths = _calc_concat_over(\n         datasets, dim, data_vars, coords, compat)\n@@ -289,7 +329,7 @@\n \n def _dataarray_concat(\n     arrays, dim, data_vars, coords, compat, positions, indexers, mode,\n-    concat_over\n+    concat_over, join='outer'\n ):\n     from .dataarray import DataArray\n \n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T20:07:21.009236+00:00",
+      "experiment_id": "sequential_hybrid_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-H",
+      "agent_role": "Planner",
+      "communication_mode": "hybrid",
+      "iteration": 0,
+      "input_tokens": 842,
+      "output_tokens": 1431,
+      "latency_ms": 19396
+    },
+    {
+      "timestamp": "2026-02-16T20:08:02.159155+00:00",
+      "experiment_id": "sequential_hybrid_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 1348,
+      "output_tokens": 294,
+      "latency_ms": 5908
+    },
+    {
+      "timestamp": "2026-02-16T20:08:51.043650+00:00",
+      "experiment_id": "sequential_hybrid_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 2,
+      "input_tokens": 1348,
+      "output_tokens": 343,
+      "latency_ms": 7873
+    },
+    {
+      "timestamp": "2026-02-16T20:09:26.798931+00:00",
+      "experiment_id": "sequential_hybrid_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-H",
+      "agent_role": "Coder",
+      "communication_mode": "hybrid",
+      "iteration": 3,
+      "input_tokens": 6640,
+      "output_tokens": 2961,
+      "latency_ms": 35754
+    },
+    {
+      "timestamp": "2026-02-16T20:09:39.492431+00:00",
+      "experiment_id": "sequential_hybrid_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 3,
+      "input_tokens": 4023,
+      "output_tokens": 476,
+      "latency_ms": 12692
+    },
+    {
+      "timestamp": "2026-02-16T20:10:06.218254+00:00",
+      "experiment_id": "sequential_hybrid_pydata__xarray-3364",
+      "issue_id": "pydata__xarray-3364",
+      "config": "Seq-H",
+      "agent_role": "Tester",
+      "communication_mode": "hybrid",
+      "iteration": 3,
+      "input_tokens": 3381,
+      "output_tokens": 418,
+      "latency_ms": 10821
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "pydata__xarray-3364",
+      "problem_statement": "Ignore missing variables when concatenating datasets?\nSeveral users (@raj-kesavan, @richardotis, now myself) have wondered about how to concatenate xray Datasets with different variables.\n\nWith the current `xray.concat`, you need to awkwardly create dummy variables filled with `NaN` in datasets that don't have them (or drop mismatched variables entirely). Neither of these are great options -- `concat` should have an option (the default?) to take care of this for the user.\n\nThis would also be more consistent with `pd.concat`, which takes a more relaxed approach to matching dataframes with different variables (it does an outer join).\n\n",
+      "repo": "pydata/xarray",
+      "base_commit": "863e49066ca4d61c9adfe62aca3bf21b90e1af8c",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The current xarray.concat function does not handle datasets with different variables gracefully. When concatenating datasets that have mismatched variables, users must manually create dummy variables filled with NaN or drop mismatched variables entirely. The function lacks an option to automatically perform an outer join on variables (similar to pandas.concat), which would fill missing variables with NaN automatically.",
+      "relevant_files": [
+        "xarray/core/concat.py",
+        "xarray/core/merge.py"
+      ],
+      "relevant_functions": [
+        "xarray.concat",
+        "xarray.core.concat.concat",
+        "_dataset_concat",
+        "_calc_concat_over"
+      ],
+      "fix_strategy": "1. Add a new parameter to the concat function (e.g., 'join' or 'fill_value') that controls how to handle missing variables across datasets. This should support at least 'inner' (only keep common variables) and 'outer' (keep all variables, fill missing with NaN) options, similar to pandas.concat.\n\n2. Modify the _dataset_concat function to:\n   - Collect all unique variables across all datasets being concatenated\n   - When join='outer', ensure each dataset has all variables before concatenation by adding missing variables filled with NaN\n   - When join='inner', filter to only common variables across all datasets\n\n3. Update _calc_concat_over or related helper functions to identify which variables are present in which datasets and handle the logic for filling missing variables.\n\n4. Ensure coordinate handling is preserved and works correctly with the new join logic.\n\n5. Add comprehensive tests covering:\n   - Concatenating datasets with completely different variables\n   - Concatenating datasets with partially overlapping variables\n   - Both 'inner' and 'outer' join modes\n   - Edge cases with coordinates and dimensions\n\n6. Update documentation to explain the new parameter and provide examples of its usage.\n\n7. Consider making 'outer' the default behavior to align with pandas.concat and provide better user experience.",
+      "confidence": 0.85,
+      "relevant_code": "The main implementation will be in xarray/core/concat.py, specifically in the concat() function and _dataset_concat() helper function. The logic needs to:\n1. Accept a 'join' parameter (similar to pandas)\n2. Identify all variables across datasets\n3. For 'outer' join: add missing variables with NaN fill values\n4. For 'inner' join: keep only common variables\n5. Proceed with existing concatenation logic"
+    },
+    "patches": [
+      {
+        "version": 3,
+        "author": "Coder",
+        "diff": "--- a/xarray/core/concat.py\n+++ b/xarray/core/concat.py\n@@ -8,7 +8,7 @@\n \n def concat(\n     objs, dim, data_vars='all', coords='different', compat='equals',\n-    positions=None, indexers=None, mode=None, concat_over=None\n+    positions=None, indexers=None, mode=None, concat_over=None, join='outer'\n ):\n     \"\"\"Concatenate xarray objects along a new or existing dimension.\n \n@@ -56,6 +56,11 @@\n         Deprecated.\n     concat_over : None or str or list of str, optional\n         Deprecated.\n+    join : {'outer', 'inner'}, optional\n+        How to handle variables that are not present in all datasets.\n+        - 'outer': take the union of all variables (default)\n+        - 'inner': take the intersection of all variables\n+        Similar to pandas.concat behavior.\n \n     Returns\n     -------\n@@ -100,7 +105,7 @@\n         return _dataarray_concat(\n             objs, dim=dim, data_vars=data_vars, coords=coords,\n             compat=compat, positions=positions, indexers=indexers,\n-            mode=mode, concat_over=concat_over)\n+            mode=mode, concat_over=concat_over, join=join)\n     elif isinstance(first_obj, Dataset):\n         return _dataset_concat(\n             objs, dim=dim, data_vars=data_vars, coords=coords,\n@@ -108,7 +113,7 @@\n             mode=mode, concat_over=concat_over)\n     else:\n         raise TypeError(\n-            'can only concatenate xarray Dataset and DataArray '\n+            'can only concatenate xarray Dataset and DataArray objects, '\n             'got %s' % type(first_obj))\n \n \n@@ -196,7 +201,7 @@\n \n def _dataset_concat(\n     datasets, dim, data_vars, coords, compat, positions, indexers, mode,\n-    concat_over\n+    concat_over, join='outer'\n ):\n     \"\"\"\n     Concatenate a sequence of datasets along a new or existing dimension\n@@ -217,6 +222,41 @@\n     concat_over_existing_dim = (dim in datasets[0].dims)\n     concat_dim_lengths = [ds.dims.get(dim, 1) for ds in datasets]\n \n+    # Handle join parameter for variables\n+    if join not in ['inner', 'outer']:\n+        raise ValueError(\"join must be either 'inner' or 'outer'\")\n+    \n+    if join == 'inner':\n+        # Keep only variables present in all datasets\n+        common_vars = set(datasets[0].data_vars.keys())\n+        for ds in datasets[1:]:\n+            common_vars &= set(ds.data_vars.keys())\n+        \n+        # Filter datasets to only include common variables\n+        datasets = [ds[list(common_vars)] for ds in datasets]\n+    \n+    elif join == 'outer':\n+        # Collect all variables across all datasets\n+        all_vars = set()\n+        for ds in datasets:\n+            all_vars.update(ds.data_vars.keys())\n+        \n+        # Add missing variables filled with NaN to each dataset\n+        import numpy as np\n+        filled_datasets = []\n+        for ds in datasets:\n+            missing_vars = all_vars - set(ds.data_vars.keys())\n+            if missing_vars:\n+                ds = ds.copy()\n+                for var in missing_vars:\n+                    # Find the variable in another dataset to get shape info\n+                    for other_ds in datasets:\n+                        if var in other_ds.data_vars:\n+                            nan_data = np.full(other_ds[var].shape, np.nan, dtype=other_ds[var].dtype)\n+                            ds[var] = (other_ds[var].dims, nan_data)\n+                            break\n+            filled_datasets.append(ds)\n+        datasets = filled_datasets\n+    \n     # Determine which variables to concatenate\n     concat_over, equals, concat_dim_lengths = _calc_concat_over(\n         datasets, dim, data_vars, coords, compat)\n@@ -289,7 +329,7 @@\n \n def _dataarray_concat(\n     arrays, dim, data_vars, coords, compat, positions, indexers, mode,\n-    concat_over\n+    concat_over, join='outer'\n ):\n     from .dataarray import DataArray\n \n",
+        "description": "Add 'join' parameter to xarray.concat to handle datasets with different variables. Supports 'outer' (default) to keep all variables and fill missing with NaN, and 'inner' to keep only common variables. This aligns with pandas.concat behavior.",
+        "timestamp": "2026-02-16T20:09:26.799180Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 0,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "No valid patch was provided by the Coder agent",
+          "The Coder agent failed to parse LLM output into a proper Patch format",
+          "Cannot review a non-existent patch for correctness or completeness"
+        ],
+        "suggestions": [
+          "The Coder should provide a valid patch that adds a 'join' parameter to the concat function in xarray/core/concat.py",
+          "The patch should modify _dataset_concat to handle 'inner' and 'outer' join modes for variables",
+          "For 'outer' join: collect all unique variables across datasets and fill missing ones with NaN",
+          "For 'inner' join: identify common variables across all datasets and filter to only those",
+          "The implementation should be similar to pandas.concat behavior with join='inner' and join='outer'",
+          "Add appropriate tests to verify the new functionality works correctly",
+          "Update function documentation to describe the new 'join' parameter",
+          "Consider making 'outer' the default to align with pandas and improve user experience"
+        ]
+      },
+      {
+        "patch_version": 0,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "No valid patch was provided by the Coder agent",
+          "The Coder agent failed to parse LLM output into a proper Patch format",
+          "Cannot review a non-existent patch for correctness, logical errors, or regressions"
+        ],
+        "suggestions": [
+          "The Coder should provide a valid patch that adds a 'join' parameter to the xarray.concat function with 'outer' and 'inner' options",
+          "The patch should modify _dataset_concat to handle missing variables by either filling with NaN (outer join) or filtering to common variables (inner join)",
+          "Implementation should collect all unique variables across datasets being concatenated",
+          "For outer join: ensure each dataset has all variables before concatenation by adding missing variables filled with NaN",
+          "For inner join: filter to only keep variables common across all datasets",
+          "The patch should maintain backward compatibility or clearly document breaking changes",
+          "Include proper error handling for edge cases",
+          "Ensure coordinate handling is preserved with the new join logic",
+          "Add comprehensive unit tests covering different join scenarios",
+          "Update function documentation with examples of the new 'join' parameter usage",
+          "Consider making 'outer' the default to align with pandas.concat behavior as suggested in the analysis"
+        ]
+      },
+      {
+        "patch_version": 3,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "The 'join' parameter is not passed through to _dataset_concat when called from the main concat function (line 106-108). It's missing from the function call.",
+          "The shape and dimensions of missing variables are copied from other datasets without considering the concatenation dimension. When concatenating along a dimension, each dataset may have different sizes along that dimension, so using 'other_ds[var].shape' directly is incorrect.",
+          "The dtype handling may cause issues with integer dtypes when filling with np.nan (which is a float). This could lead to type conversion errors or unexpected behavior.",
+          "The implementation doesn't handle coordinates properly - the join logic only applies to data_vars but coordinates might also need similar treatment depending on the use case.",
+          "The patch modifies the datasets list in-place during the outer join, which could have side effects if the original datasets are used elsewhere.",
+          "Missing variables should be filled with appropriate dimensions that match the current dataset's dimensions, not copied from another dataset's shape."
+        ],
+        "suggestions": [
+          "Add 'join=join' parameter to the _dataset_concat call on line 106-108 to ensure the parameter is passed through.",
+          "When filling missing variables with NaN, construct the shape based on the current dataset's dimensions, not another dataset's shape. Use the dimension sizes from the current dataset and only copy the dimension names from the reference variable.",
+          "Handle dtype compatibility more carefully - consider using a float dtype when filling with NaN, or use a masked array approach for integer types.",
+          "Consider whether the join parameter should also apply to coordinates, or add a separate parameter for coordinate handling.",
+          "Use a more robust approach for filling missing variables that accounts for the concatenation dimension and ensures each dataset has the correct shape for its portion of the concatenated result.",
+          "Add validation to ensure that when variables are present in multiple datasets, they have compatible dimensions (excluding the concat dimension)."
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 0,
+        "passed": false,
+        "pass_count": 0,
+        "fail_count": 1,
+        "failing_tests": [
+          "Evaluation did not complete"
+        ],
+        "error_traces": [
+          "Evaluation did not complete - likely indicates a runtime error, infinite loop, or test framework failure during execution"
+        ]
+      }
+    ],
+    "metadata": {
+      "status": "testing",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-16T20:07:01.611917Z",
+      "end_time": null
+    }
+  }
+}

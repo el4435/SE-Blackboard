@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from collections import defaultdict
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path("E:/SE-Blackboard")
 RESULTS_DIR = ROOT / "data" / "results"
 
 # 8 experiment configurations (3 baseline + 5 phase2)
@@ -88,7 +88,10 @@ def main():
     report.append("Phase 2 Analysis Report: Easy Issues (N=20)")
     report.append("=" * 80)
     report.append("")
+
+    # =========================================================================
     # 4a. Resolve Rate Comparison Table
+    # =========================================================================
     report.append("4a. Resolve Rate Comparison (Core Metric)")
     report.append("-" * 60)
     report.append("")
@@ -141,7 +144,10 @@ def main():
     report.append(f"  MP wholefile+fb vs MP diff+strict:            {(mp_wf-mp_strict)/20*100:+.0f}pp ({mp_strict/20*100:.0f}% -> {mp_wf/20*100:.0f}%)")
     report.append(f"  Hybrid diff+fallback vs Hybrid diff+strict:   +{(hybrid_fb-hybrid_strict)/20*100:.0f}pp ({hybrid_strict/20*100:.0f}% -> {hybrid_fb/20*100:.0f}%)")
     report.append("")
+
+    # =========================================================================
     # 4b. Apply Success Rate
+    # =========================================================================
     report.append("")
     report.append("4b. Apply Success Rate")
     report.append("-" * 60)
@@ -199,7 +205,10 @@ def main():
             report.append(f"    {method:<16} {cnt}/20 ({cnt/20*100:.0f}%)")
 
     report.append("")
+
+    # =========================================================================
     # 4c. Conditional Resolve Rate P(resolved | apply_success)
+    # =========================================================================
     report.append("")
     report.append("4c. Conditional Resolve Rate: P(resolved | apply_success)")
     report.append("-" * 60)
@@ -237,7 +246,10 @@ def main():
     report.append("  - If cond. resolve rate stays constant: improvement is purely from better apply")
     report.append("  - If cond. resolve rate changes: patch quality itself is affected")
     report.append("")
+
+    # =========================================================================
     # 4d. Token Consumption
+    # =========================================================================
     report.append("")
     report.append("4d. Average Tokens per Issue")
     report.append("-" * 60)
@@ -270,7 +282,10 @@ def main():
         report.append(f"{label:<12} {diff_s_str:<16} {diff_f_str:<16} {wf_str:<16} {ratio_str:<16}")
 
     report.append("")
+
+    # =========================================================================
     # 4e. Issue-by-Issue Breakdown
+    # =========================================================================
     report.append("")
     report.append("4e. Issue-by-Issue Results")
     report.append("-" * 120)
@@ -373,7 +388,10 @@ def main():
         report.append(f"{iid:<30} {s:<14} {f_res:<14} {note_str}")
 
     report.append("")
+
+    # =========================================================================
     # 4f. McNemar's Test (Statistical Significance)
+    # =========================================================================
     report.append("")
     report.append("4f. McNemar's Test (Statistical Significance)")
     report.append("-" * 60)
@@ -447,7 +465,10 @@ def main():
     # Additional: BB(diff+fallback) vs BB(wholefile+fallback)
     mcnemar_test("bb_diff_fallback", "bb_wholefile_fallback",
                  "BB(diff+fb)", "BB(wf+fb)")
+
+    # =========================================================================
     # Whole-file Failure Analysis
+    # =========================================================================
     report.append("")
     report.append("Whole-file Mode Failure Analysis")
     report.append("-" * 60)
@@ -481,7 +502,10 @@ def main():
     report.append("  - All non-Django issues produce 'Only garbage was found in the patch input'")
     report.append("  - Even for Django, whole-file generates multi-hunk diffs causing 'Reversed patch detected'")
     report.append("")
+
+    # =========================================================================
     # Phase 3 Decision
+    # =========================================================================
     report.append("")
     report.append("=" * 60)
     report.append("Phase 3 Decision")

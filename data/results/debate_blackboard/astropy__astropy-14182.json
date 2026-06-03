@@ -1,0 +1,284 @@
+{
+  "experiment_id": "deb_blackboard_astropy__astropy-14182_edcefb90",
+  "issue_id": "astropy__astropy-14182",
+  "topology": "debate",
+  "communication": "blackboard",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 71206,
+  "total_output_tokens": 15773,
+  "total_latency_ms": 232279,
+  "final_patch": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -18,7 +18,7 @@\n \n \n class SimpleRSTHeader(FixedWidthHeader):\n-    position_line = None\n+    position_line = None  \n     start_line = None\n     splitter_class = FixedWidthTwoLineSplitter\n     position_char = \"=\"\n@@ -26,6 +26,35 @@\n     def get_fixedwidth_params(self, line):\n         return {\"position_line\": None, \"start_line\": None}\n \n+    def write(self, lines):\n+        if self.header_rows:\n+            # Validate header_rows\n+            for row in self.header_rows:\n+                if row not in (\"name\", \"unit\"):\n+                    raise ValueError(f\"header_rows must only contain 'name' or 'unit', got '{row}'\")\n+            \n+            # Ensure column widths are calculated\n+            if not hasattr(self.cols[0], 'width'):\n+                self.get_fixedwidth_params(None)\n+            \n+            # Write top separator\n+            lines.append(self.splitter.join([self.position_char * col.width for col in self.cols]))\n+            \n+            # Write each header row with separator\n+            for row in self.header_rows:\n+                if row == \"name\":\n+                    header_values = [col.info.name for col in self.cols]\n+                elif row == \"unit\":\n+                    header_values = [str(col.info.unit) if col.info.unit else \"\" for col in self.cols]\n+                \n+                formatted_row = self.splitter.join([val.center(col.width) for val, col in zip(header_values, self.cols)])\n+                lines.append(formatted_row)\n+                lines.append(self.splitter.join([self.position_char * col.width for col in self.cols]))\n+        else:\n+            # Call parent implementation for default behavior\n+            super().write(lines)\n+\n+\n \n class SimpleRSTData(FixedWidthData):\n     start_line = None\n@@ -35,7 +64,9 @@\n class SimpleRST(FixedWidth):\n     \"\"\"reStructuredText simple format table.\n \n-    See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#simple-tables\n+    See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#simple-tables\n+    \n+    This class supports the ``header_rows`` parameter to specify multiple header rows.\n \n     Example::\n \n@@ -50,6 +81,11 @@\n     data_class = SimpleRSTData\n     header_class = SimpleRSTHeader\n \n+    def __init__(self, header_rows=None):\n+        super().__init__()\n+        if header_rows is not None:\n+            self.header.header_rows = header_rows\n+\n     def write(self, lines):\n         lines = super().write(lines)\n         lines = [lines[1]] + lines + [lines[1]]\n@@ -58,7 +94,7 @@\n \n class RSTHeader(SimpleRSTHeader):\n     position_char = \"=\"\n-\n+    \n \n class RSTData(SimpleRSTData):\n     pass\n@@ -67,7 +103,9 @@\n class RST(SimpleRST):\n     \"\"\"reStructuredText grid format table.\n \n-    See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#grid-tables\n+    See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#grid-tables\n+    \n+    This class supports the ``header_rows`` parameter to specify multiple header rows.\n \n     Example::\n \n@@ -82,3 +120,8 @@\n \n     data_class = RSTData\n     header_class = RSTHeader\n+\n+    def __init__(self, header_rows=None):\n+        super().__init__()\n+        if header_rows is not None:\n+            self.header.header_rows = header_rows\n",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-15T02:54:53.924461+00:00",
+      "experiment_id": "debate_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Deb-B",
+      "agent_role": "Planner",
+      "communication_mode": "blackboard",
+      "iteration": 0,
+      "input_tokens": 4023,
+      "output_tokens": 1776,
+      "latency_ms": 26439
+    },
+    {
+      "timestamp": "2026-02-15T02:55:21.396185+00:00",
+      "experiment_id": "debate_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 6275,
+      "output_tokens": 2207,
+      "latency_ms": 27470
+    },
+    {
+      "timestamp": "2026-02-15T02:55:43.280860+00:00",
+      "experiment_id": "debate_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 5840,
+      "output_tokens": 1722,
+      "latency_ms": 21883
+    },
+    {
+      "timestamp": "2026-02-15T02:56:13.110975+00:00",
+      "experiment_id": "debate_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 1,
+      "input_tokens": 8878,
+      "output_tokens": 1585,
+      "latency_ms": 29828
+    },
+    {
+      "timestamp": "2026-02-15T02:56:30.444395+00:00",
+      "experiment_id": "debate_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 2848,
+      "output_tokens": 1184,
+      "latency_ms": 17332
+    },
+    {
+      "timestamp": "2026-02-15T02:56:49.404318+00:00",
+      "experiment_id": "debate_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 2848,
+      "output_tokens": 1689,
+      "latency_ms": 18959
+    },
+    {
+      "timestamp": "2026-02-15T02:57:15.202383+00:00",
+      "experiment_id": "debate_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 2,
+      "input_tokens": 14504,
+      "output_tokens": 1339,
+      "latency_ms": 25797
+    },
+    {
+      "timestamp": "2026-02-15T02:57:33.300909+00:00",
+      "experiment_id": "debate_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 2770,
+      "output_tokens": 1325,
+      "latency_ms": 18097
+    },
+    {
+      "timestamp": "2026-02-15T02:57:52.216418+00:00",
+      "experiment_id": "debate_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Deb-B",
+      "agent_role": "Coder",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 2770,
+      "output_tokens": 1520,
+      "latency_ms": 18914
+    },
+    {
+      "timestamp": "2026-02-15T02:58:19.762820+00:00",
+      "experiment_id": "debate_blackboard_astropy__astropy-14182",
+      "issue_id": "astropy__astropy-14182",
+      "config": "Deb-B",
+      "agent_role": "Reviewer",
+      "communication_mode": "blackboard",
+      "iteration": 3,
+      "input_tokens": 20450,
+      "output_tokens": 1426,
+      "latency_ms": 27545
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "astropy__astropy-14182",
+      "problem_statement": "Please support header rows in RestructuredText output\n### Description\r\n\r\nIt would be great if the following would work:\r\n\r\n```Python\r\n>>> from astropy.table import QTable\r\n>>> import astropy.units as u\r\n>>> import sys\r\n>>> tbl = QTable({'wave': [350,950]*u.nm, 'response': [0.7, 1.2]*u.count})\r\n>>> tbl.write(sys.stdout,  format=\"ascii.rst\")\r\n===== ========\r\n wave response\r\n===== ========\r\n350.0      0.7\r\n950.0      1.2\r\n===== ========\r\n>>> tbl.write(sys.stdout,  format=\"ascii.fixed_width\", header_rows=[\"name\", \"unit\"])\r\n|  wave | response |\r\n|    nm |       ct |\r\n| 350.0 |      0.7 |\r\n| 950.0 |      1.2 |\r\n>>> tbl.write(sys.stdout,  format=\"ascii.rst\", header_rows=[\"name\", \"unit\"])\r\nTraceback (most recent call last):\r\n  File \"<stdin>\", line 1, in <module>\r\n  File \"/usr/lib/python3/dist-packages/astropy/table/connect.py\", line 129, in __call__\r\n    self.registry.write(instance, *args, **kwargs)\r\n  File \"/usr/lib/python3/dist-packages/astropy/io/registry/core.py\", line 369, in write\r\n    return writer(data, *args, **kwargs)\r\n  File \"/usr/lib/python3/dist-packages/astropy/io/ascii/connect.py\", line 26, in io_write\r\n    return write(table, filename, **kwargs)\r\n  File \"/usr/lib/python3/dist-packages/astropy/io/ascii/ui.py\", line 856, in write\r\n    writer = get_writer(Writer=Writer, fast_writer=fast_writer, **kwargs)\r\n  File \"/usr/lib/python3/dist-packages/astropy/io/ascii/ui.py\", line 800, in get_writer\r\n    writer = core._get_writer(Writer, fast_writer, **kwargs)\r\n  File \"/usr/lib/python3/dist-packages/astropy/io/ascii/core.py\", line 1719, in _get_writer\r\n    writer = Writer(**writer_kwargs)\r\nTypeError: RST.__init__() got an unexpected keyword argument 'header_rows'\r\n```\r\n\r\n\r\n### Additional context\r\n\r\nRestructuredText output is a great way to fill autogenerated documentation with content, so having this flexible makes the life easier `:-)`\r\n\r\n\n",
+      "repo": "astropy/astropy",
+      "base_commit": "a5917978be39d13cd90b517e1de4e7a539ffaa48",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The RST (RestructuredText) writer class in astropy.io.ascii does not support the 'header_rows' parameter, which is available in other ASCII formats like fixed_width. The RST.__init__() method doesn't accept this parameter, causing a TypeError when users try to specify multiple header rows (e.g., name and unit rows) in RestructuredText table output.",
+      "relevant_files": [
+        "astropy/io/ascii/rst.py",
+        "astropy/io/ascii/fixedwidth.py",
+        "astropy/io/ascii/core.py"
+      ],
+      "relevant_functions": [
+        "astropy.io.ascii.rst.RST.__init__",
+        "astropy.io.ascii.rst.RST.write",
+        "astropy.io.ascii.rst.RSTHeader.write",
+        "astropy.io.ascii.fixedwidth.FixedWidth.__init__",
+        "astropy.io.ascii.core.BaseHeader.write"
+      ],
+      "fix_strategy": "1. Examine how the 'header_rows' parameter is implemented in the FixedWidth class (astropy/io/ascii/fixedwidth.py) to understand the expected behavior and data structure.\n\n2. Modify the RST class in astropy/io/ascii/rst.py:\n   a. Update RST.__init__() to accept 'header_rows' as a parameter\n   b. Store header_rows as an instance variable (self.header_rows)\n   c. Pass header_rows to the parent class if needed\n\n3. Modify the RSTHeader class header writing logic:\n   a. Check if header_rows is specified\n   b. If specified, iterate through the requested header rows (e.g., 'name', 'unit')\n   c. For each header row, write the appropriate separator line (=====) and the header content\n   d. Ensure proper RST table formatting with separators between each header row\n\n4. The expected output format should be:\n   - Top separator line\n   - First header row (e.g., column names)\n   - Middle separator line\n   - Second header row (e.g., units)\n   - Bottom separator line\n   - Data rows\n   - Final separator line\n\n5. Add appropriate tests to verify the functionality works correctly with various header_rows configurations.",
+      "confidence": 0.85,
+      "relevant_code": "## Source Code Context\n\n## File: astropy/io/ascii/rst.py\n```python\n# Mock content for astropy/io/ascii/rst.py\n# This is a placeholder.\n\n```\n\n## File: astropy/io/ascii/fixedwidth.py\n```python\n# Mock content for astropy/io/ascii/fixedwidth.py\n# This is a placeholder.\n\n```\n\n## File: astropy/io/ascii/core.py\n```python\n# Mock content for astropy/io/ascii/core.py\n# This is a placeholder.\n\n```"
+    },
+    "patches": [
+      {
+        "version": 1,
+        "author": "Coder_A",
+        "diff": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -15,7 +15,7 @@\n class RSTHeader(FixedWidthHeader):\n     position_line = None\n     start_line = None\n-    splitter_class = FixedWidthTwoLineDataSplitter\n+    splitter_class = RSTDataSplitter\n \n     def get_fixedwidth_params(self, line):\n         vals, starts, ends = super().get_fixedwidth_params(line)\n@@ -23,6 +23,33 @@\n \n     def write(self, lines):\n         lines.append(self.splitter.join([self.start_line] + self.colnames))\n+        if self.header_rows:\n+            lines.append(self.splitter.join([self.start_line] + ['=' * len(name) for name in self.colnames]))\n+            for header_row in self.header_rows:\n+                if header_row == 'name':\n+                    continue\n+                elif header_row == 'unit':\n+                    col_str_iters = self.splitter.process_column_units(self.cols)\n+                else:\n+                    col_str_iters = self.splitter.process_column_meta(self.cols, header_row)\n+                lines.append(self.splitter.join([self.start_line] + list(col_str_iters)))\n+        lines.append(self.splitter.join([self.start_line] + ['=' * len(name) for name in self.colnames]))\n+\n+\n+class RSTDataSplitter(FixedWidthTwoLineDataSplitter):\n+    def process_column_units(self, cols):\n+        for col in cols:\n+            if hasattr(col.info, 'unit') and col.info.unit:\n+                yield str(col.info.unit)\n+            else:\n+                yield ''\n+    \n+    def process_column_meta(self, cols, meta_key):\n+        for col in cols:\n+            if hasattr(col.info, meta_key):\n+                yield str(getattr(col.info, meta_key))\n+            else:\n+                yield ''\n \n \n class RSTData(FixedWidthData):\n@@ -56,7 +83,7 @@\n     data_class = RSTData\n     header_class = RSTHeader\n \n-    def __init__(self):\n-        super().__init__(delimiter_pad=None, bookend=False)\n+    def __init__(self, header_rows=None):\n+        super().__init__(delimiter_pad=None, bookend=False, header_rows=header_rows)\n \n     def write(self, lines):\n",
+        "description": "Add header_rows parameter support to RST writer class. This enables writing multiple header rows (e.g., name and unit) in RestructuredText table output, matching the functionality available in other ASCII formats like fixed_width.",
+        "timestamp": "2026-02-15T02:55:21.396470Z"
+      },
+      {
+        "version": 1,
+        "author": "Coder_B",
+        "diff": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -15,6 +15,7 @@\n class SimpleRSTHeader(FixedWidthHeader):\n     position_line = None\n     start_line = None\n+    write_comment = False\n \n     def get_cols(self, lines):\n         \"\"\"Initialize the header Column objects from the table ``lines``.\n@@ -44,6 +45,29 @@\n         return out\n \n     def write(self, lines):\n+        if self.header_rows:\n+            lines.append(self.splitter.join([self.data_pad * x for x in self.colwidths]))\n+            for header_row in self.header_rows:\n+                if header_row == 'name':\n+                    col_str_iters = []\n+                    for col in self.cols:\n+                        col_str_iters.append(col.iter_str_vals())\n+                    col_strs = [next(col_str_iter) for col_str_iter in col_str_iters]\n+                    lines.append(self.splitter.join(col_strs))\n+                elif header_row == 'unit':\n+                    col_strs = []\n+                    for col in self.cols:\n+                        unit = col.info.unit if col.info.unit else ''\n+                        col_width = col.width\n+                        col_strs.append(f'{unit:^{col_width}s}')\n+                    lines.append(self.splitter.join(col_strs))\n+                else:\n+                    raise ValueError(f\"Unknown header row type: {header_row}\")\n+                lines.append(self.splitter.join([self.data_pad * x for x in self.colwidths]))\n+            return lines\n+        \n+        # Original single header row behavior\n         lines.append(self.splitter.join([self.data_pad * x for x in self.colwidths]))\n         lines.append(self.splitter.join(self.str_vals()))\n         lines.append(self.splitter.join([self.data_pad * x for x in self.colwidths]))\n@@ -67,6 +91,7 @@\n     data_class = SimpleRSTData\n     header_class = SimpleRSTHeader\n \n-    def __init__(self):\n+    def __init__(self, header_rows=None):\n         super().__init__(delimiter_pad=None, bookend=False)\n+        self.header_rows = header_rows\n",
+        "description": "Add header_rows parameter support to RST writer class. This allows users to specify multiple header rows (e.g., 'name' and 'unit') in RestructuredText table output, matching the functionality available in other ASCII formats like fixed_width.",
+        "timestamp": "2026-02-15T02:55:43.281314Z"
+      },
+      {
+        "version": 2,
+        "author": "Coder_A",
+        "diff": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -18,7 +18,7 @@\n class SimpleRSTHeader(FixedWidthHeader):\n     position_line = None\n     start_line = None\n-    splitter_class = FixedWidthTwoLineDataSplitter\n+    splitter_class = DefaultSplitter\n \n     def get_fixedwidth_params(self, line):\n         vals, starts, ends = super().get_fixedwidth_params(line)\n@@ -30,6 +30,35 @@\n         for i, col in enumerate(self.cols):\n             col.width = ends[i] - starts[i]\n \n+    def write(self, lines):\n+        if getattr(self, 'header_rows', None):\n+            # Calculate column widths based on data\n+            if not hasattr(self, 'colwidths'):\n+                self.colwidths = [col.width for col in self.cols]\n+            \n+            # Write header rows\n+            for i, row_type in enumerate(self.header_rows):\n+                if row_type == 'name':\n+                    # Write column names\n+                    col_str = self.splitter.join([col.info.name.center(width) \n+                                                   for col, width in zip(self.cols, self.colwidths)])\n+                elif row_type == 'unit':\n+                    # Write units\n+                    col_str = self.splitter.join([\n+                        (col.info.unit if col.info.unit else '').center(width)\n+                        for col, width in zip(self.cols, self.colwidths)\n+                    ])\n+                else:\n+                    continue\n+                \n+                lines.append(col_str)\n+                # Add separator after each header row\n+                lines.append(self.splitter.join(['=' * width for width in self.colwidths]))\n+        else:\n+            # Default behavior - single header row\n+            super().write(lines)\n+        return lines\n+\n \n class SimpleRSTData(FixedWidthData):\n     splitter_class = FixedWidthTwoLineDataSplitter\n@@ -40,6 +69,13 @@\n     header_class = SimpleRSTHeader\n     data_class = SimpleRSTData\n \n+    def __init__(self, header_rows=None):\n+        super().__init__()\n+        if header_rows is not None:\n+            if not isinstance(header_rows, list):\n+                header_rows = [header_rows]\n+            self.header.header_rows = header_rows\n+\n     def write(self, lines):\n         lines = super().write(lines)\n         lines = [lines[1]] + lines + [lines[1]]\n@@ -49,7 +85,7 @@\n class RSTHeader(SimpleRSTHeader):\n     def write(self, lines):\n         lines.append(self.splitter.join([\"=\" * col.width for col in self.cols]))\n-        super().write(lines)\n+        super(SimpleRSTHeader, self).write(lines)\n         lines.append(self.splitter.join([\"=\" * col.width for col in self.cols]))\n         return lines\n \n@@ -62,6 +98,13 @@\n     header_class = RSTHeader\n     data_class = RSTData\n \n+    def __init__(self, header_rows=None):\n+        super().__init__()\n+        if header_rows is not None:\n+            if not isinstance(header_rows, list):\n+                header_rows = [header_rows]\n+            self.header.header_rows = header_rows\n+\n     def write(self, lines):\n         lines = super().write(lines)\n         return lines[1:-1]",
+        "description": "Add support for header_rows parameter in RestructuredText (RST) output format. This patch modifies both SimpleRST and RST classes to accept and handle the header_rows parameter, allowing users to specify multiple header rows (e.g., 'name' and 'unit') in RST table output. The implementation follows the pattern used in FixedWidth format and properly formats RST tables with appropriate separator lines.",
+        "timestamp": "2026-02-15T02:56:30.444687Z"
+      },
+      {
+        "version": 2,
+        "author": "Coder_B",
+        "diff": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -18,7 +18,7 @@\n class SimpleRSTHeader(FixedWidthHeader):\n     position_line = None\n     start_line = None\n-    splitter_class = FixedWidthTwoLineDataSplitter\n+    splitter_class = DefaultSplitter\n \n     def get_fixedwidth_params(self, line):\n         vals, starts, ends = super().get_fixedwidth_params(line)\n@@ -30,6 +30,32 @@\n         for i, col in enumerate(self.cols):\n             col.width = ends[i] - starts[i]\n \n+    def write(self, lines):\n+        if getattr(self, 'header_rows', None):\n+            # Calculate column widths based on data\n+            if not hasattr(self, 'colwidths'):\n+                self.colwidths = [col.width for col in self.cols]\n+            \n+            # Write header rows\n+            for i, row_type in enumerate(self.header_rows):\n+                if i == 0:\n+                    # Top separator\n+                    lines.append(' '.join('=' * width for width in self.colwidths))\n+                \n+                if row_type == 'name':\n+                    col_str_list = [col.info.name.center(width) for col, width in zip(self.cols, self.colwidths)]\n+                elif row_type == 'unit':\n+                    col_str_list = []\n+                    for col, width in zip(self.cols, self.colwidths):\n+                        unit = col.info.unit if col.info.unit else ''\n+                        col_str_list.append(str(unit).center(width))\n+                \n+                lines.append(' '.join(col_str_list))\n+            \n+            # Bottom separator after all header rows\n+            lines.append(' '.join('=' * width for width in self.colwidths))\n+        else:\n+            super().write(lines)\n \n class SimpleRSTData(FixedWidthData):\n     splitter_class = FixedWidthTwoLineDataSplitter\n@@ -38,7 +64,7 @@\n class SimpleRST(FixedWidth):\n     \"\"\"Simple reStructuredText table.\n \n-    See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#simple-tables\n+    See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#simple-tables  \n \n     Example::\n \n@@ -55,6 +81,11 @@\n     header_class = SimpleRSTHeader\n     data_class = SimpleRSTData\n \n+    def __init__(self, header_rows=None):\n+        super().__init__()\n+        if header_rows is not None:\n+            self.header.header_rows = header_rows\n+\n     def write(self, lines):\n         lines.append(self.write_header())\n         lines.append(self.write_data())\n@@ -79,7 +110,7 @@\n class RSTHeader(FixedWidthHeader):\n     position_line = None\n     start_line = None\n-    splitter_class = FixedWidthTwoLineDataSplitter\n+    splitter_class = DefaultSplitter\n \n     def get_fixedwidth_params(self, line):\n         vals, starts, ends = super().get_fixedwidth_params(line)\n@@ -91,6 +122,32 @@\n         for i, col in enumerate(self.cols):\n             col.width = ends[i] - starts[i]\n \n+    def write(self, lines):\n+        if getattr(self, 'header_rows', None):\n+            # Calculate column widths based on data\n+            if not hasattr(self, 'colwidths'):\n+                self.colwidths = [col.width for col in self.cols]\n+            \n+            # Write header rows\n+            for i, row_type in enumerate(self.header_rows):\n+                if i == 0:\n+                    # Top separator\n+                    lines.append(' '.join('=' * width for width in self.colwidths))\n+                \n+                if row_type == 'name':\n+                    col_str_list = [col.info.name.center(width) for col, width in zip(self.cols, self.colwidths)]\n+                elif row_type == 'unit':\n+                    col_str_list = []\n+                    for col, width in zip(self.cols, self.colwidths):\n+                        unit = col.info.unit if col.info.unit else ''\n+                        col_str_list.append(str(unit).center(width))\n+                \n+                lines.append(' '.join(col_str_list))\n+            \n+            # Bottom separator after all header rows\n+            lines.append(' '.join('=' * width for width in self.colwidths))\n+        else:\n+            super().write(lines)\n \n class RSTData(FixedWidthData):\n     splitter_class = FixedWidthTwoLineDataSplitter\n@@ -119,6 +176,11 @@\n     header_class = RSTHeader\n     data_class = RSTData\n \n+    def __init__(self, header_rows=None):\n+        super().__init__()\n+        if header_rows is not None:\n+            self.header.header_rows = header_rows\n+\n     def write(self, lines):\n         lines.append(self.write_header())\n         lines.append(self.write_data())",
+        "description": "Add support for header_rows parameter in RST writer classes. This patch modifies both SimpleRST and RST classes to accept and handle the header_rows parameter, allowing users to specify multiple header rows (e.g., 'name' and 'unit') in RestructuredText table output. The implementation follows RST table formatting conventions with proper separator lines using '=' characters based on column widths.",
+        "timestamp": "2026-02-15T02:56:49.404600Z"
+      },
+      {
+        "version": 3,
+        "author": "Coder_A",
+        "diff": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -18,7 +18,7 @@\n \n \n class SimpleRSTHeader(FixedWidthHeader):\n-    position_line = None\n+    position_line = None  \n     start_line = None\n     splitter_class = FixedWidthTwoLineSplitter\n     position_char = \"=\"\n@@ -26,6 +26,35 @@\n     def get_fixedwidth_params(self, line):\n         return {\"position_line\": None, \"start_line\": None}\n \n+    def write(self, lines):\n+        if self.header_rows:\n+            # Validate header_rows\n+            for row in self.header_rows:\n+                if row not in (\"name\", \"unit\"):\n+                    raise ValueError(f\"header_rows must only contain 'name' or 'unit', got '{row}'\")\n+            \n+            # Ensure column widths are calculated\n+            if not hasattr(self.cols[0], 'width'):\n+                self.get_fixedwidth_params(None)\n+            \n+            # Write top separator\n+            lines.append(self.splitter.join([self.position_char * col.width for col in self.cols]))\n+            \n+            # Write each header row with separator\n+            for row in self.header_rows:\n+                if row == \"name\":\n+                    header_values = [col.info.name for col in self.cols]\n+                elif row == \"unit\":\n+                    header_values = [str(col.info.unit) if col.info.unit else \"\" for col in self.cols]\n+                \n+                formatted_row = self.splitter.join([val.center(col.width) for val, col in zip(header_values, self.cols)])\n+                lines.append(formatted_row)\n+                lines.append(self.splitter.join([self.position_char * col.width for col in self.cols]))\n+        else:\n+            # Call parent implementation for default behavior\n+            super().write(lines)\n+\n+\n \n class SimpleRSTData(FixedWidthData):\n     start_line = None\n@@ -35,7 +64,9 @@\n class SimpleRST(FixedWidth):\n     \"\"\"reStructuredText simple format table.\n \n-    See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#simple-tables\n+    See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#simple-tables\n+    \n+    This class supports the ``header_rows`` parameter to specify multiple header rows.\n \n     Example::\n \n@@ -50,6 +81,11 @@\n     data_class = SimpleRSTData\n     header_class = SimpleRSTHeader\n \n+    def __init__(self, header_rows=None):\n+        super().__init__()\n+        if header_rows is not None:\n+            self.header.header_rows = header_rows\n+\n     def write(self, lines):\n         lines = super().write(lines)\n         lines = [lines[1]] + lines + [lines[1]]\n@@ -58,7 +94,7 @@\n \n class RSTHeader(SimpleRSTHeader):\n     position_char = \"=\"\n-\n+    \n \n class RSTData(SimpleRSTData):\n     pass\n@@ -67,7 +103,9 @@\n class RST(SimpleRST):\n     \"\"\"reStructuredText grid format table.\n \n-    See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#grid-tables\n+    See: https://docutils.sourceforge.io/docs/ref/rst/restructuredtext.html#grid-tables\n+    \n+    This class supports the ``header_rows`` parameter to specify multiple header rows.\n \n     Example::\n \n@@ -82,3 +120,8 @@\n \n     data_class = RSTData\n     header_class = RSTHeader\n+\n+    def __init__(self, header_rows=None):\n+        super().__init__()\n+        if header_rows is not None:\n+            self.header.header_rows = header_rows\n",
+        "description": "Add support for header_rows parameter in RestructuredText (RST) output. This patch modifies the SimpleRST and RST classes to accept and handle the header_rows parameter, allowing users to specify multiple header rows (e.g., 'name' and 'unit') in RST table output. The implementation validates header_rows values, ensures column widths are calculated, and properly formats the output with separators between header rows while maintaining backward compatibility with existing code.",
+        "timestamp": "2026-02-15T02:57:33.301219Z"
+      },
+      {
+        "version": 3,
+        "author": "Coder_B",
+        "diff": "--- a/astropy/io/ascii/rst.py\n+++ b/astropy/io/ascii/rst.py\n@@ -18,7 +18,7 @@\n \n \n class SimpleRSTHeader(FixedWidthHeader):\n-    position_line = None\n+    position_line = None  \n     start_line = None\n     splitter_class = FixedWidthTwoLineSplitter\n     position_char = \"=\"\n@@ -26,6 +26,35 @@\n     def get_fixedwidth_params(self, line):\n         return {\"position_line\": None, \"start_line\": None}\n \n+    def write(self, lines):\n+        if getattr(self, 'header_rows', None):\n+            # Validate header_rows\n+            for row in self.header_rows:\n+                if row not in ('name', 'unit'):\n+                    raise ValueError(f\"header_rows must only contain 'name' or 'unit', got '{row}'\")\n+            \n+            # Ensure column widths are calculated\n+            if not hasattr(self.cols[0], 'width'):\n+                self.get_fixedwidth_params(None)\n+            \n+            # Write top separator\n+            lines.append(self.splitter.join([self.position_char * col.width for col in self.cols]))\n+            \n+            # Write each header row with separator\n+            for row in self.header_rows:\n+                if row == 'name':\n+                    line_str = self.splitter.join([col.info.name for col in self.cols])\n+                elif row == 'unit':\n+                    line_str = self.splitter.join([str(col.info.unit) if col.info.unit else '' for col in self.cols])\n+                lines.append(line_str)\n+                lines.append(self.splitter.join([self.position_char * col.width for col in self.cols]))\n+        else:\n+            # Call parent implementation for default behavior\n+            super().write(lines)\n+\n+\n+class SimpleRSTData(FixedWidthData):\n+    splitter_class = FixedWidthTwoLineDataSplitter\n \n class SimpleRST(FixedWidth):\n     \"\"\"reStructuredText simple format table.\n@@ -54,7 +83,8 @@\n     \"\"\"\n \n     _format_name = \"ascii.rst\"\n-    _description = \"reStructuredText simple table\"\n+    _description = \"reStructuredText simple table\"  \n+    data_class = SimpleRSTData\n     header_class = SimpleRSTHeader\n \n \n@@ -62,6 +92,35 @@\n     position_line = None\n     start_line = None\n     splitter_class = FixedWidthTwoLineSplitter\n+\n+    def write(self, lines):\n+        if getattr(self, 'header_rows', None):\n+            # Validate header_rows\n+            for row in self.header_rows:\n+                if row not in ('name', 'unit'):\n+                    raise ValueError(f\"header_rows must only contain 'name' or 'unit', got '{row}'\")\n+            \n+            # Ensure column widths are calculated\n+            if not hasattr(self.cols[0], 'width'):\n+                self.get_fixedwidth_params(None)\n+            \n+            # Write top separator\n+            lines.append(self.splitter.join([self.position_char * col.width for col in self.cols]))\n+            \n+            # Write each header row with separator\n+            for row in self.header_rows:\n+                if row == 'name':\n+                    line_str = self.splitter.join([col.info.name for col in self.cols])\n+                elif row == 'unit':\n+                    line_str = self.splitter.join([str(col.info.unit) if col.info.unit else '' for col in self.cols])\n+                lines.append(line_str)\n+                lines.append(self.splitter.join([self.position_char * col.width for col in self.cols]))\n+        else:\n+            # Call parent implementation for default behavior\n+            super().write(lines)\n+\n+\n+class RSTData(FixedWidthData):\n+    splitter_class = FixedWidthTwoLineDataSplitter\n \n \n class RST(FixedWidth):\n@@ -91,5 +150,6 @@\n     \"\"\"\n \n     _format_name = \"ascii.rst\"\n-    _description = \"reStructuredText table\"\n+    _description = \"reStructuredText table\"  \n+    data_class = RSTData\n     header_class = RSTHeader\n",
+        "description": "Add support for header_rows parameter in RestructuredText (RST) output format. This patch:\n\n1. Adds write() method to SimpleRSTHeader and RSTHeader classes to handle header_rows parameter\n2. Validates that header_rows only contains 'name' or 'unit' values\n3. Ensures column widths are calculated before writing headers\n4. Writes multiple header rows with proper RST separators when header_rows is specified\n5. Falls back to parent implementation when header_rows is not specified to preserve existing behavior\n6. Explicitly defines data_class for SimpleRST and RST to use FixedWidthTwoLineDataSplitter for proper data formatting\n7. Maintains compatibility with existing RST output format",
+        "timestamp": "2026-02-15T02:57:52.216678Z"
+      }
+    ],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "Coder_B: Uses incorrect separator character (data_pad instead of '=') for RST table formatting",
+          "Coder_B: Modifies SimpleRSTHeader instead of RSTHeader - unclear which class is the correct target without full file context",
+          "Coder_B: header_rows parameter is not passed to parent class constructor, only stored as instance variable",
+          "Coder_B: Early return statement in write() prevents fallback to original behavior and may cause issues",
+          "Coder_B: Unit formatting uses center alignment which may not match expected RST output format",
+          "Coder_A: Logic error - creates separators based on column name length instead of column width",
+          "Coder_A: Adds separator line before first header row when header_rows is specified, breaking standard RST format",
+          "Coder_A: Creates RSTDataSplitter class but integration with header writing logic is incomplete",
+          "Both patches: Missing validation for header_rows parameter values",
+          "Both patches: No clear handling of edge cases (empty units, missing metadata)"
+        ],
+        "suggestions": [
+          "Use '=' character for RST table separators, calculated based on actual column widths (self.colwidths)",
+          "Verify which RST class should be modified by examining the full file structure and class hierarchy",
+          "Pass header_rows to parent class constructor properly to ensure it's available throughout the class hierarchy",
+          "Restructure the write() method logic to cleanly handle both header_rows and non-header_rows cases without early returns",
+          "Ensure column widths are properly calculated and available before writing headers",
+          "Add validation to ensure header_rows contains only valid values like 'name' and 'unit'",
+          "Handle cases where units are None or empty strings gracefully with appropriate fallback values",
+          "Test the output format to ensure it matches valid RST table syntax with proper separator lines",
+          "Consider following the pattern used in FixedWidth class more closely for consistency"
+        ]
+      },
+      {
+        "patch_version": 2,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "Changing splitter_class from FixedWidthTwoLineDataSplitter to DefaultSplitter may affect data row formatting and break existing functionality",
+          "No validation that header_rows contains valid values (should only accept 'name', 'unit', etc.)",
+          "The write() method doesn't call super().write() in the else branch for SimpleRSTHeader and RSTHeader, which may break the existing separator logic",
+          "Column width calculation assumes col.width is already set, but this may not be guaranteed before write() is called",
+          "The implementation doesn't integrate with the existing write flow - it should work with the parent class methods rather than replacing them entirely",
+          "The __init__ methods in SimpleRST and RST classes call super().__init__() without passing through parameters, which may break parent class initialization"
+        ],
+        "suggestions": [
+          "Keep the original splitter_class (FixedWidthTwoLineDataSplitter) to avoid breaking data formatting",
+          "Add validation for header_rows parameter to ensure only valid values like 'name' and 'unit' are accepted",
+          "Ensure the write() method properly calls the parent implementation for the default case to maintain existing separator logic",
+          "Add proper column width calculation before writing headers, possibly by calling get_fixedwidth_params or ensuring cols are properly initialized",
+          "Consider extending the existing write() logic rather than replacing it - add header_rows support while preserving the original separator placement",
+          "Pass header_rows parameter to parent class __init__ if the parent supports it, or store it properly before header object is created",
+          "Add unit tests to verify the functionality works correctly and doesn't break existing RST output"
+        ]
+      },
+      {
+        "patch_version": 3,
+        "author": "Coder_A",
+        "verdict": "needs_revision",
+        "issues": [
+          "The initialization pattern in __init__ methods tries to set self.header.header_rows before the header object is properly initialized by the parent class",
+          "The super().__init__() call in SimpleRST and RST should be called with proper parameters (delimiter_pad=None, bookend=False) as in the original code",
+          "Need to ensure header_rows is passed through the initialization chain properly, possibly by storing it as an instance variable and having the header access it from the parent"
+        ],
+        "suggestions": [
+          "Store header_rows as an instance variable in the __init__ method before calling super().__init__()",
+          "Modify the header's write() method to check for header_rows on the parent writer object (e.g., self.writer.header_rows) instead of self.header_rows",
+          "Ensure the initialization follows the pattern: store header_rows, call super().__init__() with original parameters, then pass header_rows to the header after it's initialized",
+          "Add test cases to verify the functionality works correctly with various header_rows configurations",
+          "Consider adding error handling for cases where column widths are not properly calculated"
+        ]
+      }
+    ],
+    "test_results": [],
+    "metadata": {
+      "status": "reviewing",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-15T02:54:27.484229Z",
+      "end_time": null
+    }
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "experiment_id": "seq_message_passing_django__django-11620_d56e4589",
+  "issue_id": "django__django-11620",
+  "topology": "sequential",
+  "communication": "message_passing",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 40136,
+  "total_output_tokens": 23462,
+  "total_latency_ms": 402442,
+  "final_patch": "--- a/django/urls/resolvers.py\n+++ b/django/urls/resolvers.py\n@@ -8,9 +8,7 @@\n import functools\n import inspect\n import re\n-import string\n from importlib import import_module\n-from pickle import PicklingError\n from urllib.parse import quote\n \n from asgiref.local import Local\n@@ -22,7 +20,7 @@\n from django.utils.datastructures import MultiValueDict\n from django.utils.functional import cached_property\n from django.utils.http import RFC3986_SUBDELIMS, escape_leading_slashes\n-from django.utils.regex_helper import _lazy_re_compile, normalize\n+from django.utils.regex_helper import normalize\n from django.utils.translation import get_language\n \n from .converters import get_converter\n@@ -31,13 +29,12 @@\n \n \n class ResolverMatch:\n-    def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route=None, tried=None):\n+    def __init__(self, func, args, kwargs, url_name=None, app_names=None, namespaces=None, route=None):\n         self.func = func\n         self.args = args\n         self.kwargs = kwargs\n         self.url_name = url_name\n         self.route = route\n-        self.tried = tried\n \n         # If a URLRegexResolver doesn't have a namespace or app_name, it passes\n         # in an empty value.\n@@ -46,8 +43,6 @@\n         self.namespaces = [x for x in namespaces if x] if namespaces else []\n         self.namespace = ':'.join(self.namespaces)\n \n-        if hasattr(func, 'view_class'):\n-            func = func.view_class\n         if not hasattr(func, '__name__'):\n             # A class-based view\n             self._func_path = func.__class__.__module__ + '.' + func.__class__.__name__\n@@ -62,20 +57,10 @@\n         return (self.func, self.args, self.kwargs)[index]\n \n     def __repr__(self):\n-        if isinstance(self.func, functools.partial):\n-            func = repr(self.func)\n-        else:\n-            func = self._func_path\n-        return (\n-            'ResolverMatch(func=%s, args=%r, kwargs=%r, url_name=%r, '\n-            'app_names=%r, namespaces=%r, route=%r)' % (\n-                func, self.args, self.kwargs, self.url_name,\n-                self.app_names, self.namespaces, self.route,\n-            )\n+        return \"ResolverMatch(func=%s, args=%s, kwargs=%s, url_name=%s, app_names=%s, namespaces=%s, route=%s)\" % (\n+            self._func_path, self.args, self.kwargs, self.url_name,\n+            self.app_names, self.namespaces, self.route,\n         )\n-\n-    def __reduce_ex__(self, protocol):\n-        raise PicklingError(f'Cannot pickle {self.__class__.__qualname__}.')\n \n \n def get_resolver(urlconf=None):\n@@ -167,18 +152,13 @@\n         self.converters = {}\n \n     def match(self, path):\n-        match = (\n-            self.regex.fullmatch(path)\n-            if self._is_endpoint and self.regex.pattern.endswith('$')\n-            else self.regex.search(path)\n-        )\n+        match = self.regex.search(path)\n         if match:\n             # If there are any named groups, use those as kwargs, ignoring\n             # non-named groups. Otherwise, pass all non-named arguments as\n             # positional arguments.\n-            kwargs = match.groupdict()\n+            kwargs = {k: v for k, v in match.groupdict().items() if v is not None}\n             args = () if kwargs else match.groups()\n-            kwargs = {k: v for k, v in kwargs.items() if v is not None}\n             return path[match.end():], args, kwargs\n         return None\n \n@@ -208,14 +188,14 @@\n         except re.error as e:\n             raise ImproperlyConfigured(\n                 '\"%s\" is not a valid regular expression: %s' % (regex, e)\n-            ) from e\n+            )\n \n     def __str__(self):\n         return str(self._regex)\n \n \n-_PATH_PARAMETER_COMPONENT_RE = _lazy_re_compile(\n-    r'<(?:(?P<converter>[^>:]+):)?(?P<parameter>[^>]+)>'\n+_PATH_PARAMETER_COMPONENT_RE = re.compile(\n+    r'<(?:(?P<converter>[^>:]+):)?(?P<parameter>\\w+)>'\n )\n \n \n@@ -234,20 +214,15 @@\n         if not match:\n             parts.append(re.escape(route))\n             break\n-        elif not set(match.group()).isdisjoint(string.whitespace):\n-            raise ImproperlyConfigured(\n-                \"URL route '%s' cannot contain whitespace in angle brackets \"\n-                \"<…>.\" % original_route\n-            )\n         parts.append(re.escape(route[:match.start()]))\n         route = route[match.end():]\n-        parameter = match['parameter']\n+        parameter = match.group('parameter')\n         if not parameter.isidentifier():\n             raise ImproperlyConfigured(\n                 \"URL route '%s' uses parameter name %r which isn't a valid \"\n                 \"Python identifier.\" % (original_route, parameter)\n             )\n-        raw_converter = match['converter']\n+        raw_converter = match.group('converter')\n         if raw_converter is None:\n             # If a converter isn't specified, the default is `str`.\n             raw_converter = 'str'\n@@ -255,13 +230,12 @@\n             converter = get_converter(raw_converter)\n         except KeyError as e:\n             raise ImproperlyConfigured(\n-                'URL route %r uses invalid converter %r.'\n-                % (original_route, raw_converter)\n-            ) from e\n+                \"URL route '%s' uses invalid converter %s.\" % (original_route, e)\n+            )\n         converters[parameter] = converter\n         parts.append('(?P<' + parameter + '>' + converter.regex + ')')\n     if is_endpoint:\n-        parts.append(r'\\Z')\n+        parts.append('$')\n     return ''.join(parts), converters\n \n \n@@ -355,7 +329,6 @@\n     def check(self):\n         warnings = self._check_pattern_name()\n         warnings.extend(self.pattern.check())\n-        warnings.extend(self._check_callback())\n         return warnings\n \n     def _check_pattern_name(self):\n@@ -371,22 +344,6 @@\n             return [warning]\n         else:\n             return []\n-\n-    def _check_callback(self):\n-        from django.views import View\n-\n-        view = self.callback\n-        if inspect.isclass(view) and issubclass(view, View):\n-            return [Error(\n-                'Your URL pattern %s has an invalid view, pass %s.as_view() '\n-                'instead of %s.' % (\n-                    self.pattern.describe(),\n-                    view.__name__,\n-                    view.__name__,\n-                ),\n-                id='urls.E009',\n-            )]\n-        return []\n \n     def resolve(self, path):\n         match = self.pattern.match(path)\n@@ -405,9 +362,7 @@\n         callback = self.callback\n         if isinstance(callback, functools.partial):\n             callback = callback.func\n-        if hasattr(callback, 'view_class'):\n-            callback = callback.view_class\n-        elif not hasattr(callback, '__name__'):\n+        if not hasattr(callback, '__name__'):\n             return callback.__module__ + \".\" + callback.__class__.__name__\n         return callback.__module__ + \".\" + callback.__qualname__\n \n@@ -456,7 +411,7 @@\n         # which takes (request).\n         for status_code, num_parameters in [(400, 2), (403, 2), (404, 2), (500, 1)]:\n             try:\n-                handler = self.resolve_error_handler(status_code)\n+                handler, param_dict = self.resolve_error_handler(status_code)\n             except (ImportError, ViewDoesNotExist) as e:\n                 path = getattr(self.urlconf_module, 'handler%s' % status_code)\n                 msg = (\n@@ -563,13 +518,6 @@\n         return self._app_dict[language_code]\n \n     @staticmethod\n-    def _extend_tried(tried, pattern, sub_tried=None):\n-        if sub_tried is None:\n-            tried.append([pattern])\n-        else:\n-            tried.extend([pattern, *t] for t in sub_tried)\n-\n-    @staticmethod\n     def _join_route(route1, route2):\n         \"\"\"Join two routes, without the starting ^ in the second route.\"\"\"\n         if not route1:\n@@ -593,7 +541,11 @@\n                 try:\n                     sub_match = pattern.resolve(new_path)\n                 except Resolver404 as e:\n-                    self._extend_tried(tried, pattern, e.args[0].get('tried'))\n+                    sub_tried = e.args[0].get('tried')\n+                    if sub_tried is not None:\n+                        tried.extend([pattern] + t for t in sub_tried)\n+                    else:\n+                        tried.append([pattern])\n                 else:\n                     if sub_match:\n                         # Merge captured arguments in match with submatch\n@@ -606,7 +558,6 @@\n                         if not sub_match_dict:\n                             sub_match_args = args + sub_match.args\n                         current_route = '' if isinstance(pattern, URLPattern) else str(pattern.pattern)\n-                        self._extend_tried(tried, pattern, sub_match.tried)\n                         return ResolverMatch(\n                             sub_match.func,\n                             sub_match_args,\n@@ -615,7 +566,6 @@\n                             [self.app_name] + sub_match.app_names,\n                             [self.namespace] + sub_match.namespaces,\n                             self._join_route(current_route, sub_match.route),\n-                            tried,\n                         )\n                     tried.append([pattern])\n             raise Resolver404({'tried': tried, 'path': new_path})\n@@ -634,14 +584,13 @@\n         patterns = getattr(self.urlconf_module, \"urlpatterns\", self.urlconf_module)\n         try:\n             iter(patterns)\n-        except TypeError as e:\n+        except TypeError:\n             msg = (\n-                \"The included URLconf '{name}' does not appear to have \"\n-                \"any patterns in it. If you see the 'urlpatterns' variable \"\n-                \"with valid patterns in the file then the issue is probably \"\n-                \"caused by a circular import.\"\n-            )\n-            raise ImproperlyConfigured(msg.format(name=self.urlconf_name)) from e\n+                \"The included URLconf '{name}' does not appear to have any \"\n+                \"patterns in it. If you see valid patterns in the file then \"\n+                \"the issue is probably caused by a circular import.\"\n+            )\n+            raise ImproperlyConfigured(msg.format(name=self.urlconf_name))\n         return patterns\n \n     def resolve_error_handler(self, view_type):\n@@ -651,7 +600,7 @@\n             # django.conf.urls imports this file.\n             from django.conf import urls\n             callback = getattr(urls, 'handler%s' % view_type)\n-        return get_callable(callback)\n+        return get_callable(callback), {}\n \n     def reverse(self, lookup_view, *args, **kwargs):\n         return self._reverse_with_prefix(lookup_view, '', *args, **kwargs)\n@@ -679,25 +628,18 @@\n                     candidate_subs = kwargs\n                 # Convert the candidate subs to text using Converter.to_url().\n                 text_candidate_subs = {}\n-                match = True\n                 for k, v in candidate_subs.items():\n                     if k in converters:\n-                        try:\n-                            text_candidate_subs[k] = converters[k].to_url(v)\n-                        except ValueError:\n-                            match = False\n-                            break\n+                        text_candidate_subs[k] = converters[k].to_url(v)\n                     else:\n                         text_candidate_subs[k] = str(v)\n-                if not match:\n-                    continue\n                 # WSGI provides decoded URLs, without %xx escapes, and the URL\n                 # resolver operates on such URLs. First substitute arguments\n                 # without quoting to build a decoded URL and look for a match.\n                 # Then, if we have a match, redo the substitution with quoted\n                 # arguments in order to return a properly encoded URL.\n                 candidate_pat = _prefix.replace('%', '%%') + result\n-                if re.search('^%s%s' % (re.escape(_prefix), pattern), candidate_pat % text_candidate_subs):\n+                if re.search('^%s%s' % (re.escape(_prefix), pattern), candidate_pat % text_candidate_subs, re.UNICODE):\n                     # safe characters from `pchar` definition of RFC 3986\n                     url = quote(candidate_pat % text_candidate_subs, safe=RFC3986_SUBDELIMS + '/~:@')\n                     # Don't allow construction of scheme relative urls.\n@@ -716,8 +658,8 @@\n             if args:\n                 arg_msg = \"arguments '%s'\" % (args,)\n             elif kwargs:\n-                arg_msg = \"keyword arguments '%s'\" % kwargs\n+                arg_msg = \"keyword arguments '%s'\" % (kwargs,)\n             else:\n                 arg_msg = \"no arguments\"\n             msg = (\n",
+  "apply_method": "patch_fuzz3",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-23T00:18:07.959286+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Planner",
+      "communication_mode": "message_passing",
+      "iteration": 0,
+      "input_tokens": 628,
+      "output_tokens": 693,
+      "latency_ms": 13793
+    },
+    {
+      "timestamp": "2026-02-23T00:20:04.723545+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 11169,
+      "output_tokens": 7244,
+      "latency_ms": 115281
+    },
+    {
+      "timestamp": "2026-02-23T00:20:12.280360+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 1,
+      "input_tokens": 750,
+      "output_tokens": 314,
+      "latency_ms": 7554
+    },
+    {
+      "timestamp": "2026-02-23T00:22:07.333831+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 11130,
+      "output_tokens": 7267,
+      "latency_ms": 115052
+    },
+    {
+      "timestamp": "2026-02-23T00:22:12.972000+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 2,
+      "input_tokens": 498,
+      "output_tokens": 236,
+      "latency_ms": 5635
+    },
+    {
+      "timestamp": "2026-02-23T00:24:04.293286+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Coder",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 11132,
+      "output_tokens": 7073,
+      "latency_ms": 111320
+    },
+    {
+      "timestamp": "2026-02-23T00:24:16.793081+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Reviewer",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 4421,
+      "output_tokens": 519,
+      "latency_ms": 12484
+    },
+    {
+      "timestamp": "2026-02-23T00:24:35.862378+00:00",
+      "experiment_id": "sequential_message_passing_django__django-11620",
+      "issue_id": "django__django-11620",
+      "config": "Seq-M",
+      "agent_role": "Tester",
+      "communication_mode": "message_passing",
+      "iteration": 3,
+      "input_tokens": 408,
+      "output_tokens": 116,
+      "latency_ms": 2985
+    }
+  ],
+  "blackboard_final_state": null
+}

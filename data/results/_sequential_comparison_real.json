@@ -1,0 +1,1311 @@
+{
+  "experiment": "sequential_real_evaluation",
+  "date": "2026-02-15",
+  "evaluator": "swebench_docker_harness",
+  "configs": {
+    "sequential_message_passing": {
+      "label": "A-Seq (MP)",
+      "total_issues": 50,
+      "resolved": 5,
+      "resolve_rate": 10.0,
+      "avg_tokens": 20099,
+      "avg_latency_ms": 97084,
+      "resolved_issues": [
+        "django__django-12700",
+        "django__django-15347",
+        "django__django-16379",
+        "pytest-dev__pytest-11143",
+        "sympy__sympy-15345"
+      ],
+      "per_issue": {
+        "astropy__astropy-14182": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 8878,
+          "output_tokens": 4817,
+          "total_tokens": 13695,
+          "latency_ms": 90391
+        },
+        "astropy__astropy-14995": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7127,
+          "output_tokens": 3012,
+          "total_tokens": 10139,
+          "latency_ms": 75959
+        },
+        "django__django-11179": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 29569,
+          "output_tokens": 5428,
+          "total_tokens": 34997,
+          "latency_ms": 102125
+        },
+        "django__django-11564": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 30883,
+          "output_tokens": 6402,
+          "total_tokens": 37285,
+          "latency_ms": 107453
+        },
+        "django__django-11620": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 29657,
+          "output_tokens": 3946,
+          "total_tokens": 33603,
+          "latency_ms": 217326
+        },
+        "django__django-12700": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 9919,
+          "output_tokens": 1498,
+          "total_tokens": 11417,
+          "latency_ms": 52218
+        },
+        "django__django-12908": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 28860,
+          "output_tokens": 3981,
+          "total_tokens": 32841,
+          "latency_ms": 76914
+        },
+        "django__django-12915": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 28750,
+          "output_tokens": 5040,
+          "total_tokens": 33790,
+          "latency_ms": 84824
+        },
+        "django__django-13028": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 30068,
+          "output_tokens": 4715,
+          "total_tokens": 34783,
+          "latency_ms": 109147
+        },
+        "django__django-13220": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 26789,
+          "output_tokens": 8957,
+          "total_tokens": 35746,
+          "latency_ms": 122864
+        },
+        "django__django-13230": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 30781,
+          "output_tokens": 4716,
+          "total_tokens": 35497,
+          "latency_ms": 118736
+        },
+        "django__django-13321": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 32461,
+          "output_tokens": 5994,
+          "total_tokens": 38455,
+          "latency_ms": 130824
+        },
+        "django__django-14155": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 30250,
+          "output_tokens": 5037,
+          "total_tokens": 35287,
+          "latency_ms": 94880
+        },
+        "django__django-14238": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 20808,
+          "output_tokens": 2967,
+          "total_tokens": 23775,
+          "latency_ms": 73120
+        },
+        "django__django-14667": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 30444,
+          "output_tokens": 5706,
+          "total_tokens": 36150,
+          "latency_ms": 98857
+        },
+        "django__django-15202": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 26318,
+          "output_tokens": 4013,
+          "total_tokens": 30331,
+          "latency_ms": 74305
+        },
+        "django__django-15213": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 29740,
+          "output_tokens": 5348,
+          "total_tokens": 35088,
+          "latency_ms": 95344
+        },
+        "django__django-15347": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 9821,
+          "output_tokens": 1285,
+          "total_tokens": 11106,
+          "latency_ms": 47836
+        },
+        "django__django-15388": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 29336,
+          "output_tokens": 4027,
+          "total_tokens": 33363,
+          "latency_ms": 229063
+        },
+        "django__django-16229": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 28773,
+          "output_tokens": 4418,
+          "total_tokens": 33191,
+          "latency_ms": 83817
+        },
+        "django__django-16379": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 8025,
+          "output_tokens": 1395,
+          "total_tokens": 9420,
+          "latency_ms": 117352
+        },
+        "django__django-16408": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 30935,
+          "output_tokens": 5771,
+          "total_tokens": 36706,
+          "latency_ms": 247914
+        },
+        "django__django-16820": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 27614,
+          "output_tokens": 5994,
+          "total_tokens": 33608,
+          "latency_ms": 107018
+        },
+        "django__django-17051": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 29743,
+          "output_tokens": 4821,
+          "total_tokens": 34564,
+          "latency_ms": 99726
+        },
+        "pallets__flask-4045": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 6143,
+          "output_tokens": 2178,
+          "total_tokens": 8321,
+          "latency_ms": 65784
+        },
+        "pydata__xarray-3364": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 12927,
+          "output_tokens": 8059,
+          "total_tokens": 20986,
+          "latency_ms": 130112
+        },
+        "pylint-dev__pylint-5859": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7300,
+          "output_tokens": 2558,
+          "total_tokens": 9858,
+          "latency_ms": 88147
+        },
+        "pytest-dev__pytest-11143": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 4591,
+          "output_tokens": 999,
+          "total_tokens": 5590,
+          "latency_ms": 41218
+        },
+        "pytest-dev__pytest-5221": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 6526,
+          "output_tokens": 2622,
+          "total_tokens": 9148,
+          "latency_ms": 77433
+        },
+        "pytest-dev__pytest-5495": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7366,
+          "output_tokens": 3775,
+          "total_tokens": 11141,
+          "latency_ms": 76478
+        },
+        "sphinx-doc__sphinx-10325": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7841,
+          "output_tokens": 4274,
+          "total_tokens": 12115,
+          "latency_ms": 84736
+        },
+        "sphinx-doc__sphinx-10451": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 9190,
+          "output_tokens": 5324,
+          "total_tokens": 14514,
+          "latency_ms": 98879
+        },
+        "sphinx-doc__sphinx-7738": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 9356,
+          "output_tokens": 4292,
+          "total_tokens": 13648,
+          "latency_ms": 81352
+        },
+        "sphinx-doc__sphinx-8713": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 3728,
+          "output_tokens": 2144,
+          "total_tokens": 5872,
+          "latency_ms": 64094
+        },
+        "sympy__sympy-12481": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7241,
+          "output_tokens": 3811,
+          "total_tokens": 11052,
+          "latency_ms": 69587
+        },
+        "sympy__sympy-13895": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 5834,
+          "output_tokens": 3636,
+          "total_tokens": 9470,
+          "latency_ms": 96396
+        },
+        "sympy__sympy-13971": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 5688,
+          "output_tokens": 3247,
+          "total_tokens": 8935,
+          "latency_ms": 90729
+        },
+        "sympy__sympy-14024": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 8374,
+          "output_tokens": 4728,
+          "total_tokens": 13102,
+          "latency_ms": 102420
+        },
+        "sympy__sympy-14396": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 8469,
+          "output_tokens": 4262,
+          "total_tokens": 12731,
+          "latency_ms": 81995
+        },
+        "sympy__sympy-15345": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 4420,
+          "output_tokens": 1336,
+          "total_tokens": 5756,
+          "latency_ms": 43461
+        },
+        "sympy__sympy-15346": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7122,
+          "output_tokens": 2525,
+          "total_tokens": 9647,
+          "latency_ms": 113881
+        },
+        "sympy__sympy-18057": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7964,
+          "output_tokens": 4085,
+          "total_tokens": 12049,
+          "latency_ms": 85147
+        },
+        "sympy__sympy-18698": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7535,
+          "output_tokens": 3913,
+          "total_tokens": 11448,
+          "latency_ms": 102464
+        },
+        "sympy__sympy-18835": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 6315,
+          "output_tokens": 2598,
+          "total_tokens": 8913,
+          "latency_ms": 58559
+        },
+        "sympy__sympy-19254": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 12780,
+          "output_tokens": 7997,
+          "total_tokens": 20777,
+          "latency_ms": 121427
+        },
+        "sympy__sympy-20049": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 11190,
+          "output_tokens": 5540,
+          "total_tokens": 16730,
+          "latency_ms": 102463
+        },
+        "sympy__sympy-20639": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 6976,
+          "output_tokens": 2945,
+          "total_tokens": 9921,
+          "latency_ms": 78158
+        },
+        "sympy__sympy-21171": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 13291,
+          "output_tokens": 3797,
+          "total_tokens": 17088,
+          "latency_ms": 105510
+        },
+        "sympy__sympy-24213": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7373,
+          "output_tokens": 3638,
+          "total_tokens": 11011,
+          "latency_ms": 72229
+        },
+        "sympy__sympy-24909": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 6953,
+          "output_tokens": 3315,
+          "total_tokens": 10268,
+          "latency_ms": 63542
+        }
+      }
+    },
+    "sequential_blackboard": {
+      "label": "B-Seq (BB)",
+      "total_issues": 50,
+      "resolved": 7,
+      "resolve_rate": 14.0,
+      "avg_tokens": 50357,
+      "avg_latency_ms": 192052,
+      "resolved_issues": [
+        "django__django-12700",
+        "django__django-13028",
+        "django__django-13230",
+        "django__django-15347",
+        "django__django-16379",
+        "pytest-dev__pytest-11143",
+        "sympy__sympy-15345"
+      ],
+      "per_issue": {
+        "astropy__astropy-14182": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 27641,
+          "output_tokens": 5125,
+          "total_tokens": 32766,
+          "latency_ms": 283792
+        },
+        "astropy__astropy-14995": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 15751,
+          "output_tokens": 2570,
+          "total_tokens": 18321,
+          "latency_ms": 250230
+        },
+        "django__django-11179": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 54228,
+          "output_tokens": 5777,
+          "total_tokens": 60005,
+          "latency_ms": 258192
+        },
+        "django__django-11564": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 86629,
+          "output_tokens": 9109,
+          "total_tokens": 95738,
+          "latency_ms": 141801
+        },
+        "django__django-11620": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 57569,
+          "output_tokens": 3659,
+          "total_tokens": 61228,
+          "latency_ms": 129226
+        },
+        "django__django-12700": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 20766,
+          "output_tokens": 2113,
+          "total_tokens": 22879,
+          "latency_ms": 151767
+        },
+        "django__django-12908": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 92667,
+          "output_tokens": 5117,
+          "total_tokens": 97784,
+          "latency_ms": 239934
+        },
+        "django__django-12915": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 75633,
+          "output_tokens": 6041,
+          "total_tokens": 81674,
+          "latency_ms": 247147
+        },
+        "django__django-13028": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 22694,
+          "output_tokens": 2871,
+          "total_tokens": 25565,
+          "latency_ms": 69173
+        },
+        "django__django-13220": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 80253,
+          "output_tokens": 15008,
+          "total_tokens": 95261,
+          "latency_ms": 347214
+        },
+        "django__django-13230": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 20308,
+          "output_tokens": 2282,
+          "total_tokens": 22590,
+          "latency_ms": 172412
+        },
+        "django__django-13321": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 72601,
+          "output_tokens": 5550,
+          "total_tokens": 78151,
+          "latency_ms": 256218
+        },
+        "django__django-14155": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 70036,
+          "output_tokens": 6091,
+          "total_tokens": 76127,
+          "latency_ms": 252903
+        },
+        "django__django-14238": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 111366,
+          "output_tokens": 6032,
+          "total_tokens": 117398,
+          "latency_ms": 251498
+        },
+        "django__django-14667": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 96081,
+          "output_tokens": 6593,
+          "total_tokens": 102674,
+          "latency_ms": 169705
+        },
+        "django__django-15202": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 77539,
+          "output_tokens": 6948,
+          "total_tokens": 84487,
+          "latency_ms": 249947
+        },
+        "django__django-15213": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 121077,
+          "output_tokens": 8077,
+          "total_tokens": 129154,
+          "latency_ms": 166273
+        },
+        "django__django-15347": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 17095,
+          "output_tokens": 2182,
+          "total_tokens": 19277,
+          "latency_ms": 156433
+        },
+        "django__django-15388": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 66677,
+          "output_tokens": 7141,
+          "total_tokens": 73818,
+          "latency_ms": 138669
+        },
+        "django__django-16229": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 98722,
+          "output_tokens": 5885,
+          "total_tokens": 104607,
+          "latency_ms": 255888
+        },
+        "django__django-16379": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 13807,
+          "output_tokens": 1391,
+          "total_tokens": 15198,
+          "latency_ms": 217199
+        },
+        "django__django-16408": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 178031,
+          "output_tokens": 8308,
+          "total_tokens": 186339,
+          "latency_ms": 145032
+        },
+        "django__django-16820": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 52937,
+          "output_tokens": 4686,
+          "total_tokens": 57623,
+          "latency_ms": 144008
+        },
+        "django__django-17051": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 180071,
+          "output_tokens": 10273,
+          "total_tokens": 190344,
+          "latency_ms": 294557
+        },
+        "pallets__flask-4045": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 21206,
+          "output_tokens": 4482,
+          "total_tokens": 25688,
+          "latency_ms": 147752
+        },
+        "pydata__xarray-3364": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 33092,
+          "output_tokens": 10150,
+          "total_tokens": 43242,
+          "latency_ms": 175866
+        },
+        "pylint-dev__pylint-5859": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 19769,
+          "output_tokens": 3423,
+          "total_tokens": 23192,
+          "latency_ms": 174527
+        },
+        "pytest-dev__pytest-11143": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 14968,
+          "output_tokens": 1347,
+          "total_tokens": 16315,
+          "latency_ms": 86301
+        },
+        "pytest-dev__pytest-5221": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 16520,
+          "output_tokens": 3444,
+          "total_tokens": 19964,
+          "latency_ms": 188874
+        },
+        "pytest-dev__pytest-5495": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 16741,
+          "output_tokens": 4324,
+          "total_tokens": 21065,
+          "latency_ms": 155797
+        },
+        "sphinx-doc__sphinx-10325": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 29067,
+          "output_tokens": 7593,
+          "total_tokens": 36660,
+          "latency_ms": 137142
+        },
+        "sphinx-doc__sphinx-10451": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 35232,
+          "output_tokens": 9119,
+          "total_tokens": 44351,
+          "latency_ms": 150097
+        },
+        "sphinx-doc__sphinx-7738": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 10917,
+          "output_tokens": 2169,
+          "total_tokens": 13086,
+          "latency_ms": 237373
+        },
+        "sphinx-doc__sphinx-8713": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 23744,
+          "output_tokens": 4186,
+          "total_tokens": 27930,
+          "latency_ms": 221975
+        },
+        "sympy__sympy-12481": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 10818,
+          "output_tokens": 2758,
+          "total_tokens": 13576,
+          "latency_ms": 111896
+        },
+        "sympy__sympy-13895": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 13263,
+          "output_tokens": 3225,
+          "total_tokens": 16488,
+          "latency_ms": 130153
+        },
+        "sympy__sympy-13971": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 20187,
+          "output_tokens": 3772,
+          "total_tokens": 23959,
+          "latency_ms": 189596
+        },
+        "sympy__sympy-14024": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 15042,
+          "output_tokens": 3953,
+          "total_tokens": 18995,
+          "latency_ms": 142921
+        },
+        "sympy__sympy-14396": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 22859,
+          "output_tokens": 4921,
+          "total_tokens": 27780,
+          "latency_ms": 112510
+        },
+        "sympy__sympy-15345": {
+          "resolved": true,
+          "iterations": 3,
+          "input_tokens": 12529,
+          "output_tokens": 3649,
+          "total_tokens": 16178,
+          "latency_ms": 166678
+        },
+        "sympy__sympy-15346": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 13191,
+          "output_tokens": 2458,
+          "total_tokens": 15649,
+          "latency_ms": 160896
+        },
+        "sympy__sympy-18057": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 32737,
+          "output_tokens": 6734,
+          "total_tokens": 39471,
+          "latency_ms": 233430
+        },
+        "sympy__sympy-18698": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 13795,
+          "output_tokens": 3393,
+          "total_tokens": 17188,
+          "latency_ms": 248547
+        },
+        "sympy__sympy-18835": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 20374,
+          "output_tokens": 4487,
+          "total_tokens": 24861,
+          "latency_ms": 228828
+        },
+        "sympy__sympy-19254": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 23604,
+          "output_tokens": 5949,
+          "total_tokens": 29553,
+          "latency_ms": 192212
+        },
+        "sympy__sympy-20049": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 24017,
+          "output_tokens": 5457,
+          "total_tokens": 29474,
+          "latency_ms": 232104
+        },
+        "sympy__sympy-20639": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 19211,
+          "output_tokens": 4416,
+          "total_tokens": 23627,
+          "latency_ms": 184791
+        },
+        "sympy__sympy-21171": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 59901,
+          "output_tokens": 4586,
+          "total_tokens": 64487,
+          "latency_ms": 211387
+        },
+        "sympy__sympy-24213": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 13155,
+          "output_tokens": 2793,
+          "total_tokens": 15948,
+          "latency_ms": 206407
+        },
+        "sympy__sympy-24909": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 16575,
+          "output_tokens": 3557,
+          "total_tokens": 20132,
+          "latency_ms": 185304
+        }
+      }
+    },
+    "sequential_hybrid": {
+      "label": "C-Seq (Hybrid)",
+      "total_issues": 50,
+      "resolved": 5,
+      "resolve_rate": 10.0,
+      "avg_tokens": 36792,
+      "avg_latency_ms": 115115,
+      "resolved_issues": [
+        "django__django-12700",
+        "django__django-13230",
+        "django__django-15347",
+        "django__django-16379",
+        "pytest-dev__pytest-11143"
+      ],
+      "per_issue": {
+        "astropy__astropy-14182": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 18245,
+          "output_tokens": 3429,
+          "total_tokens": 21674,
+          "latency_ms": 121861
+        },
+        "astropy__astropy-14995": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 12792,
+          "output_tokens": 2634,
+          "total_tokens": 15426,
+          "latency_ms": 106969
+        },
+        "django__django-11179": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 36597,
+          "output_tokens": 3773,
+          "total_tokens": 40370,
+          "latency_ms": 88233
+        },
+        "django__django-11564": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 75099,
+          "output_tokens": 8021,
+          "total_tokens": 83120,
+          "latency_ms": 125902
+        },
+        "django__django-11620": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 62526,
+          "output_tokens": 4393,
+          "total_tokens": 66919,
+          "latency_ms": 127867
+        },
+        "django__django-12700": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 19392,
+          "output_tokens": 1408,
+          "total_tokens": 20800,
+          "latency_ms": 54842
+        },
+        "django__django-12908": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 83820,
+          "output_tokens": 5466,
+          "total_tokens": 89286,
+          "latency_ms": 174121
+        },
+        "django__django-12915": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 39562,
+          "output_tokens": 2543,
+          "total_tokens": 42105,
+          "latency_ms": 80745
+        },
+        "django__django-13028": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 71065,
+          "output_tokens": 4946,
+          "total_tokens": 76011,
+          "latency_ms": 139335
+        },
+        "django__django-13220": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 52822,
+          "output_tokens": 8153,
+          "total_tokens": 60975,
+          "latency_ms": 124792
+        },
+        "django__django-13230": {
+          "resolved": true,
+          "iterations": 2,
+          "input_tokens": 29673,
+          "output_tokens": 2672,
+          "total_tokens": 32345,
+          "latency_ms": 82819
+        },
+        "django__django-13321": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 72411,
+          "output_tokens": 6236,
+          "total_tokens": 78647,
+          "latency_ms": 154118
+        },
+        "django__django-14155": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 56208,
+          "output_tokens": 4119,
+          "total_tokens": 60327,
+          "latency_ms": 131151
+        },
+        "django__django-14238": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 71035,
+          "output_tokens": 4146,
+          "total_tokens": 75181,
+          "latency_ms": 139437
+        },
+        "django__django-14667": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 53922,
+          "output_tokens": 4169,
+          "total_tokens": 58091,
+          "latency_ms": 115048
+        },
+        "django__django-15202": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 78283,
+          "output_tokens": 5397,
+          "total_tokens": 83680,
+          "latency_ms": 145262
+        },
+        "django__django-15213": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 62287,
+          "output_tokens": 4301,
+          "total_tokens": 66588,
+          "latency_ms": 95018
+        },
+        "django__django-15347": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 17624,
+          "output_tokens": 1911,
+          "total_tokens": 19535,
+          "latency_ms": 54144
+        },
+        "django__django-15388": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 66546,
+          "output_tokens": 8524,
+          "total_tokens": 75070,
+          "latency_ms": 158120
+        },
+        "django__django-16229": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 73854,
+          "output_tokens": 4485,
+          "total_tokens": 78339,
+          "latency_ms": 137498
+        },
+        "django__django-16379": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 16714,
+          "output_tokens": 2099,
+          "total_tokens": 18813,
+          "latency_ms": 129456
+        },
+        "django__django-16408": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 75224,
+          "output_tokens": 3578,
+          "total_tokens": 78802,
+          "latency_ms": 124139
+        },
+        "django__django-16820": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 75160,
+          "output_tokens": 5302,
+          "total_tokens": 80462,
+          "latency_ms": 119321
+        },
+        "django__django-17051": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 127203,
+          "output_tokens": 6955,
+          "total_tokens": 134158,
+          "latency_ms": 139305
+        },
+        "pallets__flask-4045": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 22963,
+          "output_tokens": 4930,
+          "total_tokens": 27893,
+          "latency_ms": 120715
+        },
+        "pydata__xarray-3364": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 11653,
+          "output_tokens": 4212,
+          "total_tokens": 15865,
+          "latency_ms": 169444
+        },
+        "pylint-dev__pylint-5859": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 8827,
+          "output_tokens": 2551,
+          "total_tokens": 11378,
+          "latency_ms": 100120
+        },
+        "pytest-dev__pytest-11143": {
+          "resolved": true,
+          "iterations": 1,
+          "input_tokens": 18887,
+          "output_tokens": 1463,
+          "total_tokens": 20350,
+          "latency_ms": 48853
+        },
+        "pytest-dev__pytest-5221": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 5417,
+          "output_tokens": 1806,
+          "total_tokens": 7223,
+          "latency_ms": 82277
+        },
+        "pytest-dev__pytest-5495": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 14394,
+          "output_tokens": 2752,
+          "total_tokens": 17146,
+          "latency_ms": 117296
+        },
+        "sphinx-doc__sphinx-10325": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 5458,
+          "output_tokens": 1497,
+          "total_tokens": 6955,
+          "latency_ms": 92515
+        },
+        "sphinx-doc__sphinx-10451": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7881,
+          "output_tokens": 1599,
+          "total_tokens": 9480,
+          "latency_ms": 114244
+        },
+        "sphinx-doc__sphinx-7738": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 8567,
+          "output_tokens": 2254,
+          "total_tokens": 10821,
+          "latency_ms": 119993
+        },
+        "sphinx-doc__sphinx-8713": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 16823,
+          "output_tokens": 2046,
+          "total_tokens": 18869,
+          "latency_ms": 122404
+        },
+        "sympy__sympy-12481": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 6032,
+          "output_tokens": 2146,
+          "total_tokens": 8178,
+          "latency_ms": 109016
+        },
+        "sympy__sympy-13895": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 6299,
+          "output_tokens": 1795,
+          "total_tokens": 8094,
+          "latency_ms": 117716
+        },
+        "sympy__sympy-13971": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7091,
+          "output_tokens": 2316,
+          "total_tokens": 9407,
+          "latency_ms": 100528
+        },
+        "sympy__sympy-14024": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 17727,
+          "output_tokens": 4165,
+          "total_tokens": 21892,
+          "latency_ms": 117448
+        },
+        "sympy__sympy-14396": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 27207,
+          "output_tokens": 3591,
+          "total_tokens": 30798,
+          "latency_ms": 193481
+        },
+        "sympy__sympy-15345": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 5993,
+          "output_tokens": 2158,
+          "total_tokens": 8151,
+          "latency_ms": 83094
+        },
+        "sympy__sympy-15346": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 10603,
+          "output_tokens": 2561,
+          "total_tokens": 13164,
+          "latency_ms": 123608
+        },
+        "sympy__sympy-18057": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 15237,
+          "output_tokens": 2959,
+          "total_tokens": 18196,
+          "latency_ms": 94897
+        },
+        "sympy__sympy-18698": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 5411,
+          "output_tokens": 1694,
+          "total_tokens": 7105,
+          "latency_ms": 125758
+        },
+        "sympy__sympy-18835": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7757,
+          "output_tokens": 2070,
+          "total_tokens": 9827,
+          "latency_ms": 89300
+        },
+        "sympy__sympy-19254": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 16326,
+          "output_tokens": 4226,
+          "total_tokens": 20552,
+          "latency_ms": 126267
+        },
+        "sympy__sympy-20049": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7989,
+          "output_tokens": 1881,
+          "total_tokens": 9870,
+          "latency_ms": 94918
+        },
+        "sympy__sympy-20639": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7166,
+          "output_tokens": 2436,
+          "total_tokens": 9602,
+          "latency_ms": 110163
+        },
+        "sympy__sympy-21171": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 39048,
+          "output_tokens": 2374,
+          "total_tokens": 41422,
+          "latency_ms": 110442
+        },
+        "sympy__sympy-24213": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 8510,
+          "output_tokens": 2200,
+          "total_tokens": 10710,
+          "latency_ms": 93225
+        },
+        "sympy__sympy-24909": {
+          "resolved": false,
+          "iterations": 3,
+          "input_tokens": 7488,
+          "output_tokens": 2416,
+          "total_tokens": 9904,
+          "latency_ms": 108512
+        }
+      }
+    }
+  },
+  "analysis": {
+    "by_difficulty": {
+      "easy": {
+        "n": 20,
+        "MP": 5,
+        "BB": 7,
+        "Hybrid": 5
+      },
+      "medium": {
+        "n": 20,
+        "MP": 0,
+        "BB": 0,
+        "Hybrid": 0
+      },
+      "hard": {
+        "n": 10,
+        "MP": 0,
+        "BB": 0,
+        "Hybrid": 0
+      }
+    },
+    "paired_analysis": {
+      "total_unique_resolved": 7,
+      "resolved_by_all_3": [
+        "django__django-12700",
+        "django__django-15347",
+        "django__django-16379",
+        "pytest-dev__pytest-11143"
+      ],
+      "only_BB": [
+        "django__django-13028"
+      ],
+      "only_MP": [],
+      "only_Hybrid": [],
+      "BB_and_MP_not_Hybrid": [
+        "sympy__sympy-15345"
+      ],
+      "BB_and_Hybrid_not_MP": [
+        "django__django-13230"
+      ]
+    },
+    "key_findings": [
+      "BB resolves 2 more issues than MP or Hybrid (7 vs 5)",
+      "All resolved issues are easy difficulty - no medium or hard solved",
+      "BB effect: +4pp (10% -> 14%) - weaker than mock (+20pp)",
+      "Hybrid matches MP (10%) not BB (14%) in real evaluation",
+      "Core 4 issues resolved by all 3 configs (robust easy wins)",
+      "BB uniquely solves django-13028 (the check_filterable bug)",
+      "Django is most solvable repo (13-23%); sympy hardest (0-6%)"
+    ]
+  }
+}

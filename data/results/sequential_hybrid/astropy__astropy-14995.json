@@ -1,0 +1,182 @@
+{
+  "experiment_id": "seq_hybrid_astropy__astropy-14995_79d3ef7f",
+  "issue_id": "astropy__astropy-14995",
+  "topology": "sequential",
+  "communication": "hybrid",
+  "resolved": false,
+  "iterations": 3,
+  "total_input_tokens": 14327,
+  "total_output_tokens": 2706,
+  "total_latency_ms": 116370,
+  "final_patch": "",
+  "agent_traces": [
+    {
+      "timestamp": "2026-02-16T19:17:00.989742+00:00",
+      "experiment_id": "sequential_hybrid_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-H",
+      "agent_role": "Planner",
+      "communication_mode": "hybrid",
+      "iteration": 0,
+      "input_tokens": 5975,
+      "output_tokens": 1566,
+      "latency_ms": 23190
+    },
+    {
+      "timestamp": "2026-02-16T19:17:24.465333+00:00",
+      "experiment_id": "sequential_hybrid_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 1,
+      "input_tokens": 2262,
+      "output_tokens": 338,
+      "latency_ms": 7839
+    },
+    {
+      "timestamp": "2026-02-16T19:17:53.413202+00:00",
+      "experiment_id": "sequential_hybrid_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 2,
+      "input_tokens": 2262,
+      "output_tokens": 332,
+      "latency_ms": 7921
+    },
+    {
+      "timestamp": "2026-02-16T19:18:15.957814+00:00",
+      "experiment_id": "sequential_hybrid_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-H",
+      "agent_role": "Reviewer",
+      "communication_mode": "hybrid",
+      "iteration": 3,
+      "input_tokens": 2262,
+      "output_tokens": 376,
+      "latency_ms": 8403
+    },
+    {
+      "timestamp": "2026-02-16T19:18:34.168130+00:00",
+      "experiment_id": "sequential_hybrid_astropy__astropy-14995",
+      "issue_id": "astropy__astropy-14995",
+      "config": "Seq-H",
+      "agent_role": "Tester",
+      "communication_mode": "hybrid",
+      "iteration": 3,
+      "input_tokens": 1566,
+      "output_tokens": 94,
+      "latency_ms": 2268
+    }
+  ],
+  "blackboard_final_state": {
+    "issue": {
+      "instance_id": "astropy__astropy-14995",
+      "problem_statement": "In v5.3, NDDataRef mask propagation fails when one of the operand does not have a mask\n### Description\n\nThis applies to v5.3. \r\n\r\nIt looks like when one of the operand does not have a mask, the mask propagation when doing arithmetic, in particular with `handle_mask=np.bitwise_or` fails.  This is not a problem in v5.2.\r\n\r\nI don't know enough about how all that works, but it seems from the error that the operand without a mask is set as a mask of None's and then the bitwise_or tries to operate on an integer and a None and fails.\n\n### Expected behavior\n\nWhen one of the operand does not have mask, the mask that exists should just be copied over to the output.  Or whatever was done in that situation in v5.2 where there's no problem.\n\n### How to Reproduce\n\nThis is with v5.3.   With v5.2, there are no errors.\r\n\r\n```\r\n>>> import numpy as np\r\n>>> from astropy.nddata import NDDataRef\r\n\r\n>>> array = np.array([[0, 1, 0], [1, 0, 1], [0, 1, 0]])\r\n>>> mask = np.array([[0, 1, 64], [8, 0, 1], [2, 1, 0]])\r\n\r\n>>> nref_nomask = NDDataRef(array)\r\n>>> nref_mask = NDDataRef(array, mask=mask)\r\n\r\n# multiply no mask by constant (no mask * no mask)\r\n>>> nref_nomask.multiply(1., handle_mask=np.bitwise_or).mask   # returns nothing, no mask,  OK\r\n\r\n# multiply no mask by itself (no mask * no mask)\r\n>>> nref_nomask.multiply(nref_nomask, handle_mask=np.bitwise_or).mask # return nothing, no mask, OK\r\n\r\n# multiply mask by constant (mask * no mask)\r\n>>> nref_mask.multiply(1., handle_mask=np.bitwise_or).mask\r\n...\r\nTypeError: unsupported operand type(s) for |: 'int' and 'NoneType'\r\n\r\n# multiply mask by itself (mask * mask)\r\n>>> nref_mask.multiply(nref_mask, handle_mask=np.bitwise_or).mask\r\narray([[ 0,  1, 64],\r\n       [ 8,  0,  1],\r\n       [ 2,  1,  0]])\r\n\r\n# multiply mask by no mask (mask * no mask)\r\n>>> nref_mask.multiply(nref_nomask, handle_mask=np.bitwise_or).mask\r\n...\r\nTypeError: unsupported operand type(s) for |: 'int' and 'NoneType'\r\n```\r\n\n\n### Versions\n\n>>> import sys; print(\"Python\", sys.version)\r\nPython 3.10.11 | packaged by conda-forge | (main, May 10 2023, 19:07:22) [Clang 14.0.6 ]\r\n>>> import astropy; print(\"astropy\", astropy.__version__)\r\nastropy 5.3\r\n>>> import numpy; print(\"Numpy\", numpy.__version__)\r\nNumpy 1.24.3\r\n>>> import erfa; print(\"pyerfa\", erfa.__version__)\r\npyerfa 2.0.0.3\r\n>>> import scipy; print(\"Scipy\", scipy.__version__)\r\nScipy 1.10.1\r\n>>> import matplotlib; print(\"Matplotlib\", matplotlib.__version__)\r\nMatplotlib 3.7.1\r\n\n",
+      "repo": "astropy/astropy",
+      "base_commit": "b16c7d12ccbc7b2d20364b89fb44285bcbfede54",
+      "key_entities": []
+    },
+    "analysis": {
+      "root_cause": "The mask propagation logic in NDDataRef arithmetic operations does not properly handle cases where one operand has a mask and the other has None as a mask. When handle_mask is set to a function like np.bitwise_or, the code attempts to apply the bitwise operation between mask array elements (integers) and None values, which raises a TypeError. This is a regression from v5.2 where None masks were handled correctly.",
+      "relevant_files": [
+        "astropy/nddata/mixins/ndarithmetic.py",
+        "astropy/nddata/nddata_base.py",
+        "astropy/nddata/nddata.py"
+      ],
+      "relevant_functions": [
+        "NDArithmeticMixin._arithmetic",
+        "NDArithmeticMixin.multiply",
+        "NDArithmeticMixin._prepare_then_do_arithmetic",
+        "NDArithmeticMixin._arithmetic_mask"
+      ],
+      "fix_strategy": "1. Locate the mask propagation logic in NDArithmeticMixin._arithmetic_mask or similar method that handles mask operations during arithmetic.\n\n2. Add special handling for cases where one or both masks are None:\n   - If both masks are None, return None\n   - If one mask is None and the other is not, return the non-None mask (copy it)\n   - Only apply the handle_mask function when both masks are actual arrays\n\n3. The fix should check if either mask is None before attempting to apply the handle_mask function (like np.bitwise_or).\n\n4. Ensure this matches the v5.2 behavior where None masks were handled gracefully.\n\n5. Add or update tests to cover all combinations:\n   - mask * mask (both have masks)\n   - mask * no_mask (one has mask, one doesn't)\n   - no_mask * mask (reverse of above)\n   - no_mask * no_mask (neither has mask)\n   - mask * scalar (mask with constant)\n   - no_mask * scalar (no mask with constant)",
+      "confidence": 0.9,
+      "relevant_code": "The issue is in the mask propagation code within NDArithmeticMixin. The _arithmetic_mask method (or equivalent) needs to check for None masks before applying the handle_mask function. The fix should add conditional logic like:\n\nif mask1 is None and mask2 is None:\n    return None\nelif mask1 is None:\n    return mask2.copy() if hasattr(mask2, 'copy') else mask2\nelif mask2 is None:\n    return mask1.copy() if hasattr(mask1, 'copy') else mask1\nelse:\n    return handle_mask(mask1, mask2)"
+    },
+    "patches": [],
+    "reviews": [
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "No patch was provided by the Coder agent - the output failed to parse into a valid Patch object",
+          "Cannot review a non-existent patch for correctness, logical errors, or regressions",
+          "Unable to verify if the mask propagation issue with None masks is addressed"
+        ],
+        "suggestions": [
+          "The Coder should provide a valid patch that modifies the mask propagation logic in astropy/nddata/mixins/ndarithmetic.py",
+          "The patch should add None-checking logic before applying handle_mask functions like np.bitwise_or",
+          "Implement the fix strategy from the analysis: check if either mask is None and handle appropriately (return None if both None, return the non-None mask if only one is None, apply handle_mask only when both are arrays)",
+          "The fix should be in the _arithmetic_mask method or similar mask handling code within NDArithmeticMixin",
+          "Add test cases covering all combinations: mask*mask, mask*no_mask, no_mask*mask, no_mask*no_mask, mask*scalar, no_mask*scalar",
+          "Ensure the patch format follows the required structure with file_path, original_code, and patched_code sections"
+        ]
+      },
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "No patch was provided by the Coder agent - the output failed to parse into a valid Patch object",
+          "Cannot review a non-existent patch for correctness, logical errors, or regressions",
+          "Unable to verify if the mask propagation issue with None masks is addressed"
+        ],
+        "suggestions": [
+          "The Coder should provide a valid patch that modifies the mask propagation logic in astropy/nddata/mixins/ndarithmetic.py",
+          "The patch should add None-checking logic before applying handle_mask functions like np.bitwise_or",
+          "Implement the fix strategy from the analysis: check if either mask is None and handle appropriately (return None if both None, return the non-None mask if only one is None, apply handle_mask only when both are arrays)",
+          "The fix should be in the _arithmetic_mask method or similar mask handling code within NDArithmeticMixin",
+          "Add test cases covering all combinations: mask*mask, mask*no_mask, no_mask*mask, no_mask*no_mask, mask*scalar, no_mask*scalar",
+          "Ensure the solution matches v5.2 behavior where None masks were handled gracefully"
+        ]
+      },
+      {
+        "patch_version": 1,
+        "author": "Reviewer",
+        "verdict": "needs_revision",
+        "issues": [
+          "No patch was provided by the Coder agent - the output failed to parse into a valid Patch object",
+          "Cannot review a non-existent patch for correctness, logical errors, or regressions",
+          "Unable to verify if the mask propagation issue with None masks is addressed",
+          "Cannot check if the fix handles all required cases: both masks None, one mask None, both masks present",
+          "Cannot verify if the solution matches v5.2 behavior where None masks were handled gracefully"
+        ],
+        "suggestions": [
+          "The Coder should provide a valid patch that modifies the mask propagation logic in astropy/nddata/mixins/ndarithmetic.py",
+          "The patch should add None-checking logic before applying handle_mask function in the _arithmetic_mask method or equivalent",
+          "Implement the logic: if both masks are None return None, if one is None return the other (copied), otherwise apply handle_mask",
+          "The fix should be in the NDArithmeticMixin class, likely in the _arithmetic_mask method or where mask operations are performed during arithmetic",
+          "Include test cases covering all combinations: mask*mask, mask*no_mask, no_mask*mask, no_mask*no_mask, mask*scalar, no_mask*scalar",
+          "Ensure the patch format follows the required schema with file_path, original_code, and patched_code fields"
+        ]
+      }
+    ],
+    "test_results": [
+      {
+        "patch_version": 0,
+        "passed": false,
+        "pass_count": 0,
+        "fail_count": 1,
+        "failing_tests": [
+          "Patch Generation"
+        ],
+        "error_traces": [
+          "Failed to parse LLM output into Patch after correction retry. Evaluation did not complete."
+        ]
+      }
+    ],
+    "metadata": {
+      "status": "testing",
+      "current_iteration": 0,
+      "total_input_tokens": 0,
+      "total_output_tokens": 0,
+      "total_latency_ms": 0,
+      "start_time": "2026-02-16T19:16:37.798316Z",
+      "end_time": null
+    }
+  }
+}
