@@ -37,7 +37,7 @@
 \vol{13}
 \year{2025}
 \history{Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.}
-\doi{} % DOI will be assigned by IEEE Access production
+\doi{} % DOI to be assigned by IEEE Access production
 
 \title{SE-Blackboard: A Shared-State Architecture for Multi-Agent Software Engineering Pipelines}
 \author{\uppercase{Erxi Liu}\authorrefmark{1},
@@ -55,7 +55,7 @@
 \corresp{Corresponding author: Qiang Zhu (e-mail: zhuqiang@nim.ac.cn).}
 
 \begin{abstract}
-Multi-agent large language model (LLM) systems are increasingly used for software engineering tasks, yet the role of \textbf{communication architecture} in these systems remains poorly understood. Most existing approaches assume message passing, where agents exchange sequential natural-language summaries, without examining the information loss this assumption may introduce. This paper makes a methodological and diagnostic contribution to that question. We present \textbf{SE-Blackboard}, a modular framework that places message passing, a shared-state blackboard, and a hybrid design within an otherwise identical multi-agent pipeline, and we introduce the \textbf{Information Fidelity Score (IFS)}, a stage-level metric that measures how well key technical entities from the original issue survive successive agent handoffs. On 50 SWE-bench Lite issues, the blackboard configuration improves Coder-stage IFS by 62\% over message passing (0.586 vs. 0.362) and correct file targeting by 27.5 percentage points (82.6\% vs. 55.1\%). Once the correct file is identified, however, all configurations converge to a $\sim$22\% conditional resolve rate, revealing a downstream bottleneck in LLM diff generation. Building on these decompositions, we present an \textbf{information-flow bottleneck model} that predicts how upstream gains attenuate at the patch-generation stage; the model accounts for the modest end-to-end resolve-rate improvement observed (16\% vs. 12\%). These findings identify communication architecture as a measurable, separable design dimension and supply tools---IFS and the bottleneck model---for diagnosing where future improvements in multi-agent SE pipelines should be targeted.
+Multi-agent large language model (LLM) systems are increasingly used for software engineering tasks, yet the role of \textbf{communication architecture} in these systems remains poorly understood. Most existing approaches rely on message passing, where agents communicate through sequential natural language summaries, potentially introducing information loss across pipeline stages. This paper introduces \textbf{SE-Blackboard}, a modular framework that applies a shared-state Blackboard architecture to multi-agent software engineering pipelines. We conduct controlled experiments on 50 SWE-bench Lite issues, comparing three communication architectures: message passing, shared-state blackboard, and a hybrid design. Our results show that communication architecture significantly affects information preservation and intermediate pipeline performance. The blackboard configuration improves Coder-stage information fidelity (IFS) by 62\% compared with message passing (0.586 vs. 0.362), which translates into a 27.5 percentage-point improvement in correct file targeting (82.6\% vs. 55.1\%). However, once the correct file is identified, all configurations converge to a $\sim$22\% conditional resolve rate, revealing a downstream bottleneck in LLM diff generation. As a result, the overall resolve-rate improvement is modest (16\% vs. 12\%) despite large upstream gains. These findings highlight communication architecture as an important design dimension for multi-agent software engineering systems and suggest that improvements in upstream information quality translate into task-level gains only when downstream generation bottlenecks are addressed.
 \end{abstract}
 
 \begin{keywords}
@@ -70,7 +70,7 @@ multi-agent systems, large language models, software engineering, blackboard arc
 
 \PARstart{T}{he} rapid advancement of large language models (LLMs) \cite{brown2020language} has catalyzed the emergence of multi-agent systems for software engineering (SE). Systems such as MetaGPT \cite{hong2024metagpt}, ChatDev \cite{qian2024chatdev}, SWE-Agent \cite{yang2024sweagent}, and AgentCoder \cite{huang2024agentcoder} demonstrate that multiple AI agents can collaboratively solve complex tasks, including code generation \cite{chen2021evaluating}, bug fixing, and code review, representing a shift from monolithic tools toward modular, role-based architectures.
 
-However, current multi-agent SE systems share a common architectural assumption: \textbf{message-passing communication}. Agents communicate by forwarding natural-language messages along a predefined chain; the output of one agent becomes the input to the next. This approach has a fundamental limitation: information fidelity degrades at each handoff. Critical technical information, such as function signatures, parameter types, and error stack traces, may be paraphrased, simplified, or omitted. We term this progressive degradation of information \emph{knowledge drift}: the cumulative loss or distortion of technical entities, identifiers, and references that occurs as task-relevant content is paraphrased through successive agent handoffs, leading downstream agents to operate on a representation that no longer fully reflects the original problem specification. Knowledge drift has also been identified as a primary failure cause in multi-agent LLM systems \cite{cemri2025why}.
+However, current multi-agent SE systems share a common architectural assumption: \textbf{message-passing communication}. Agents communicate by forwarding natural-language messages along a predefined chain; the output of one agent becomes the input to the next. This approach has a fundamental limitation: information fidelity degrades at each handoff. Critical technical information, such as function signatures, parameter types, and error stack traces, may be paraphrased, simplified, or omitted. We term this progressive degradation of information \emph{knowledge drift}, which has also been identified as a primary failure cause in multi-agent LLM systems \cite{cemri2025why}.
 
 Knowledge drift is particularly critical in software engineering contexts. While paraphrasing in general reasoning tasks may preserve semantic equivalence, SE tasks require exact technical precision. A single character difference in a function name or file path can determine whether a patch applies correctly, making SE an ideal domain for studying information preservation in multi-agent architectures.
 
@@ -94,9 +94,7 @@ This paper makes the following contributions:
 
 Recent studies have introduced a range of multi-agent software engineering (SE) systems that differ in architectural design and interaction style, which typically rely on the code-generation strengths of foundation models such as Codex \cite{chen2021evaluating} and Code Llama \cite{roziere2023code}. Role-oriented frameworks---such as MetaGPT \cite{hong2024metagpt}, ChatDev \cite{qian2024chatdev}, and AutoGen \cite{wu2023autogen}---assign specialized responsibilities to individual agents and organize their collaboration through predefined workflows or structured dialogue. In contrast, tool-augmented approaches such as SWE-Agent \cite{yang2024sweagent} and AutoCodeRover \cite{zhang2024autocoderover} focus on enhancing a single agent with repository navigation and execution tools, achieving strong performance without explicit multi-agent coordination.
 
-For automated bug fixing, AgentCoder \cite{huang2024agentcoder} and CodeR \cite{chen2024coder} use multi-agent pipelines that incorporate iterative feedback from test execution, whereas Agentless \cite{xia2024agentless} shows that carefully designed prompting strategies can attain comparable results without deploying multiple agents. More recently, MAGIS \cite{tao2024magis} proposes an LLM-based multi-agent framework specifically for GitHub issue resolution, organized around role-specialized agents that exchange information through structured handoffs; its design goals are closely aligned with ours, though it does not isolate the communication architecture as an independent variable. This comparison suggests that interaction design may be as influential as agent multiplicity itself.
-
-Recent advances also extend agent capability through tool integration: SWE-Agent \cite{yang2024sweagent} formalizes an agent--computer interface that exposes repository navigation and file editing as discrete tools, AutoCodeRover \cite{zhang2024autocoderover} couples spectrum-based code search with iterative LLM reasoning, and Agentless \cite{xia2024agentless} achieves comparable results using only carefully structured prompts. These developments share a common emphasis on what each agent can \emph{do} (search, read, execute, retry) rather than how multiple agents \emph{exchange} information among themselves.
+For automated bug fixing, AgentCoder \cite{huang2024agentcoder} and CodeR \cite{chen2024coder} use multi-agent pipelines that incorporate iterative feedback from test execution, whereas Agentless \cite{xia2024agentless} shows that carefully designed prompting strategies can attain comparable results without deploying multiple agents. This comparison suggests that interaction design may be as influential as agent multiplicity itself.
 
 Despite their differences, these systems largely rely on message passing as the primary mechanism for inter-agent communication. Although some approaches use shared artifacts, the communication architecture is seldom examined as an independent design dimension. Our work seeks to fill this gap.
 
@@ -135,14 +133,14 @@ Formally, the shared state is defined as a tuple:
 
 where \emph{I} denotes IssueInfo, \emph{A} denotes Analysis, \emph{P} denotes Patch, \emph{R} denotes Review, and \emph{T} denotes TestResult.
 
-A key design principle is \textbf{field ownership}. Each agent is only allowed to write to its designated state fields and has read access to upstream fields. Formally, the write-permission mapping $W : \mathcal{K} \to 2^{\{I,A,P,R,T\}}$ assigns each agent role $k \in \mathcal{K} = \{\text{Planner}, \text{Coder}, \text{Reviewer}, \text{Tester}\}$ the subset of state fields that role is permitted to modify. It is defined as follows:
+A key design principle is \textbf{field ownership}. Each agent is only allowed to write to its designated state fields and has read access to upstream fields. The write-permission mapping $W$ is defined as follows:
 
 \begin{align*}
 W(\text{Planner}) &= \{A\}, \quad W(\text{Coder}) = \{P\}, \\
 W(\text{Reviewer}) &= \{R\}, \quad W(\text{Tester}) = \{T\}
 \end{align*}
 
-The IssueInfo field $I$ is excluded from every $W(k)$, making it read-only for all agents. This ownership model prevents agents from inadvertently overwriting each other's contributions and ensures a clear audit trail. The combination of a structured shared state with role-bound write permissions is consistent with recent cognitive-architecture treatments of language agents~\cite{sumers2024cognitive}, which advocate explicit separation between working memory, reasoning state, and action production---a separation our $\mathbf{S} = (I, A, P, R, T)$ schema realizes at the granularity of pipeline stages.
+This ownership model prevents agents from inadvertently overwriting each other's contributions and ensures a clear audit trail.
 
 Crucially, the original issue description (IssueInfo) is always preserved in the shared state and remains directly accessible to all agents. This design mitigates knowledge drift: downstream agents, such as the Coder, can reference the original issue text directly rather than relying solely on the Planner's summarization.
 
@@ -202,7 +200,7 @@ where the inner loop terminates early if $\mathcal{R}$ returns an accept decisio
 
 We evaluate on SWE-bench Lite \cite{jimenez2024swebench}, which is a curated subset of 300 real-world GitHub issues from 12 popular Python repositories. Each issue includes a natural language problem description, a base commit, and test cases that the fix must pass (FAIL\_TO\_PASS) while not breaking existing functionality (PASS\_TO\_PASS).
 
-We select a stratified sample of 50 issues to balance evaluation cost, repository diversity, and difficulty coverage while remaining comparable to prior small-scale SWE-bench Lite studies. Issues were initially sampled in equal strata based on repository metadata to avoid concentration on any single project, then reclassified post-hoc using gold patch complexity as an objective difficulty proxy: Easy (single-file, $<$20 lines): 22 issues, predominantly Django; Medium (single-file, 20--50 lines or multi-file with small changes): 5 issues; Hard (multi-file, $>$50 lines, or complex reasoning): 23 issues. The final sample covers 8 of the 12 repositories in SWE-bench Lite, with Django overrepresented (22/50) because its comprehensive test coverage makes a larger fraction of issues passable under the FAIL\_TO\_PASS / PASS\_TO\_PASS evaluation protocol; we discuss the implications of this concentration for external validity in Section~\ref{sec:threats}.
+We select a stratified sample of 50 issues to balance feasibility with coverage. Issues were initially sampled in equal strata based on repository metadata, then reclassified post-hoc using gold patch complexity as an objective difficulty proxy: Easy (single-file, $<$20 lines): 22 issues, predominantly Django; Medium (single-file, 20--50 lines or multi-file with small changes): 5 issues; Hard (multi-file, $>$50 lines, or complex reasoning): 23 issues. The final sample covers 8 repositories, with Django overrepresented (22/50) due to its comprehensive test coverage.
 
 \subsection{Configurations}
 
@@ -239,8 +237,6 @@ In MP mode, IFS is computed only at the Coder stage; in BB and Hybrid modes, it 
 
 \textbf{Efficiency Metrics.} We measure token consumption, latency, and iteration count per issue.
 
-\textbf{Relationship to prior multi-agent evaluation criteria.} IFS differs in scope from common multi-agent evaluation criteria, which include end-to-end task success (e.g., resolve rate), role-consistency metrics, and dialogue-quality scores. Task-success metrics summarize the whole pipeline into a single binary outcome and therefore conflate communication quality with downstream generation capability; role-consistency and dialogue-quality metrics target generic conversational behavior and do not test whether domain-specific technical entities (function names, file paths, error types) survive each handoff. IFS instead measures stage-level preservation of those technical entities and is therefore designed to isolate the contribution of the communication layer from confounds such as patch-formatting reliability. We use IFS alongside, not in place of, resolve rate.
-
 \subsection{Statistical Methods}
 
 Given the paired design (each issue under all three configurations), we use McNemar's exact test \cite{mcnemar1947note} for resolve rate comparisons, Wilcoxon signed-rank test \cite{wilcoxon1945individual} for continuous measurements (tokens, latency, IFS), Cohen's $h$ for effect size, and odds ratio with 95\% CI. All tests use $\alpha = 0.05$. With $N=50$ and expected resolve rates of 12--16\%, statistical power to detect resolve-rate differences is limited; therefore, we interpret the results in conjunction with IFS and failure analysis.
@@ -263,13 +259,13 @@ Table~\ref{tab:main-results} presents the main experimental results across three
 \caption{Main experimental results on SWE-bench Lite ($N=50$, Sequential pipeline).}
 \label{tab:main-results}
 \small
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-\textbf{Comm.} & \textbf{Res.} & \textbf{Rate} & \textbf{Tokens} & \textbf{Latency} \\
+\textbf{Comm.} & \textbf{Res.} & \textbf{Rate} & \textbf{Tokens} & \textbf{Latency} & \textbf{Iter.} \\
 \midrule
-MP & 6/50 & 12.0\% & 25,316 & 106s \\
-BB & 8/50 & 16.0\% & 54,849 & 171s \\
-Hybrid & 6/50 & 12.0\% & 43,278 & 128s \\
+MP & 6/50 & 12.0\% & 25,316 & 106s & 2.78 \\
+BB & 8/50 & 16.0\% & 54,849 & 171s & 2.70 \\
+Hybrid & 6/50 & 12.0\% & 43,278 & 128s & 2.80 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -306,24 +302,20 @@ Five issues form a "common core" resolved by all three configurations. BB unique
 
 The IFS analysis provides clear evidence of the benefits of the Blackboard architecture (Table~\ref{tab:ifs}, Figure~\ref{fig:ifs-analysis}).
 
-\begin{table*}[!ht]
+\begin{table}[!ht]
 \centering
-\caption{Information Fidelity Score by pipeline stage (mean $\pm$ std).}
+\caption{Average Information Fidelity Score by pipeline stage.}
 \label{tab:ifs}
 \begin{tabular}{lcccc}
 \toprule
 \textbf{Comm.} & \textbf{Planner} & \textbf{Coder} & \textbf{Reviewer} & \textbf{Tester} \\
 \midrule
-MP & 0.749$^{\dagger}$ & 0.362 $\pm$ 0.385 & N/A & N/A \\
-BB & 0.749 $\pm$ 0.308 & 0.586 $\pm$ 0.342 & 0.454 $\pm$ 0.361 & 0.074 $\pm$ 0.165 \\
-Hybrid & 0.738 $\pm$ 0.332 & 0.539 $\pm$ 0.357 & 0.503 $\pm$ 0.340 & 0.079 $\pm$ 0.246 \\
+MP & N/A & 0.362 & N/A & N/A \\
+BB & 0.749 & 0.586 & 0.454 & 0.074 \\
+Hybrid & 0.738 & 0.539 & 0.503 & 0.079 \\
 \bottomrule
 \end{tabular}
-
-\vspace{1mm}
-\footnotesize
-$^{\dagger}$Planner IFS for MP is identical to that for BB by design: the Planner is invoked with the same prompt and the same input (the original issue $I$) in all configurations, and the LLM is run with temperature 0 for deterministic generation. The intermediate text output of the MP Planner was not separately persisted; we therefore report the BB Planner-stage value, which is the value the MP Planner would produce in this experimental setting. Standard deviations are computed across the per-issue IFS values available for that stage.
-\end{table*}
+\end{table}
 
 \subsubsection{Coder Stage}
 
@@ -331,53 +323,11 @@ BB achieves an average Coder IFS of 0.586 compared to 0.362 under MP, resulting 
 
 \subsubsection{Information Decay Pattern}
 
-For BB and Hybrid, IFS decays across the pipeline stages (Figure~\ref{fig:ifs-analysis}b): Planner ($\sim$0.74) $\rightarrow$ Coder ($\sim$0.56) $\rightarrow$ Reviewer ($\sim$0.48) $\rightarrow$ Tester ($\sim$0.08). This decline reflects a shift toward implementation tasks in downstream stages rather than reproducing terminology from the original issue description. A manual inspection of a sample of Tester outputs confirms that they primarily report pass/fail counts, the names of the FAIL\_TO\_PASS tests that were executed, and SWE-bench harness messages, while they do not generally reproduce the function or class identifiers from the original issue description; this is consistent with the low Tester IFS and indicates that Tester IFS is not a useful diagnostic for upstream information preservation.
+For BB and Hybrid, IFS decays across the pipeline stages (Figure~\ref{fig:ifs-analysis}b): Planner ($\sim$0.74) $\rightarrow$ Coder ($\sim$0.56) $\rightarrow$ Reviewer ($\sim$0.48) $\rightarrow$ Tester ($\sim$0.08). This decline reflects a shift toward implementation tasks in downstream stages rather than reproducing terminology from the original issue description.
 
 \subsubsection{IFS and Resolve Rate}
 
 While a higher IFS does not guarantee resolution, the two issues uniquely resolved under BB (django-12915 and django-13028) both exhibit substantially higher Coder IFS compared with MP. This pattern suggests that improved information preservation may have contributed to their successful resolution.
-
-\subsubsection{Per-Repository Breakdown}
-\label{sec:per-repo-ifs}
-
-A concern that arises from the sample's repository composition is whether BB's IFS advantage might be driven by the over-representation of Django (22/50 issues). To address this, we recompute Coder-stage IFS separately for each repository in the sample (Table~\ref{tab:per-repo-ifs}). The Coder-IFS advantage of BB over MP holds in \emph{every} repository: from a modest $+17$\% on Django (where MP already retains comparatively rich content) up to substantially larger gains on sympy ($+178$\%), astropy ($+187$\%), sphinx-doc ($+79$\%), and pytest-dev (an effective $33\times$ improvement on issues where MP retained almost none of the original technical entities). The corresponding correct-file-targeting rates also rise under BB across every repository. The resolve-rate advantage, in contrast, is observed primarily on easy Django issues, consistent with the bottleneck model (Section~\ref{sec:resolve-rate-limited}): on the harder sympy and astropy issues the downstream patch-generation bottleneck dominates, so upstream gains do not translate into additional resolved issues. The IFS effect of the Blackboard architecture is therefore an architecture-level property of the communication layer rather than a Django-specific artifact.
-
-\begin{table*}[!ht]
-\centering
-\caption{Per-repository Coder-stage IFS and correct file targeting (non-empty patches). Number in parentheses is the count of available IFS measurements.}
-\label{tab:per-repo-ifs}
-\begin{tabular}{llcccc}
-\toprule
-\textbf{Repo} & \textbf{N} & \textbf{Comm.} & \textbf{Resolved} & \textbf{Coder IFS} & \textbf{File targeting} \\
-\midrule
-django      & 22 & MP & 4/22 & 0.474 & 68.2\% \\
-            &    & BB & 7/22 & \textbf{0.555} & \textbf{76.2\%} \\
-            &    & Hybrid & 5/22 & 0.541 & 72.7\% \\
-\midrule
-sympy       & 16 & MP & 0/16 & 0.207 & 20.0\% \\
-            &    & BB & 0/16 & \textbf{0.577} & \textbf{76.9\%} \\
-            &    & Hybrid & 0/16 & 0.583 & 75.0\% \\
-\midrule
-sphinx-doc  & 3  & MP & 1/3  & 0.472 & 66.7\% \\
-            &    & BB & 0/3  & \textbf{0.847} & \textbf{100.0\%} \\
-            &    & Hybrid & 0/3  & 0.875 & 100.0\% \\
-\midrule
-pytest-dev  & 2  & MP & 1/2  & 0.016 & 100.0\% \\
-            &    & BB & 1/2  & \textbf{0.532} & 100.0\% \\
-            &    & Hybrid & 1/2  & 0.032 & 100.0\% \\
-\midrule
-astropy     & 2  & MP & 0/2  & 0.147 & 50.0\% \\
-            &    & BB & 0/2  & \textbf{0.423} & \textbf{100.0\%} \\
-\midrule
-pydata, pylint-dev, pallets & 3 & all & 1/3 & similar across modes & similar \\
-\bottomrule
-\end{tabular}
-\end{table*}
-
-\subsubsection{Robustness of IFS to Matcher Choice}
-\label{sec:ifs-robustness}
-
-Because IFS relies on automated entity matching, we examine whether its results depend on the matcher implementation. We re-evaluated IFS on a 19-issue subset using a stricter fuzzy matcher based on Python's \texttt{difflib.SequenceMatcher} with a partial-match threshold of $0.80$. On this subset the rule-based matcher yields a BB-over-MP relative IFS gap of $+39.3$\%; the fuzzy matcher yields $+30.6$\%. Both matchers preserve the directional advantage of BB. The relative magnitude is somewhat sensitive to matcher strictness---as expected, because the rule-based matcher counts any case-insensitive substring hit while the difflib matcher requires consecutive-token similarity above $0.80$---but the qualitative finding that BB preserves more upstream information than MP is robust to this measurement choice.
 
 \subsection{Failure Analysis}
 
@@ -403,8 +353,6 @@ Total & 50 & 50 & 50 \\
 \textbf{Patch Apply Error} is the most common failure mode (MP: 43/50, BB: 38/50, Hybrid: 26/50), occurring when generated diffs contain context lines that do not match repository content.
 
 \textbf{Empty Patch} failures are very frequent in Hybrid mode (18/50, 36\%) compared with MP (1/50, 2\%) and BB (4/50, 8\%), suggesting that the dual-channel context overwhelms the Coder.
-
-To characterize this failure mode concretely, we inspected each of the 18 Hybrid empty-patch runs. In every one of them, the Coder produced no parseable patch object at all: \texttt{blackboard\_final\_state.patches} is empty, even though the Reviewer was invoked three times as expected. This is not the same failure mode as a malformed or partially-correct diff; rather, the Coder appears to abandon the patch-emission step entirely when given the combined message-passing summary plus the full structured blackboard state. The same 18 issues are also unresolved under MP and BB, so the failures concentrate on intrinsically hard issues; Hybrid's dual-channel context appears to suppress the Coder's output on precisely the issues where the model already has the least useful signal. This corroborates the ``context overload'' hypothesis~\cite{liu2024lost} with direct, in-experiment evidence and suggests that future hybrid designs should constrain the Coder's input rather than offer both channels simultaneously.
 
 The large gap between BB's IFS advantage (62\%) and its resolve rate advantage (4pp) is explained by this patch-formatting bottleneck; Section~\ref{sec:patch-quality-analysis} provides a fine-grained decomposition.
 
@@ -437,16 +385,11 @@ Resolve rate (of correct file) & 22.2\% & 21.1\% & 24.0\% \\
 
 \subsubsection{File Targeting}
 
-Among non-empty patches, the BB Coder correctly identifies the file(s) that require modification---closely related to software fault localization \cite{wong2016survey,lou2021boosting}---in 82.6\% of cases, compared with 55.1\% for MP, corresponding to a 27.5 percentage-point improvement (Figure~\ref{fig:main-results}c). Hybrid achieves 78.1\%, which is close to BB. This pattern directly mirrors the earlier IFS advantage, suggesting that shared-state access enables more accurate code localization.
+Among non-empty patches, the BB Coder correctly identifies the file(s) that require modification---closely related to software fault localization \cite{wong2016survey}---in 82.6\% of cases, compared with 55.1\% for MP, corresponding to a 27.5 percentage-point improvement (Figure~\ref{fig:main-results}c). Hybrid achieves 78.1\%, which is close to BB. This pattern directly mirrors the earlier IFS advantage, suggesting that shared-state access enables more accurate code localization.
 
 \subsubsection{Conditional Resolve Rate}
 
 Once the correct file is targeted, all three modes achieve similar resolve rates: MP 22.2\%, BB 21.1\%, Hybrid 24.0\%. The near-identical conditional rates indicate that patch generation precision, rather than information quality, is the main constraint.
-
-\subsubsection{Reviewer Accept/Reject Dynamics}
-\label{sec:reviewer-dynamics}
-
-The Reviewer agent decides whether the Coder's current patch should be accepted, returned for revision (rejected), or sent forward to the Tester at the iteration limit (3 by default). Aggregating Reviewer verdicts from \texttt{blackboard\_final\_state.reviews} across all 50 issues exposes a clear behavioral difference between BB and Hybrid. Under BB, the Reviewer issues 55 accept and 80 reject verdicts; first acceptance occurs on iteration 1 in 21 runs, on iteration 2 in 4, on iteration 3 in 8, and never in 17 runs. Under Hybrid, the corresponding numbers are 37 accept, 103 reject, with first acceptance on iteration 1 in only 13 runs and never-accepted in 29 runs. BB therefore both elicits more first-iteration acceptances and reduces the number of runs in which the Reviewer never accepts a patch, despite the loop being bounded at the same three iterations in all configurations. The MP runs do not persist explicit verdicts, but their distribution over iteration counts (5/1/44 for iters=1/2/3) is closer to Hybrid than to BB, again consistent with BB's higher-quality patches being accepted earlier. These results indicate that BB's information-preservation benefit propagates downstream into measurably more efficient Reviewer behavior, even though the resulting end-to-end resolve rate gain is modest because of the diff-generation bottleneck.
 
 \subsubsection{Information Flow Bottleneck Model}
 
@@ -459,7 +402,7 @@ BB outperforms MP in both IFS (+62\%) and file targeting (+27.5pp), yet the thre
 \subsection{Tool Use Ablation Study}
 \label{sec:tool-ablation-study}
 
-To examine whether tool access can address the patch-generation bottleneck, we conducted an ablation study inspired by the Toolformer paradigm \cite{schick2023toolformer}. In this setup, the Coder is equipped with five tools: \texttt{read\_file} (with optional line range), \texttt{search\_code} (substring search across the working tree), \texttt{read\_lines} (read a specified line range from a previously discovered file), \texttt{validate\_patch} (dry-run apply via \texttt{git apply --check}), and \texttt{submit\_patch} (final answer). The tools are exposed via a JSON schema, and the Coder is instructed to call \texttt{read\_file} or \texttt{search\_code} at least once before producing a diff, to use \texttt{validate\_patch} prior to \texttt{submit\_patch}, and to retry up to two times if validation fails before submitting anyway. The system prompt and tool descriptions are otherwise identical to the non-tool baseline; all other pipeline components (Planner, Reviewer, Tester) are unchanged. We evaluated 10 issues under both MP and BB (Table~\ref{tab:tool-ablation}).
+To examine whether tool access can address the patch-generation bottleneck, we conducted an ablation study inspired by the Toolformer paradigm \cite{schick2023toolformer}. In this setup, the Coder is equipped with five tools: \texttt{read\_file}, \texttt{search\_code}, \texttt{read\_lines}, \texttt{validate\_patch}, and \texttt{submit\_patch}, and we evaluated 10 issues under both MP and BB (Table~\ref{tab:tool-ablation}).
 
 \begin{table}[!ht]
 \centering
@@ -475,29 +418,13 @@ BB & 4/10 & 4/10 & 0 \\
 \end{tabular}
 \end{table}
 
-Tool use does not improve resolve rates for either configuration. Although the \texttt{validate\_patch} tool detects format errors, the LLM cannot correct them even after multiple retries. Token consumption increases 2--4x without yielding additional resolutions. These results confirm that the bottleneck is in the LLM's intrinsic diff-generation ability, rather than information insufficiency or lack of tool access. We note that this ablation uses 10 issues per configuration, which is sufficient to rule out a large positive effect but not to establish a precise null; we therefore treat the result as directional evidence consistent with the bottleneck model rather than as a definitive negative finding.
+Tool use does not improve resolve rates for either configuration. Although the \texttt{validate\_patch} tool detects format errors, the LLM cannot correct them even after multiple retries. Token consumption increases 2--4x without yielding additional resolutions. These results confirm that the bottleneck is in the LLM's intrinsic diff-generation ability, rather than information insufficiency or lack of tool access.
 
 \subsection{Cost-Efficiency}
 
-BB incurs significantly higher token costs: 54,849 tokens per issue versus MP's 25,316 (2.17x, Wilcoxon $W=34$, $p<0.001$). Latency shows a similar pattern (171s vs. 106s, 1.61x, Wilcoxon $W=63$, $p<0.001$). To localize the overhead, we decompose token consumption per agent role (Table~\ref{tab:cost-per-stage}). The Coder consumes a comparable number of tokens in all three configurations ($\sim$17--20k), and the Planner is also broadly comparable ($\sim$1.5--4.4k). The dominant overhead under BB and Hybrid is concentrated at the Reviewer (28.2k for BB, 19.3k for Hybrid versus 3.5k for MP), because the Reviewer reads the full serialized blackboard state at each iteration. The Tester also incurs noticeably more tokens under BB and Hybrid (3.4k and 2.9k versus 0.6k under MP) for the same reason.
+BB incurs significantly higher token costs: 54,849 tokens per issue versus MP's 25,316 (2.17x, Wilcoxon $p<0.001$). Latency shows a similar pattern (171s vs. 106s, 1.61x, $p<0.001$). This overhead arises primarily from blackboard state serialization.
 
-\begin{table}[!ht]
-\centering
-\small
-\caption{Mean tokens consumed per agent role and per run, summed across iterations.}
-\label{tab:cost-per-stage}
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Comm.} & \textbf{Planner} & \textbf{Coder} & \textbf{Reviewer} & \textbf{Tester} \\
-\midrule
-MP     & 1{,}513 & 19{,}746 &  3{,}456 & 601 \\
-BB     & 4{,}428 & 18{,}895 & 28{,}168 & 3{,}359 \\
-Hybrid & 3{,}944 & 17{,}151 & 19{,}306 & 2{,}877 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-When measured in tokens per resolved issue---arguably the more practically relevant cost figure than tokens per run---MP requires approximately 211{,}000 tokens, BB about 343{,}000 tokens, and Hybrid about 361{,}000 tokens. BB therefore spends roughly $1.6\times$ as many tokens per resolution as MP, even though it resolves $1.33\times$ as many issues. Practitioners considering BB at present resolve rates should regard this as a deliberate trade of fixed serialization overhead for higher upstream information quality, rather than as a free improvement. We also note that tokens consumed in successful runs are substantially lower than in failed runs in every configuration (MP: 13.4k vs.\ 26.9k; BB: 29.2k vs.\ 59.7k; Hybrid: 31.8k vs.\ 44.8k), reflecting that successful runs typically terminate after one or two Coder--Reviewer iterations, while failures hit the iteration ceiling. The serialization overhead of BB would therefore be amortized to an increasingly favorable ratio if the downstream patch-generation bottleneck (Section~\ref{sec:resolve-rate-limited}) is addressed and the resolve rate rises.
+When measured in tokens per resolved issue, MP requires approximately 211,000 tokens, whereas BB requires about 343,000 tokens. At the current resolve rates, the marginal cost of the additional resolutions achieved by BB is relatively high. However, the fixed serialization overhead would be amortized if resolve rates improve.
 
 \subsection{Case Study: django-13028}
 
@@ -514,14 +441,7 @@ We examine django-13028, which is exclusively resolved by BB (Figure~\ref{fig:ca
 
 \textbf{BB Success}: The Coder reads the Planner's analysis and the original issue description, which includes the full traceback: File "django/db/models/sql/query.py", line 1131, in \texttt{check\_filterable}. With direct access, the Coder generates a precisely targeted one-iteration patch adding a \texttt{hasattr(expression, '\_meta')} guard, correctly resolving the issue.
 
-\textbf{Concrete Impact}: MP consumed 34,042 tokens across 3 iterations (131s) and failed; BB consumed 30,732 tokens in 1 iteration (67s) and succeeded.
-
-\textbf{Path-wise comparison.} Tracing the agent interaction sequences makes the divergence explicit:
-\begin{itemize}
-\item \emph{MP path}: Issue $\xrightarrow{C^{\text{MP}}(\text{Planner})=\{I\}}$ Planner produces a 679-token summary that drops the file/line traceback $\rightarrow$ Coder receives only this summary ($C^{\text{MP}}(\text{Coder})=\{\text{out}(\text{Planner})\}$) and incorrectly patches \texttt{Query.clone()} (line 355) $\rightarrow$ Reviewer rejects $\rightarrow$ Coder re-attempts twice on a similarly wrong target $\rightarrow$ Tester fails (3 iterations).
-\item \emph{BB path}: Issue $\xrightarrow{C^{\text{BB}}(\text{Planner})=\{I\}}$ Planner produces the same diagnosis $\rightarrow$ Coder receives the structured analysis \emph{and} the original issue text including the traceback ($C^{\text{BB}}(\text{Coder})=\{A, I\}$) $\rightarrow$ Coder targets \texttt{Query.check\_filterable} on the first try $\rightarrow$ Reviewer accepts $\rightarrow$ Tester passes (1 iteration).
-\end{itemize}
-The divergence between the two paths occurs precisely at the Planner $\rightarrow$ Coder handoff, where MP's lossy natural-language compression discards the file/line information that survives intact in BB's shared state. This example illustrates how message passing can introduce information loss during summarization: even when the Planner's diagnosis is correct, the compressed representation may omit the precise location details required for accurate patch generation.
+\textbf{Concrete Impact}: MP consumed 34,042 tokens across 3 iterations (131s) and failed; BB consumed 30,732 tokens in 1 iteration (67s) and succeeded. This example illustrates how message passing can introduce information loss during summarization: even when the Planner's diagnosis is correct, the compressed representation may omit the precise location details required for accurate patch generation.
 
 \subsection{Statistical Summary}
 \label{sec:stat-summary}
@@ -568,7 +488,7 @@ A central question is the gap between the large IFS improvement (62\%) and the m
 \begin{enumerate}
 \item \textbf{Upstream: BB significantly outperforms MP.} BB achieves a 62\% higher IFS, corresponding to a 27.5pp advantage in correct file targeting (82.6\% vs. 55.1\%).
 
-\item \textbf{Downstream: A systematic bottleneck limits all modes.} Once the correct file is identified, all modes achieve $\sim$22\% conditional resolve rate. We attribute this convergence to the LLM's difficulty in reliably generating context-correct unified diffs---a property we observe empirically across all 50 issues and all three configurations rather than infer from prior work: the $\sim$78\% of correct-file patches that nevertheless fail to apply or to pass tests do so primarily because of mismatched context lines, incorrect line numbers in hunk headers, or off-by-one offsets in the generated diffs (see also Section~\ref{sec:tool-ablation-study}, where giving the Coder direct file-read and validate tools does not improve this rate).
+\item \textbf{Downstream: A systematic bottleneck limits all modes.} Once the correct file is identified, all modes achieve $\sim$22\% conditional resolve rate. The LLM's inability to reliably generate context-correct unified diffs is a limiting factor largely independent of the communication architecture.
 
 \item \textbf{Tool use does not resolve the bottleneck.} Despite file access and \texttt{validate\_patch} capability, the LLM cannot generate corrected patches (Section~\ref{sec:tool-ablation-study}). Token consumption increases 2--4x without improving resolve rates.
 
@@ -579,13 +499,13 @@ These findings suggest that BB's observed advantage closely matches what would b
 
 The predictive accuracy of this model deserves emphasis. From BB's 27.5pp file-targeting advantage and the $\sim$22\% conditional resolve rate, the model predicts an expected improvement in resolve rate of $27.5 \times 0.22 \approx 6$pp. The observed gain is 4pp (16\% vs. 12\%), falling within the expected range given sampling variance on 50 issues. This correspondence between predicted and observed effects provides strong internal validity for the bottleneck model, regardless of whether the difference in resolve rates itself is statistically significant.
 
-\textbf{A note on statistical power.} A post-hoc power analysis indicates that detecting a 4 percentage-point difference (12\% vs. 16\%) using McNemar's test at $\alpha = 0.05$ with 80\% power would require approximately $\mathbf{N = 300}$ paired observations, roughly six times the size of our sample. Because most pipeline runs share a downstream bottleneck (Section~\ref{sec:patch-quality-analysis}), discordant pairs between MP and BB are intrinsically scarce ($b + c = 4$ in our experiment), which compounds the power problem on this dataset: even a doubled sample at the present discordance rate would still leave the binary outcome under-powered. Accordingly, this study was not designed to establish statistical significance for resolve rate alone, and the 4pp resolve-rate improvement should be interpreted as descriptive rather than confirmatory. Resolve rate is interpreted as one component of a multi-metric evaluation strategy, where IFS ($p = 0.058$), file targeting (+27.5pp), the bottleneck model, the tool-use ablation, and the case study together support a consistent explanation. We view this convergence of evidence as more informative than any single p-value.
+\textbf{A note on statistical power.} A post-hoc power analysis indicates that detecting a 4 percentage-point difference (12\% vs. 16\%) using McNemar's test at $\alpha = 0.05$ with 80\% power would require approximately $N = 300$ paired observations, roughly six times the size of our sample. Accordingly, this study was not designed to establish statistical significance for resolve rate alone. Instead, resolve rate is interpreted as one component of a multi-metric evaluation strategy, where IFS ($p = 0.058$), file targeting (+27.5pp), the bottleneck model, the tool-use ablation, and the case study together support a consistent explanation. We view this convergence of evidence as more informative than any single p-value.
 
 \subsection{Why Does Hybrid Not Outperform?}
 
 The Hybrid configuration (12.0\%) matches MP rather than exceeding BB. This pattern can be explained by the context functions defined in Section~\ref{sec:comm-modes}: $C^{\text{Hy}}$ is a strict superset of both $C^{\text{MP}}$ and $C^{\text{BB}}$, combining the predecessor's natural-language output with the full shared state. When presented with this larger context---consistent with prior findings that LLMs struggle to make effective use of very long inputs \cite{liu2024lost}---the Coder often produces no diff output. Specifically, 36\% of Hybrid runs generate empty patches (18/50), compared with 2\% for MP and 8\% for BB.
 
-However, among non-empty patches, Hybrid achieves a file-targeting rate of 78.1\%, close to BB's 82.6\%, and its conditional resolve rate (24.0\%) is the highest among the three configurations. These results suggest that the limitation arises from input format and context size, rather than insufficient information quality. Therefore, future hybrid designs may benefit from mechanisms that limit context overload, such as selective sharing, progressive disclosure, or memory-management techniques in which the relevant subset of the shared state is surfaced to the Coder on demand rather than as a single combined context~\cite{zhong2024memorybank}.
+However, among non-empty patches, Hybrid achieves a file-targeting rate of 78.1\%, close to BB's 82.6\%, and its conditional resolve rate (24.0\%) is the highest among the three configurations. These results suggest that the limitation arises from input format and context size, rather than insufficient information quality. Therefore, future hybrid designs may benefit from mechanisms that limit context overload, such as selective sharing or progressive disclosure.
 
 \subsection{Implications for Practice and System Design}
 
@@ -608,7 +528,7 @@ These findings suggest that future evaluations of multi-agent SE systems would b
 \section{Threats to Validity}
 \label{sec:threats}
 
-\textbf{Internal Validity.} We use a single LLM (Claude Sonnet 4.5) with temperature set to 0. This design choice removes model-related variance as a potential confounding factor, ensuring that observed differences across configurations can be attributed to the communication architecture rather than to variation in model behavior. The trade-off is reduced generalizability: the exact magnitude of the observed improvements (e.g., IFS gains or differences in resolve rates) may vary across models \cite{brown2020language}. We hypothesize that the underlying direction of BB's advantage---improved information preservation through shared-state access---is an architectural property that should generalize across LLMs, because shared-state access mechanically guarantees verbatim availability of the original issue text regardless of model. This hypothesis, however, remains to be tested directly with other models and should not be treated as an empirical finding of the present study. The sequential pipeline also introduces an ordering effect, where a weak Planner analysis can influence all downstream agents regardless of communication mode. To reduce this effect, we use identical Planner prompts across all configurations.
+\textbf{Internal Validity.} We use a single LLM (Claude Sonnet 4.5) with temperature set to 0. This design choice removes model-related variance as a potential confounding factor, ensuring that observed differences across configurations can be attributed to the communication architecture rather than to variation in model behavior. The trade-off is reduced generalizability: the exact magnitude of the observed improvements (e.g., IFS gains or differences in resolve rates) may vary across models \cite{brown2020language}. However, the underlying direction of BB's advantage---improved information preservation through shared-state access---is an architectural property that does not depend on a specific LLM. The sequential pipeline also introduces an ordering effect, where a weak Planner analysis can influence all downstream agents regardless of communication mode. To reduce this effect, we use identical Planner prompts across all configurations.
 
 \textbf{External Validity.} Our sample of 50 issues from SWE-bench Lite is limited to well-maintained Python repositories. Django issues are overrepresented (22/50), and because BB's resolve-rate advantage is concentrated in easy Django issues, the observed effect may partly reflect repository-specific factors, such as Django's detailed issue descriptions and well-structured codebase. As a result, the findings may not generalize to other programming languages, less-documented repositories, or software engineering tasks beyond bug fixing. However, the IFS advantage appears consistently across all repositories in our sample, not only Django, suggesting that the underlying information-preservation mechanism is not tied to a particular repository.
 
@@ -638,9 +558,9 @@ These results highlight communication architecture as an important design dimens
 
 \subsection{Future Work}
 
-\textbf{Alternative Patch Representations.} The unified diff bottleneck is not resolved through tool augmentation alone. Future work could explore patch representations that avoid strict context-line matching. Three concrete directions are most promising: (i) \emph{search-and-replace specifications}, where the Coder emits a list of \texttt{(old\_block, new\_block)} pairs and a deterministic tool performs the substitution---this avoids context-line matching entirely while keeping outputs short; (ii) \emph{AST-level edits}, where the Coder produces structured tree transformations applied by a language-aware engine---this guarantees syntactic validity but requires per-language tooling; and (iii) \emph{whole-file rewriting}, where the Coder emits the full content of the modified file and the diff is recovered by external comparison---this scales poorly to large files but eliminates the diff-generation step at the model level.
+\textbf{Alternative Patch Representations.} The unified diff bottleneck is not resolved through tool augmentation alone. Future work could explore patch representations that avoid strict context-line matching, such as search-and-replace specifications, AST-level edits, or whole-file rewriting.
 
-\textbf{Improved Diff Generation.} Improving diff generation itself is another promising direction. Potential approaches include fine-tuning on patch corpora, constrained decoding for diff syntax, deterministic post-hoc repair of corrupt hunk headers, or retrieval-augmented generation \cite{lewis2020retrieval} to retrieve accurate context lines while retaining the unified diff format. A practical compromise---used outside this study---is to apply patches with progressively more lenient apply heuristics (\texttt{git apply} $\rightarrow$ \texttt{patch -F0} $\rightarrow$ \texttt{patch -F3}) so that minor context errors do not cause outright failure; this trades a small risk of incorrect application against substantially higher apply rates.
+\textbf{Improved Diff Generation.} Improving diff generation itself is another promising direction. Potential approaches include fine-tuning on patch corpora, constrained decoding for diff syntax, or retrieval-augmented generation \cite{lewis2020retrieval} to retrieve accurate context lines while retaining the unified diff format.
 
 \textbf{Debate Topology.} The SE-Blackboard framework also supports a debate-style topology in which multiple Coders generate competing patches and a Reviewer selects the best candidate. Prior work shows that multi-agent debate can improve factuality and reasoning in LLMs \cite{du2024improving}. Evaluating this topology across different communication architectures would help determine whether the benefits of shared state compound as agent diversity increases.
 
@@ -654,7 +574,7 @@ The source code for the SE-Blackboard framework is publicly available on GitHub 
 
 \section*{Acknowledgment}
 
-Large language models were used during the preparation of this work. ChatGPT was used to assist with proofreading and language editing of the manuscript. Claude (Anthropic) was used to assist with portions of the implementation, specifically scaffolding the agent base classes (Planner, Coder, Reviewer, Tester), drafting the SWE-bench Docker harness wrapper, and producing initial versions of the analysis scripts used in Section~V. All generated code was reviewed by the first author, integrated into the project's regression test suite (63 unit tests), and validated against the experimental results reported in this paper. The experiment design, all empirical claims, the statistical analyses, and the conclusions were produced and verified by the authors, who take full responsibility for the work.
+Large language models were used during the preparation of this work. ChatGPT was used to assist with proofreading and language editing of the manuscript, and Claude was used to assist with portions of the implementation. The authors reviewed all outputs and take full responsibility for the design, analysis, and conclusions presented in this paper.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

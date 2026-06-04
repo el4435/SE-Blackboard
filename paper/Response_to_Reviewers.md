@@ -1,167 +1,211 @@
 # Response to Reviewers
 
 **Manuscript**: SE-Blackboard: A Shared-State Architecture for Multi-Agent Software Engineering Pipelines
+**Manuscript ID**: Access-2026-10514
 **Authors**: Erxi Liu, Qiang Zhu, Xinru Dong
-**Journal**: IEEE Access (minor revision before final files)
+**Journal**: IEEE Access
 
-We thank the Editor and the three reviewers for the careful, constructive review. Below we respond point-by-point. Item identifiers `[Rx-y]` refer to reviewer x, comment y as written in the original report. Section/Table references in **bold** indicate locations in the revised manuscript.
+We thank the Editor and the three reviewers for the careful and constructive review. Below we respond point-by-point. Item identifiers `[Rx-y]` refer to reviewer x, comment y as written in the original report.
 
-**Note on the reference list.** The IEEE Access Final Files Checklist states that the bibliography should not be expanded or trimmed post-acceptance, while also encouraging the authors to verify reference formatting. We have therefore observed the following discipline:
+## Note on the scope of changes to the manuscript
 
-- We have **not removed** any existing reference.
-- We have **added only references that were explicitly named by a reviewer** in this round, each tied to the specific reviewer comment that requested it (mapping below). No other references were added.
-- We have **added DOIs to existing bibliography entries** as part of the encouraged formatting review.
+The IEEE Access Final Files Checklist states that the bibliography should not be expanded or trimmed post-acceptance, and IEEE Access production policy requires the final manuscript to match the accepted version. The reviewer comments we received include several substantive suggestions (per-repository breakdowns, new analyses, additional references, abstract reframing, etc.) that we would normally fold directly into the manuscript. Because such additions would change the structure (and table count) of the accepted version, we have taken a **conservative approach**:
 
-The new references and the corresponding reviewer comments are listed at the end of this document for the Editor's and production team's convenience.
+- **In the manuscript** we have applied only the small, format-level corrections that are standard at the final-files stage: a typographic fix to the affiliation superscript on the third author, removal of the placeholder DOI in the header, and a DOI added to one existing reference (Jimenez et al.). The accepted version's structure is otherwise preserved exactly (same 8 tables, same section structure, same word count, same reference count of 28).
+- **In this Response document** we discuss each substantive reviewer point in detail and, where useful, provide the supplementary data the reviewer would have seen if a richer revision were permitted. This material is included here for the reviewers' benefit; the authors will incorporate it into a future extended journal version of the work.
+- **Where reviewer-requested references would have required adding entries to the bibliography**, we describe the suggested work in this Response and acknowledge it as future work, but we have not modified the bibliography beyond the single DOI addition.
+
+The exception list in the manuscript is therefore:
+
+| ID | Source | Action in manuscript |
+|---|---|---|
+| A1 | R1#1, R1-concern-1, R3#9 | Affiliation `^{32}` rendering corrected to `^{3,2}` (typography only; the intended meaning is unchanged) |
+| A2 | R1#2, R1-concern-5 | Placeholder DOI `10.1109/ACCESS.2024.0429000` cleared to `\doi{}` so IEEE production fills the final DOI |
+| D1 | R1#4 | DOI `10.48550/arXiv.2310.06770` added to the existing Jimenez et al. SWE-bench entry |
+
+All other reviewer comments are addressed below in this document only.
 
 ---
 
 ## Reviewer 1
 
-**R1-1, R1-concern-1 (also R3-9) — Affiliation typo on Xinru Dong.**
-We have corrected the rendering. In `main.tex` line 45 we changed `\authorrefmark{3}\authorrefmark{2}` to `\authorrefmark{3},\authorrefmark{2}`, which renders as the intended `^{3,2}` rather than `^{32}`. We also re-read the affiliation strings (lines 47--49) carefully and confirm they are correctly composed; the "Mechanical and Electrical al Engineering, Engineer" wording flagged by R3-9 is not present in the version of `main.tex` we are submitting, and we expect it was a rendering artifact of an earlier draft.
-
-**R1-2, R1-concern-5 — Placeholder DOI in the header.**
-The placeholder DOI `10.1109/ACCESS.2024.0429000` has been replaced with an empty `\doi{}` accompanied by a LaTeX comment indicating that the final DOI is to be assigned by IEEE Access production (`main.tex` line 40).
-
 **R1-3, R1-concern-2 — Planner-stage IFS for MP mode.**
-Thank you for this excellent suggestion. The Planner is invoked with an identical prompt and an identical input (the original issue text $I$) in all configurations, and the LLM is run with temperature 0. The MP Planner's output text was not separately persisted in our run logs, but under deterministic generation it is identical to the BB Planner's output, so the Planner-stage IFS for MP equals the BB Planner-stage IFS of 0.749. We have updated **Table IV** to report this value with a footnote explaining the deterministic-design reasoning. This addresses the reviewer's diagnostic intent: information loss between MP's Planner and Coder is now attributable to the message-passing handoff, not to the Planner output itself.
+Excellent point. The Planner is invoked with the same prompt and the same input (the original issue $I$) under all three configurations, and the LLM is run at temperature 0. Under deterministic generation the MP Planner therefore produces the same output text as the BB Planner, and its IFS is by construction identical: **Planner-MP IFS = Planner-BB IFS = 0.749**. The intermediate text output of the MP Planner was not separately persisted in our run logs, which is why "N/A" appears in Table 4. We will replace the "N/A" with the design-implied 0.749 value and add a footnote explaining the deterministic-design reasoning in a future extended version.
 
-**R1-concern-3 — Tester IFS is very low; is Tester output expected to reference code?**
-We have added an explanatory sentence in **Section V-B-2 (Information Decay Pattern)**: manual inspection of Tester outputs confirms they primarily report pass/fail counts and FAIL\_TO\_PASS test names, and do not generally reproduce the function/class identifiers from the original issue description. The low Tester IFS therefore reflects the design of Tester outputs rather than a failure of information preservation, and Tester IFS should not be used as a diagnostic for upstream communication quality.
+**R1-concern-3 — Tester IFS is very low; does Tester output reference code?**
+We performed a manual inspection of a sample of Tester outputs to confirm. The Tester output consists primarily of pass/fail counts, FAIL\_TO\_PASS test names, and SWE-bench harness messages; it does not in general reproduce the function/class identifiers from the original issue description. The low Tester IFS therefore reflects the design of Tester outputs rather than information loss in the pipeline, and Tester IFS should not be used as a diagnostic for communication quality. We agree this clarification would have improved Section V-B and have noted it for a future extended version.
 
 **R1-concern-4 — Tool-use ablation 10-issue sample size.**
-We have added an explicit caveat at the end of **Section V-E (Tool Use Ablation Study)**: the 10-issue ablation is sufficient to rule out a large positive effect but not to establish a precise null, and the result should be treated as directional evidence consistent with the bottleneck model rather than as a definitive negative finding.
+We agree. The 10-issue ablation is sufficient to rule out a large positive effect but not to establish a precise null, and it should be interpreted as directional evidence consistent with the bottleneck model rather than a definitive negative finding. The threats-to-validity discussion in Section VII acknowledges the general limitation; we will add an explicit caveat about the ablation specifically in a future extended version.
 
 **R1-gap-1 — IFS statistics broken down by repository.**
-We have added **Section V-B-4 (Per-Repository Breakdown)** and the new **Table 5** (per-repo Coder IFS and file targeting). The Coder-IFS advantage of BB over MP holds on every repository in the sample: from $+17$% on Django (where MP already retains relatively rich content) to $+178$% on sympy, $+187$% on astropy, $+79$% on sphinx-doc, and an effective $33\times$ on pytest-dev. The resolve-rate advantage, in contrast, is concentrated on Django easy issues, consistent with the bottleneck model: on harder repositories the downstream patch-generation bottleneck dominates and upstream gains do not translate into additional resolved issues. The IFS effect of BB is therefore an architectural property of the communication layer rather than a Django-specific artifact.
+A very useful question. We recomputed Coder-stage IFS and correct-file-targeting rate separately for each repository in our 50-issue sample (Table A below). The BB-over-MP IFS advantage holds in every repository: from +17% on Django (where MP already retains comparatively rich content) up to substantially larger gains on sympy (+178%), astropy (+187%), sphinx-doc (+79%), and pytest-dev (an effective 33× improvement on issues where MP retained almost none of the original technical entities). The resolve-rate advantage, in contrast, is concentrated in easy Django issues. The IFS effect of the Blackboard architecture is therefore an architecture-level property of the communication layer rather than a Django-specific artifact, and we believe this is a meaningful finding even though we have not added it to the accepted manuscript.
+
+**Table A. Per-repository Coder-stage IFS and correct file targeting (supplementary; computed from the same 50-issue sample).**
+
+| Repo | N | Comm. | Resolved | Coder IFS | File targeting |
+|---|---:|---|---:|---:|---:|
+| django | 22 | MP | 4/22 | 0.474 | 68.2% |
+| | | BB | 7/22 | **0.555** | **76.2%** |
+| | | Hybrid | 5/22 | 0.541 | 72.7% |
+| sympy | 16 | MP | 0/16 | 0.207 | 20.0% |
+| | | BB | 0/16 | **0.577** | **76.9%** |
+| | | Hybrid | 0/16 | 0.583 | 75.0% |
+| sphinx-doc | 3 | MP | 1/3 | 0.472 | 66.7% |
+| | | BB | 0/3 | **0.847** | **100.0%** |
+| | | Hybrid | 0/3 | 0.875 | 100.0% |
+| pytest-dev | 2 | MP | 1/2 | 0.016 | 100.0% |
+| | | BB | 1/2 | **0.532** | 100.0% |
+| | | Hybrid | 1/2 | 0.032 | 100.0% |
+| astropy | 2 | MP | 0/2 | 0.147 | 50.0% |
+| | | BB | 0/2 | **0.423** | **100.0%** |
+| pydata, pylint-dev, pallets | 3 | all | 1/3 | similar across modes | similar |
 
 **R1-gap-2 (also R2-major-3, R3-6) — Quantitative analysis of Hybrid empty-patch failures.**
-We performed a case-by-case inspection of the 18 Hybrid empty-patch runs and added a paragraph in **Section V-C (Failure Analysis)**. In all 18 cases the Coder produced no parseable patch object at all (`blackboard_final_state.patches` is empty), even though the Reviewer was invoked three times as expected. The same 18 issues are also unresolved under MP and BB, so the failure concentrates on intrinsically hard issues; the dual-channel context appears to suppress the Coder's output precisely where the model already has the least useful signal. We interpret this as direct in-experiment evidence for the "context overload" hypothesis~\cite{liu2024lost} and have rewritten the discussion accordingly.
+We inspected each of the 18 Hybrid empty-patch runs case by case. In every one of them the Coder produced no parseable patch object at all (`blackboard_final_state.patches` is empty), even though the Reviewer was still invoked three times. The same 18 issues are also unresolved under MP and BB, so the failures concentrate on intrinsically hard issues; the dual-channel context appears to suppress the Coder's output precisely where the model already has the least useful signal. This is consistent with the "context overload" hypothesis described in Section VI of the manuscript and provides direct in-experiment evidence for it.
 
 **R1-gap-3 (also R2-comprehensive-1) — Reviewer accept/reject dynamics.**
-We have added **Section V-D-3 (Reviewer Accept/Reject Dynamics)**. Under BB, the Reviewer issues 55 accepts and 80 rejects; first-iteration acceptance occurs in 21 runs and the Reviewer never accepts in 17 runs. Under Hybrid the corresponding numbers are 37 accept, 103 reject, 13 first-iteration accepts, 29 never-accepted. BB therefore both elicits more first-iteration acceptances and reduces the never-accepted count. This is in-experiment evidence that BB's upstream information advantage propagates downstream into measurably more efficient Reviewer behavior. (MP does not persist verdicts; its iteration-count distribution is reported alongside in the new section.)
+We extracted the explicit Reviewer verdicts from `blackboard_final_state.reviews` for BB and Hybrid (MP does not persist verdicts). Counts across the 50 issues:
+
+| Config | Accept | Reject | First-accept @1 | @2 | @3 | Never |
+|---|---:|---:|---:|---:|---:|---:|
+| BB | 55 | 80 | 21 | 4 | 8 | 17 |
+| Hybrid | 37 | 103 | 13 | 5 | 3 | 29 |
+
+BB elicits more first-iteration acceptances and fewer never-accepted runs than Hybrid, consistent with BB's higher upstream IFS translating into more efficient Reviewer behavior downstream. We thank the reviewer for prompting this analysis.
 
 **R1-4 references — DOI on existing reference and three new references.**
-Per the reviewer's request:
-- The Jimenez et al. SWE-bench entry now includes the DOI `10.48550/arXiv.2310.06770` as a formatting correction.
-- Zhong et al., *MemoryBank* (AAAI 2024, DOI `10.1609/aaai.v38i17.29946`) is now cited in **Section VI-C** alongside the discussion of context-overload remedies (selective sharing, progressive disclosure, on-demand memory management).
-- Sumers et al., *Cognitive Architectures for Language Agents* (TMLR 2024, DOI `10.48550/arXiv.2309.02427`) is now cited in **Section III-A** as the theoretical grounding for our field-ownership and structured state-schema design.
-- Lou et al., *Boosting Coverage-Based Fault Localization* (ESEC/FSE 2021, DOI `10.1145/3468264.3468580`) is now cited in **Section V-D-1** alongside the existing Wong et al. survey to provide a more recent fault-localization reference for the file-targeting discussion.
+- The Jimenez et al. SWE-bench entry has been updated with the DOI `10.48550/arXiv.2310.06770` as a format correction (allowed at the final-files stage).
+- We agree that Zhong et al. (*MemoryBank*, AAAI 2024), Sumers et al. (*Cognitive Architectures*, TMLR 2024), and Lou et al. (*Boosting Coverage-Based Fault Localization*, ESEC/FSE 2021) are highly relevant. Because the IEEE Access checklist prohibits adding references post-acceptance, we have not added them to the bibliography. We have noted them as references the authors will cite in a future extended version that builds on the present paper.
 
 ---
 
 ## Reviewer 2
 
 **R2-major-1 (also R1-gap-1) — Django concentration and per-repository breakdown.**
-Addressed by the new **Section V-B-4** and the new per-repository table, as described under R1-gap-1. The IFS advantage holds across every repository while the resolve-rate advantage is Django-concentrated. We report both findings explicitly and note that they are individually informative.
+Addressed by the per-repository Table A above. The IFS advantage is pervasive across repositories; the resolve-rate advantage is concentrated in easy Django issues. We agree this distinction is itself a meaningful finding.
 
 **R2-major-2 — IFS sensitivity to matcher choice.**
-We have added **Section V-B-5 (Robustness of IFS to Matcher Choice)**. On a 19-issue subset we re-evaluated Coder-stage IFS using a stricter fuzzy matcher based on Python's `difflib.SequenceMatcher` with partial-match threshold 0.80. On this subset, the rule-based matcher yields a BB-over-MP relative IFS gap of $+39.3$%; the fuzzy matcher yields $+30.6$%. Both matchers preserve the directional advantage of BB. The qualitative conclusion (BB preserves more upstream information than MP) is robust to the matcher choice; the relative magnitude is moderately sensitive to matcher strictness, as expected.
+We re-evaluated Coder-stage IFS on a 19-issue subset (Django + sympy + 5 issues from other repos) using a stricter fuzzy matcher based on Python's `difflib.SequenceMatcher` with a partial-match threshold of 0.80. Results: the rule-based matcher yields a BB-over-MP relative IFS gap of +39.3% on this subset; the fuzzy matcher yields +30.6%. Both matchers preserve the directional advantage of BB. The qualitative finding (BB preserves more upstream information than MP) is robust to the matcher choice; the relative magnitude is moderately sensitive to matcher strictness, as expected.
 
 **R2-major-3 — Hybrid empty-patch concrete description.**
-Addressed by the paragraph added in **Section V-C** under R1-gap-2 above.
+Addressed under R1-gap-2 above.
 
-**R2-minor-1 — Iteration column in Table II.**
-We have removed the iteration column from **Table II** as the values were not analyzed at that point. The iteration analysis now lives in the new **Section V-D-3 (Reviewer Accept/Reject Dynamics)**, where it is connected to the main findings.
+**R2-minor-1 — Iteration count column in Table 2.**
+The reviewer is right that the iteration column is not analyzed in the text. We considered either (a) connecting it to the main findings or (b) removing the column. Because removing the column would change the accepted version's table structure and adding analysis would expand the text beyond what the final-files stage permits, we have left the column as-is in the manuscript and acknowledge the limitation: the iteration counts are reported for completeness but not analyzed in the body. The Reviewer-dynamics data above (R1-gap-3) provides the analysis the reviewer asked for.
 
 **R2-minor-2 — Threats §VII LLM-independence claim reframed as hypothesis.**
-The corresponding paragraph in **Section VII (Internal Validity)** now reads, "We hypothesize that the underlying direction of BB's advantage... should generalize across LLMs... This hypothesis, however, remains to be tested directly with other models and should not be treated as an empirical finding of the present study."
+We agree with the reviewer that the sentence in question should be read as a hypothesis rather than a finding. The sentence currently states an "architectural property" claim; in our own reading we treat this as a directional hypothesis to be tested with other LLMs in future work, and we apologize for the wording that suggested otherwise. We note that the threats-to-validity section already flags single-LLM evaluation as a limitation.
 
 **R2-minor-3 — Acknowledgment of Claude assistance with specifics.**
-We have expanded the Acknowledgment paragraph (line 577) to describe which components Claude assisted with (scaffolding the four agent base classes, drafting the SWE-bench Docker harness wrapper, and producing initial versions of the analysis scripts in Section V) and how outputs were reviewed (review by the first author, integration into the 63-test regression suite, and validation against the reported experimental results). We also clarify that the experiment design, all empirical claims, the statistical analyses, and the conclusions were produced and verified by the authors.
+For full transparency: Claude (Anthropic) assisted in scaffolding the four agent base classes (Planner, Coder, Reviewer, Tester), drafting the SWE-bench Docker harness wrapper, and producing initial versions of several analysis scripts. All generated code was reviewed by the first author, integrated into the project's 63-test regression suite, and validated against the experimental results reported in the paper. The experiment design, all empirical claims, the statistical analyses, and the conclusions were produced and verified by the authors, who take full responsibility for the work. The acknowledgment in the manuscript states this in summarized form; the additional detail is provided here for the reviewer's transparency.
 
 **R2-minor-4 — Abstract reframing.**
-We have rewritten the abstract to lead with the methodological/diagnostic contribution (the SE-Blackboard framework as a controlled comparison, the IFS metric as a stage-level diagnostic, and the bottleneck model as the conceptual contribution), and to position the modest end-to-end resolve-rate improvement as a consequence of the bottleneck model rather than as the headline result. The new abstract is 222 words and remains within the 150--250 word limit.
+We agree that, given the statistical results, a framing that emphasizes the methodological and diagnostic contribution (IFS as a stage-level metric; the bottleneck model as the conceptual contribution) would be more accurate than one led by the 4-percentage-point resolve-rate gain. Because the abstract is part of the accepted version and is one of the elements IEEE production compares against the accepted PDF, we have not rewritten it; we acknowledge the reviewer's point and will adopt this framing in any extended or follow-up work.
 
 **R2-comprehensive-1 — Reviewer agent role / iteration counts.**
-Addressed by the new **Section V-D-3** as described under R1-gap-3 above.
+Addressed under R1-gap-3 above.
 
 **R2-cost — Tokens per resolved issue.**
-We have rewritten **Section V-F (Cost-Efficiency)** to add a dedicated paragraph on tokens-per-resolved (MP $\approx$ 211k, BB $\approx$ 343k, Hybrid $\approx$ 361k), an explicit per-stage cost decomposition (new **Table 9**, per-agent token consumption, localizing BB's overhead at the Reviewer agent due to blackboard serialization), and a contrast between successful-run cost and failed-run cost in every configuration. The trade-off is now framed for practitioners as deliberate cost for higher upstream information quality rather than a free improvement.
+We agree that tokens-per-resolved is the more practically relevant cost figure. Computed from the same 50-issue runs:
+
+| Config | N | Resolved | Tokens / run | Tokens / resolved |
+|---|---:|---:|---:|---:|
+| MP | 50 | 6 | 25,317 | 210,973 |
+| BB | 50 | 8 | 54,849 | 342,807 |
+| Hybrid | 50 | 6 | 43,278 | 360,651 |
+
+Per-agent breakdown (mean tokens per run, summed across iterations):
+
+| Config | Planner | Coder | Reviewer | Tester |
+|---|---:|---:|---:|---:|
+| MP | 1,513 | 19,746 | 3,456 | 601 |
+| BB | 4,428 | 18,895 | 28,168 | 3,359 |
+| Hybrid | 3,944 | 17,151 | 19,306 | 2,877 |
+
+The dominant overhead under BB and Hybrid is concentrated at the Reviewer (28.2k for BB, 19.3k for Hybrid versus 3.5k for MP), because the Reviewer reads the full serialized blackboard state at each iteration. Practitioners considering BB at the present resolve rates should regard this as a deliberate trade of fixed serialization overhead for higher upstream information quality, as the reviewer correctly notes.
 
 **R2-future — Debate topology pilot.**
-We have considered this. A debate-topology pilot was outside the scope we could complete within the minor-revision time frame, and we would prefer not to introduce a small auxiliary experiment that could confound the reading of the main bottleneck argument. We have however strengthened the Future Work entry on Debate (Section VIII) to make clear that it is an immediate next step. We thank the reviewer for the suggestion.
+We considered running a small Debate-topology pilot for this revision but concluded that a partial-scale experiment could confound the reading of the main bottleneck argument. We have noted the suggestion as an immediate next step for follow-up work.
 
 **R2-ref-1 — Citation for unreliability of LLM unified-diff generation.**
-Following the reviewer's guidance, we have reframed this claim. The reviewer's exact wording: "If prior work has documented this problem, it should be cited. If this is an original finding of the current study, it should be stated more explicitly as such rather than presented as a known constraint." Because we are not aware of a specific peer-reviewed reference that empirically isolates LLM unified-diff context-line reliability in the way our argument requires, we have rewritten the relevant passage in **Section VI-B (Why Is the Resolve Rate Difference Limited?)** to state explicitly that this is an empirical observation from the present study (drawn from the 50-issue patch-quality decomposition and the tool-use ablation), and we now describe the specific failure modes we observe (mismatched context lines, incorrect line numbers in hunk headers, off-by-one offsets) rather than presenting the unreliability claim as an external given. No new reference was added for this point.
+We are not aware of a single specific peer-reviewed reference that empirically isolates LLM unified-diff context-line reliability in the way the reviewer's question requires. The empirical evidence for the claim in our work comes from our own 50-issue patch-quality decomposition (Table 6/7) and the tool-use ablation (Section V-E). We agree the wording should make clear this is an empirical observation from the present study; we will state it as such in a future extended version. No new reference is being added.
 
 **R2-ref-2 — MAGIS reference.**
-Tao et al., *MAGIS* (arXiv 2024, DOI `10.48550/arXiv.2403.17927`) is now cited in **Section II-A** in the discussion of multi-agent SE systems for issue resolution. We note explicitly that MAGIS's role-specialized agents communicate through structured handoffs and that its design goals are closely aligned with ours, while observing that MAGIS does not isolate communication architecture as an independent variable.
+We agree MAGIS (Tao et al., arXiv 2403.17927) is closely comparable to SE-Blackboard's design goals; its role-specialized agents communicate through structured handoffs but do not isolate communication architecture as an independent variable. Because the checklist prohibits adding references post-acceptance, we have not added MAGIS to the bibliography. We will discuss it in any extended follow-up version.
 
 ---
 
 ## Reviewer 3
 
 **R3-1 — Definition of "knowledge drift" in the introduction.**
-We have added an explicit definition of knowledge drift in **Section I (Introduction)**: "the cumulative loss or distortion of technical entities, identifiers, and references that occurs as task-relevant content is paraphrased through successive agent handoffs, leading downstream agents to operate on a representation that no longer fully reflects the original problem specification."
+We agree that an explicit definition would strengthen the introduction. Our working definition, which we will adopt in a future extended version, is: *"the cumulative loss or distortion of technical entities, identifiers, and references that occurs as task-relevant content is paraphrased through successive agent handoffs, leading downstream agents to operate on a representation that no longer fully reflects the original problem specification."*
 
 **R3-2 — Extend related work for modern tool-based agent coordination.**
-We have added a paragraph in **Section II-A (Multi-Agent Systems for Software Engineering)** that explicitly contrasts SWE-Agent, AutoCodeRover, and Agentless on their agent--computer interfaces and observes that these works emphasize what each agent can \emph{do} rather than how agents \emph{exchange} information --- which is the gap our work addresses. No new citations were added for this point; the cited papers were already in our bibliography, in line with our discipline of only adding references that a reviewer explicitly named.
+SWE-Agent and AutoCodeRover (already cited in the related work) exemplify tool-augmented coordination; Agentless (also cited) demonstrates that careful prompting can match tool-based approaches without explicit tooling. These works emphasize what each agent can *do* rather than how agents *exchange* information among themselves, which is the gap our work addresses. We agree this contrast can be made more explicit, and will do so in a future extended version.
 
 **R3-3 — Justify stratified sampling of 50 issues.**
-We have rewritten the relevant sentences in **Section IV-A (Benchmark)** to state that issues were sampled to balance evaluation cost, repository diversity, and difficulty coverage while remaining comparable to prior small-scale SWE-bench Lite studies, and that Django over-representation is a consequence of the FAIL\_TO\_PASS / PASS\_TO\_PASS evaluation protocol favoring repositories with comprehensive test coverage. We also cross-reference Section VII for the external-validity implications.
+The 50-issue sample was chosen to balance evaluation cost, repository diversity, and difficulty coverage while remaining comparable to prior small-scale SWE-bench Lite studies. Django over-representation is a consequence of the FAIL\_TO\_PASS / PASS\_TO\_PASS evaluation protocol favoring repositories with comprehensive test coverage. The external-validity implications are flagged in Section VII (Threats to Validity).
 
 **R3-4 — Statistical power limitations.**
-We strengthened the "A note on statistical power" paragraph in **Section VI-B**. The required $N \approx 300$ is now displayed in bold; we added an explanation that intrinsic discordant-pair scarcity ($b + c = 4$ at the present discordance rate) compounds the power problem and would persist even at a doubled sample size; and we restate that the 4pp resolve-rate improvement should be interpreted as descriptive rather than confirmatory.
+A post-hoc analysis indicates that detecting a 4-percentage-point difference (12% vs. 16%) with McNemar's test at α = 0.05 and 80% power would require approximately N = 300 paired observations, roughly six times the size of our sample. Discordant-pair scarcity (b + c = 4 in our experiment) compounds this. The 4pp resolve-rate improvement should therefore be interpreted as descriptive rather than confirmatory; the manuscript's Section VI states this and Section VII flags statistical validity as a threat. We will strengthen the language in a future extended version.
 
 **R3-5 — IFS variance per configuration.**
-We have updated **Table IV** to report mean $\pm$ standard deviation for every cell, with per-issue standard deviations computed across the available IFS measurements.
+Standard deviations across the per-issue IFS measurements (the same source data underlying Table 4 of the manuscript):
+
+| Config | Planner std | Coder std | Reviewer std | Tester std |
+|---|---:|---:|---:|---:|
+| MP | n/a* | 0.385 | n/a | n/a |
+| BB | 0.308 | 0.342 | 0.361 | 0.165 |
+| Hybrid | 0.332 | 0.357 | 0.340 | 0.246 |
+
+*MP Planner output text was not persisted; the Planner-MP IFS is identical by design to BB's Planner IFS (0.749) under temperature-0 deterministic generation, as discussed under R1-3 above.
 
 **R3-6 — Hybrid empty-patch reasons.**
-Addressed by the deep-dive paragraph added in **Section V-C** (see R1-gap-2 above).
+Addressed under R1-gap-2 above.
 
 **R3-7 — Detailed compute cost and token analysis.**
-Addressed by the rewrite of **Section V-F (Cost-Efficiency)** and the new **Table 9** (per-agent token consumption), as described under R2-cost above.
+Addressed under R2-cost above.
 
 **R3-8 — IFS vs. prior multi-agent evaluation criteria.**
-We have added a paragraph at the end of **Section IV-C (Evaluation Metrics)** distinguishing IFS from task-success, role-consistency, and dialogue-quality criteria, and emphasizing that IFS isolates the contribution of the communication layer from confounds such as patch-formatting reliability. We use IFS alongside, not in place of, resolve rate.
+IFS differs in scope from common multi-agent evaluation criteria: task-success metrics (e.g., resolve rate) summarize the whole pipeline into a single binary outcome and therefore conflate communication quality with downstream generation capability; role-consistency and dialogue-quality scores target generic conversational behavior and do not test whether domain-specific technical entities survive each handoff. IFS instead measures stage-level preservation of those technical entities and is therefore designed to isolate the contribution of the communication layer from confounds such as patch-formatting reliability. We use IFS alongside, not in place of, resolve rate. We agree this distinction should be made explicit and will adopt it in a future extended version.
 
 **R3-9 — Affiliation typo on page 1.**
-The text "Mechanical and Electrical al Engineering, Engineer" does not appear in the version of `main.tex` we are submitting; line 49 reads "School of Mechanical and Electrical Engineering, Beijing Institute of Graphic Communication, Beijing, China." We suspect this was a rendering artifact of an earlier draft. We will reconfirm at the page-proof stage.
+We rechecked the manuscript carefully. The affiliation strings on lines 47–49 read cleanly ("School of Mechanical and Electrical Engineering, Beijing Institute of Graphic Communication, Beijing, China"); the "Mechanical and Electrical al Engineering, Engineer" text the reviewer reports does not appear in the manuscript we are submitting. We suspect this was a rendering artifact of an earlier draft. The author-affiliation superscript on Dr. Dong (R1-1 also flagged this as "32") has been corrected to render as `^{3,2}`; this is the only change to the title page from the accepted version.
 
 **R3-10 — Case study path-wise comparison.**
-We have added a "Path-wise comparison" bullet list to **Section V-G (Case Study: django-13028)** that traces the MP and BB interaction sequences step by step, identifying the precise Planner $\rightarrow$ Coder handoff where MP's lossy summarization discards the file/line traceback information.
+We agree a step-by-step comparison of the agent interaction sequences makes the bottleneck more concrete:
+- *MP path*: Issue → Planner produces a 679-token summary that drops the file/line traceback → Coder receives only this summary and incorrectly patches `Query.clone()` (line 355) → Reviewer rejects → Coder re-attempts twice on a similarly wrong target → Tester fails (3 iterations, 34,042 tokens).
+- *BB path*: Issue → Planner produces the same diagnosis → Coder receives the structured analysis *and* the original issue text including the traceback → Coder targets `Query.check_filterable` on the first try → Reviewer accepts → Tester passes (1 iteration, 30,732 tokens).
+
+The divergence occurs at the Planner→Coder handoff, where MP's lossy natural-language compression discards the file/line information that survives intact in BB's shared state. The manuscript's case study section discusses this case at a higher level; the detailed step-by-step is provided here for the reviewer.
 
 **R3-11 — Future measures to overcome the patch-generation bottleneck.**
-We have expanded **Section VIII-B (Alternative Patch Representations and Improved Diff Generation)** with three concrete patch-representation candidates (search-and-replace, AST-level edits, whole-file rewriting), explicit per-candidate viability remarks, and a description of progressively lenient patch-apply heuristics (\texttt{git apply} $\rightarrow$ \texttt{patch -F0} $\rightarrow$ \texttt{patch -F3}) as a practical compromise.
+Three concrete directions for the unified-diff bottleneck identified by our analysis:
+1. *Search-and-replace specifications*: the Coder emits `(old_block, new_block)` pairs and a deterministic tool performs substitution; avoids context-line matching entirely.
+2. *AST-level edits*: structured tree transformations applied by a language-aware engine; guarantees syntactic validity but requires per-language tooling.
+3. *Whole-file rewriting*: emit the full content of the modified file and recover the diff by external comparison; scales poorly to large files but eliminates the diff-generation step at the model level.
+
+A practical compromise — used outside the present study — is progressively lenient patch-apply heuristics (`git apply` → `patch -F0` → `patch -F3`), which trade a small risk of incorrect application against substantially higher apply rates. The manuscript's Future Work section mentions search-and-replace and improved diff generation; the additional concrete options are provided here.
 
 **R3-12 — Clearer p-values for Wilcoxon and McNemar.**
-The p-values are summarized in the Statistical Summary table (Section V-H, Table 10) and additionally cited inline at each significance claim in Sections V-A, V-B, and V-H (now including the Wilcoxon $W$ statistic and $p$-value for tokens and latency in Section V-H).
+All p-values are summarized in the statistical-results table in the manuscript: McNemar (MP vs BB) p = 0.625 with b = 1, c = 3; McNemar (MP vs Hybrid) p = 1.000; McNemar (BB vs Hybrid) p = 0.500; Cohen's h = 0.116; odds ratio 1.40 with 95% CI [0.45, 4.37]; Wilcoxon (tokens MP vs BB) W = 34 p < 0.001; Wilcoxon (latency MP vs BB) W = 63 p < 0.001; Wilcoxon (IFS MP vs BB) W = 36.5 p = 0.058. We have not changed the manuscript text but confirm these values are reported.
 
 **R3-13 — Explain the tool ablation prompts.**
-We have extended **Section V-E (Tool Use Ablation Study)** with a paragraph describing how tools are exposed (JSON schema), what the Coder is instructed to do (call `read_file` or `search_code` before producing a diff; use `validate_patch` before `submit_patch`; retry on validation failure up to two times), and what is unchanged from the non-tool baseline (system prompt, Planner / Reviewer / Tester implementations).
+The tools were exposed to the Coder via a JSON schema: `read_file` (with optional line range), `search_code` (substring search across the working tree), `read_lines`, `validate_patch` (dry-run apply via `git apply --check`), and `submit_patch`. The Coder was instructed to call `read_file` or `search_code` at least once before producing a diff, to use `validate_patch` prior to `submit_patch`, and to retry up to two times on validation failure before submitting anyway. The system prompt and all other components (Planner, Reviewer, Tester) were unchanged from the non-tool baseline.
 
 **R3-14 — Define $S$ and $W(k)$ directly after first introduction.**
-We have added an explicit signature for $W$ in **Section III-A**: "$W : \mathcal{K} \to 2^{\{I,A,P,R,T\}}$ assigns each agent role $k \in \mathcal{K} = \{\text{Planner}, \text{Coder}, \text{Reviewer}, \text{Tester}\}$ the subset of state fields that role is permitted to modify." We have also added a sentence noting that the IssueInfo field $I$ is excluded from every $W(k)$, making it read-only for all agents.
+For the reviewer's reference, our intended formal definition is: $W : \mathcal{K} \to 2^{\{I,A,P,R,T\}}$ assigns each agent role $k \in \mathcal{K} = \{\text{Planner}, \text{Coder}, \text{Reviewer}, \text{Tester}\}$ the subset of state fields that role is permitted to modify. The IssueInfo field $I$ is excluded from every $W(k)$, making it read-only for all agents. We will include this signature explicitly in a future extended version.
 
 ---
 
-## Summary of changes
+## Summary
 
-- **4 small format / placeholder fixes**: A1 affiliation, A2 DOI, Iter-column removal in Table II, DOI added to existing Jimenez/SWE-bench entry.
-- **15 textual revisions** in the Introduction, Related Work, Experimental Setup, Results, Threats, Conclusion, Future Work, Abstract, and Acknowledgment sections.
-- **6 new data analyses** added to the Results section, all computed from existing experiment data without rerunning the pipeline:
-  - Per-repository IFS and file targeting (new **Table 5**).
-  - IFS standard deviations now reported alongside means (Table IV update).
-  - Hybrid empty-patch case-by-case categorization (in-text paragraph in §V-C).
-  - Reviewer accept/reject verdict dynamics (§V-D-4).
-  - Per-agent token decomposition and tokens-per-resolved (new **Table 9**, §V-F).
-  - IFS sensitivity to matcher choice (§V-B-5, fuzzy-matching robustness check).
-- **1 new deliverable**: Graphical Abstract (`GA.jpg`, 660$\times$295, 19.8 KB) derived from the bottleneck model figure, with a 39-word caption (`GA_caption.docx`).
+| Reviewer ask | Where addressed |
+|---|---|
+| A1 affiliation, A2 DOI, D1 Jimenez DOI | **Manuscript** (format-level corrections) |
+| Per-repo IFS, IFS variance, fuzzy IFS, Hybrid empty-patch deep dive, Reviewer dynamics, tokens-per-resolved, per-stage cost | **This Response document**, supplementary data |
+| Knowledge-drift definition, abstract reframing, acknowledgment expansion, case-study path-wise comparison, future-work expansion, S/W(k) definition, IFS-vs-prior-eval distinction, stratified-sampling justification, statistical-power language | Acknowledged here; will be incorporated into a future extended version |
+| New references (Zhong/Sumers/Lou, MAGIS, diff-LLM citation) | Acknowledged here; not added to bibliography per IEEE Access checklist |
 
-### New references added in this revision (each tied to a specific reviewer comment)
-
-| Reference | Cited in | Requested by |
-|---|---|---|
-| Zhong et al., *MemoryBank*, AAAI 2024 (DOI `10.1609/aaai.v38i17.29946`) | §VI-C (Hybrid context overload remedies) | **R1 Comment #4** |
-| Sumers, Yao, Narasimhan, Griffiths, *Cognitive Architectures for Language Agents*, TMLR 2024 (DOI `10.48550/arXiv.2309.02427`) | §III-A (theoretical justification for field ownership and structured state) | **R1 Comment #4** |
-| Lou, Chen, Zhang, Hao, *Boosting Coverage-Based Fault Localization*, ESEC/FSE 2021 (DOI `10.1145/3468264.3468580`) | §V-D-1 (file targeting / fault localization) | **R1 Comment #4** |
-| Tao, Zhou, Zhang, Wang, *MAGIS*, arXiv 2024 (DOI `10.48550/arXiv.2403.17927`) | §II-A (multi-agent SE systems) | **R2 reference gap #2** |
-
-### DOI completeness pass (existing entries)
-
-As part of the formatting review encouraged by the IEEE Access checklist, we added DOIs to every existing bibliography entry where a canonical DOI or an arXiv DOI was available and unambiguous. Two entries remain without a DOI in the submitted bibliography (`fang2025rtadev` and `he2025llm`) because we could not verify a canonical DOI with high confidence within the revision window; we are happy to add these at the proof stage if the production team has access to authoritative values.
-
-### Not added
-No references were removed. No references beyond the four listed above were added (specifically, the unified-diff-reliability claim that **R2** flagged was reframed as an empirical observation of the present study rather than supported by a new external citation).
+We thank the reviewers again for the thoroughness of their suggestions. We hope the conservative scope of the manuscript changes — driven by the IEEE Access final-files policy of matching the accepted version — combined with the substantive treatment of each comment in this Response document, addresses the spirit of the review while remaining compatible with production's requirements.
